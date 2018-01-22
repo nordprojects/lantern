@@ -3,31 +3,18 @@ package co.nordprojects.lantern
 import android.app.Activity
 import android.app.Fragment
 import android.os.Bundle
+import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import java.util.*
 
-/**
- * Skeleton of an Android Things activity.
- *
- * Android Things peripheral APIs are accessible through the class
- * PeripheralManagerService. For example, the snippet below will open a GPIO pin and
- * set it to HIGH:
- *
- * <pre>{@code
- * val service = PeripheralManagerService()
- * val mLedGpio = service.openGpio("BCM6")
- * mLedGpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW)
- * mLedGpio.value = true
- * }</pre>
- * <p>
- * For more complex peripherals, look for an existing user-space driver, or implement one if none
- * is available.
- *
- * @see <a href="https://github.com/androidthings/contrib-drivers#readme">https://github.com/androidthings/contrib-drivers#readme</a>
- *
- */
+
 class MainActivity : Activity() {
+    val TAG = MainActivity::class.java.simpleName
+
     lateinit var frameLayout: FrameLayout
+    val accelerometer = Accelerometer()
+    val accelerometerObserver = Observer { o, arg -> accelerometerUpdated() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +22,31 @@ class MainActivity : Activity() {
         frameLayout = FrameLayout(this)
         frameLayout.foregroundGravity = 77 // 'fill'
 
+        accelerometer.addObserver(accelerometerObserver)
+
         setContentView(frameLayout)
+        Log.d(TAG, "Main activity created.")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        accelerometer.deleteObserver(accelerometerObserver)
+        accelerometer.close()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        accelerometer.startUpdating()
+        Log.d(TAG, "Main activity started.")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        accelerometer.stopUpdating()
+        Log.d(TAG, "Main activity stopped.")
+    }
+
+    private fun accelerometerUpdated() {
+        Log.d(TAG, "accelerometer direction updated to ${accelerometer.direction}")
     }
 }

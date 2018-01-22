@@ -31,6 +31,6 @@ dependencies {
 //    androidTestImplementation 'com.android.support.test:runner:1.0.1'
 //    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compileOnly 'com.google.android.things:androidthings:+'
-    compile 'com.github.MichaelColville:AndroidThings-ADXL345:update-DP6-SNAPSHOT'
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation 'com.github.MichaelColville:AndroidThings-ADXL345:update-DP6-SNAPSHOT'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
