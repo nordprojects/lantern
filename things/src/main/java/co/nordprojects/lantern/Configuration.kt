@@ -3,9 +3,7 @@ package co.nordprojects.lantern
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import org.json.JSONObject
-import java.io.InputStreamReader
-import android.databinding.BaseObservable
-import android.databinding.Bindable
+import java.util.*
 
 /**
  * Provides access to, and persists, projector configuration.
@@ -33,7 +31,7 @@ class ConfigurationManager(val context: Context) {
     }
 }
 
-class AppConfiguration: BaseObservable() {
+class AppConfiguration: Observable() {
     class Planes {
         var up = ChannelConfigurationBlank
         var forward = ChannelConfigurationBlank
@@ -47,7 +45,7 @@ class AppConfiguration: BaseObservable() {
             ))
         }
     }
-    @Bindable val planes = Planes()
+    val planes = Planes()
 
     fun updateWithJson(json: JSONObject) {
         val planesJson = json.getJSONObject("planes")
@@ -56,7 +54,8 @@ class AppConfiguration: BaseObservable() {
         planes.forward = ChannelConfiguration(planesJson.getJSONObject("forward"))
         planes.down = ChannelConfiguration(planesJson.getJSONObject("down"))
 
-        notifyPropertyChanged(BR.planes)
+        setChanged()
+        notifyObservers()
     }
 
     fun toJson(): JSONObject {
