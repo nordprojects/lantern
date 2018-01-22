@@ -2,6 +2,10 @@ package co.nordprojects.lantern
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import android.os.Parcel
+import android.os.Parcelable
+import kotlinx.android.parcel.Parceler
+import kotlinx.android.parcel.Parcelize
 import org.json.JSONObject
 import java.util.*
 
@@ -33,9 +37,9 @@ class ConfigurationManager(val context: Context) {
 
 class AppConfiguration: Observable() {
     class Planes {
-        var up = ChannelConfigurationBlank
-        var forward = ChannelConfigurationBlank
-        var down = ChannelConfigurationBlank
+        var up = ChannelConfiguration.blank
+        var forward = ChannelConfiguration.blank
+        var down = ChannelConfiguration.blank
 
         fun toJson(): JSONObject {
             return JSONObject(mapOf<String, Any>(
@@ -65,23 +69,41 @@ class AppConfiguration: Observable() {
     }
 }
 
-class ChannelConfiguration(val type: String, val settings: JSONObject, val secret: JSONObject?) {
+@Parcelize
+class ChannelConfiguration(val type: String, val settings: JSONObject, val secret: JSONObject?) : Parcelable {
     constructor(json: JSONObject) : this(
             json.getString("type"),
             jsonObjectRemovingSecret(json),
             json.optJSONObject("secret"))
 
-    fun toJson(): JSONObject {
-        return JSONObject(mapOf(
-                "settings" to settings
-        ))
+    fun toJson(includingSecrets: Boolean = false): JSONObject {
+        val json = settings.clone()
+        json.put("type", type)
+        if (includingSecrets) {
+            json.put("secret", secret)
+        }
+        return json
+    }
+
+    companion object : Parceler<ChannelConfiguration> {
+        val blank: ChannelConfiguration
+            get() = ChannelConfiguration(JSONObject("{\"type\": \"blank\"}"))
+
+        override fun ChannelConfiguration.write(parcel: Parcel, flags: Int) {
+            parcel.writeString(toJson(includingSecrets = true).toString())
+        }
+        override fun create(parcel: Parcel): ChannelConfiguration {
+            return ChannelConfiguration(JSONObject(parcel.readString()))
+        }
     }
 }
 
-val ChannelConfigurationBlank = ChannelConfiguration(JSONObject("{\"type\": \"blank\"}"))
-
 private fun jsonObjectRemovingSecret(json: JSONObject): JSONObject {
-    val copy = JSONObject(json, json.keys().asSequence().toList().toTypedArray())
+    val copy = json.clone()
     copy.remove("secret")
     return copy
+}
+
+fun JSONObject.clone(): JSONObject {
+    return JSONObject(this, keys().asSequence().toList().toTypedArray())
 }

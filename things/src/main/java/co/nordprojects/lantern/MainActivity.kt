@@ -14,7 +14,7 @@ class MainActivity : Activity() {
 
     lateinit var frameLayout: FrameLayout
     val accelerometer = Accelerometer()
-    val accelerometerObserver = Observer { o, arg -> accelerometerUpdated() }
+    val accelerometerObserver = Observer { _, _ -> accelerometerUpdated() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
