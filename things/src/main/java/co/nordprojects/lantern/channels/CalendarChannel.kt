@@ -9,11 +9,7 @@ import co.nordprojects.lantern.ChannelConfiguration
 
 import co.nordprojects.lantern.R
 
-class CalendarChannel(config: ChannelConfiguration) : Channel(config) {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
+class CalendarChannel() : Channel() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment

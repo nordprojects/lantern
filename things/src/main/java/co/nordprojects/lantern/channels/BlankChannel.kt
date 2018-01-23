@@ -14,8 +14,7 @@ import co.nordprojects.lantern.ChannelConfiguration
  *
  * Created by joerick on 23/01/18.
  */
-@SuppressLint("ValidFragment")
-class BlankChannel(config: ChannelConfiguration) : Channel(config) {
+class BlankChannel() : Channel() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = View(this.context)

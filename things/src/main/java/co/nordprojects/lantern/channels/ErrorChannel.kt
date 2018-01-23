@@ -17,12 +17,12 @@ import co.nordprojects.lantern.ChannelConfiguration
  *
  * Created by joerick on 23/01/18.
  */
-@SuppressLint("ValidFragment")
-class ErrorChannel(config: ChannelConfiguration) : Channel(config) {
+class ErrorChannel() : Channel() {
     val errorMessage: String
-        get() = config.settings.getString("message")
+        get() = arguments.getString(ARG_MESSAGE)
 
-    constructor(errorMessage: String) : this(ChannelConfiguration.error(errorMessage)) {
+    companion object {
+        val ARG_MESSAGE = "message"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

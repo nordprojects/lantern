@@ -11,18 +11,11 @@ import android.util.AttributeSet
  * Created by joerick on 18/01/18.
  */
 open class Channel(): Fragment() {
-    lateinit var config: ChannelConfiguration
-    private val CONFIG_ARGS_KEY = "config"
-
-    @SuppressLint("ValidFragment")
-    constructor(config: ChannelConfiguration) : this() {
-        val args = Bundle()
-        args.putParcelable(CONFIG_ARGS_KEY, config)
-        this.arguments = args
+    val config: ChannelConfiguration by lazy {
+        arguments.getParcelable<ChannelConfiguration>(ARG_CONFIG)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        config = arguments.getParcelable<ChannelConfiguration>(CONFIG_ARGS_KEY)
+    companion object {
+        val ARG_CONFIG = "config"
     }
 }

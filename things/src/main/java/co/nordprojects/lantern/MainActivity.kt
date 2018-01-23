@@ -109,10 +109,19 @@ class MainActivity : Activity() {
     }
 
     private fun newChannelForConfig(config: ChannelConfiguration): Channel {
-        when (config.type) {
-            "calendar-countdown" -> return CalendarChannel(config)
-            "blank" -> return BlankChannel(config)
-            else -> return ErrorChannel("Unknown channel type '${config.type}'")
+        val args = Bundle()
+        args.putParcelable(Channel.ARG_CONFIG, config)
+
+        val channel = when (config.type) {
+            "calendar-countdown" -> CalendarChannel()
+            "blank" -> BlankChannel()
+            else -> {
+                args.putString(ErrorChannel.ARG_MESSAGE, "Unknown channel type '${config.type}'")
+                ErrorChannel()
+            }
         }
+
+        channel.arguments = args
+        return channel
     }
 }
