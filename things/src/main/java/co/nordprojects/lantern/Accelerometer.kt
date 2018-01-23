@@ -69,7 +69,8 @@ class Accelerometer: Observable(), AutoCloseable {
         val (bestDirection, bestDirectionScore) = directionsWithScore.sortedBy { it.second }.last()
 
         // if the best direction has a score greater than 0.8, change the direction property
-        if (bestDirection != this.direction && bestDirectionScore > 0.8) {
+        if (this.direction == null
+                || (bestDirection != this.direction && bestDirectionScore > 0.8)) {
             this.direction = bestDirection
             setChanged()
 

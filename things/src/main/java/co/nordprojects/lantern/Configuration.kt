@@ -4,9 +4,12 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.os.Parcel
 import android.os.Parcelable
+import android.util.Log
 import kotlinx.android.parcel.Parceler
 import kotlinx.android.parcel.Parcelize
 import org.json.JSONObject
+import java.io.File
+import java.io.FileNotFoundException
 import java.util.*
 
 /**
@@ -15,23 +18,36 @@ import java.util.*
  * Created by joerick on 16/01/18.
  */
 class ConfigurationManager(val context: Context) {
+    val TAG = ConfigurationManager::class.java.simpleName
     val CONFIG_FILE_PATH = "config.json"
     val appConfig = AppConfiguration()
+    val appConfigObserver = Observer { _, _ -> save() }
 
     init {
         load()
+        appConfig.addObserver(appConfigObserver)
     }
 
     private fun load(): Unit {
-        val file = context.openFileInput(CONFIG_FILE_PATH)
-        val jsonObject = JSONObject(file.reader().readText())
-
-        appConfig.updateWithJson(jsonObject)
+        try {
+            val file = context.openFileInput(CONFIG_FILE_PATH)
+            val jsonObject = JSONObject(file.reader().readText())
+            file.close()
+            appConfig.updateWithJson(jsonObject)
+        }
+        catch (e: FileNotFoundException) {
+            Log.w(TAG, "Failed to load settings file.", e)
+        }
     }
 
     private fun save(): Unit {
         val file = context.openFileOutput(CONFIG_FILE_PATH, MODE_PRIVATE)
-        file.writer().write(appConfig.toJson().toString(2))
+        val fileWriter = file.writer()
+        fileWriter.write(appConfig.toJson().toString(2))
+        fileWriter.close()
+        file.close()
+
+        Log.d(TAG, "Saved settings to ${CONFIG_FILE_PATH}")
     }
 }
 
@@ -87,7 +103,13 @@ class ChannelConfiguration(val type: String, val settings: JSONObject, val secre
 
     companion object : Parceler<ChannelConfiguration> {
         val blank: ChannelConfiguration
-            get() = ChannelConfiguration(JSONObject("{\"type\": \"blank\"}"))
+            get() = ChannelConfiguration(JSONObject("""{"type": "blank"}"""))
+
+        fun error(message: String): ChannelConfiguration {
+            val config = JSONObject("""{"type": "error"}""")
+            config.put("message", message)
+            return ChannelConfiguration(config)
+        }
 
         override fun ChannelConfiguration.write(parcel: Parcel, flags: Int) {
             parcel.writeString(toJson(includingSecrets = true).toString())

@@ -6,25 +6,43 @@ import android.os.Bundle
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import co.nordprojects.lantern.channels.BlankChannel
+import co.nordprojects.lantern.channels.CalendarChannel
+import co.nordprojects.lantern.channels.ErrorChannel
+import org.json.JSONObject
 import java.util.*
 
 
 class MainActivity : Activity() {
     val TAG = MainActivity::class.java.simpleName
 
-    lateinit var frameLayout: FrameLayout
     val accelerometer = Accelerometer()
     val accelerometerObserver = Observer { _, _ -> accelerometerUpdated() }
+    val channels = mutableMapOf<Direction, Channel>()
+    var visibleChannel: Channel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        frameLayout = FrameLayout(this)
-        frameLayout.foregroundGravity = 77 // 'fill'
-
         accelerometer.addObserver(accelerometerObserver)
 
-        setContentView(frameLayout)
+        // TODO(joerick): remove this! 🔥🔥🔥🔥
+        App.instance.config.updateWithJson(JSONObject(
+                """{
+                    "planes": {
+                        "up": {
+                            "type": "blank"
+                        },
+                        "forward": {
+                            "type": "calendar-countdown"
+                        },
+                        "down": {
+                            "type": "blork"
+                        }
+                    }
+                }"""))
+
+        setContentView(R.layout.main_activity_layout)
+        updateChannels()
         Log.d(TAG, "Main activity created.")
     }
 
@@ -36,6 +54,7 @@ class MainActivity : Activity() {
 
     override fun onStart() {
         super.onStart()
+        updateVisibleChannel()
         accelerometer.startUpdating()
         Log.d(TAG, "Main activity started.")
     }
@@ -48,5 +67,52 @@ class MainActivity : Activity() {
 
     private fun accelerometerUpdated() {
         Log.d(TAG, "accelerometer direction updated to ${accelerometer.direction}")
+        updateVisibleChannel()
+    }
+
+    private fun updateChannels() {
+        val configDict = mapOf<Direction, ChannelConfiguration>(
+                Direction.UP to App.instance.config.planes.up,
+                Direction.FORWARD to App.instance.config.planes.forward,
+                Direction.DOWN to App.instance.config.planes.down
+        )
+
+        for (direction in Direction.values()) {
+            val incomingChannelConfig = configDict[direction]!!
+            val prevChannel = channels[direction]
+
+            val needsRefresh =
+                    if (prevChannel == null) {
+                        true
+                    } else {
+                        (incomingChannelConfig  != prevChannel.config)
+                    }
+
+            if (needsRefresh) {
+                val newChannel = newChannelForConfig(incomingChannelConfig)
+                channels[direction] = newChannel
+                Log.i(TAG, "Channel for ${direction} is now ${newChannel}")
+                updateVisibleChannel()
+            }
+        }
+    }
+
+    private fun updateVisibleChannel() {
+        val newVisibleChannel = channels[accelerometer.direction]
+        if (visibleChannel == newVisibleChannel) {
+            return
+        }
+
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.viewGroup, newVisibleChannel)
+        transaction.commit()
+    }
+
+    private fun newChannelForConfig(config: ChannelConfiguration): Channel {
+        when (config.type) {
+            "calendar-countdown" -> return CalendarChannel(config)
+            "blank" -> return BlankChannel(config)
+            else -> return ErrorChannel("Unknown channel type '${config.type}'")
+        }
     }
 }

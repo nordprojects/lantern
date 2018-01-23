@@ -12,21 +12,17 @@ import android.util.AttributeSet
  */
 open class Channel(): Fragment() {
     lateinit var config: ChannelConfiguration
+    private val CONFIG_ARGS_KEY = "config"
 
     @SuppressLint("ValidFragment")
     constructor(config: ChannelConfiguration) : this() {
         val args = Bundle()
-        args.putParcelable("config", config)
+        args.putParcelable(CONFIG_ARGS_KEY, config)
         this.arguments = args
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        config
-    }
-
-    override fun onStart() {
-        super.onStart()
-//        config = intent.getStringExtra("configJson")
+        config = arguments.getParcelable<ChannelConfiguration>(CONFIG_ARGS_KEY)
     }
 }
