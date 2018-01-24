@@ -78,7 +78,17 @@ class ConfigurationConnection(val transport: ConfigurationConnectionTransport) {
     }
 
     fun onMessageReceived(message: ConfigurationMessage) {
-        Log.d(TAG, "Received message from ${transport.endpointId}. ${message}")
+        Log.d(TAG, "Received message from ${transport.endpointId}. $message")
+
+        when (message.type) {
+            ConfigurationMessage.Type.SetPlane -> {
+                App.instance.config.updatePlane(
+                        message.arguments.getString("plane"),
+                        message.body!!
+                )
+            }
+            else -> { throw IllegalArgumentException("Can't handle message type ${message.type}") }
+        }
     }
 
     fun onDisconnected() {

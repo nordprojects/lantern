@@ -9,6 +9,7 @@ import android.util.Log
 import co.nordprojects.lantern.shared.clone
 import kotlinx.android.parcel.Parceler
 import kotlinx.android.parcel.Parcelize
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.FileNotFoundException
 import java.util.*
@@ -39,6 +40,9 @@ class ConfigurationManager(val context: Context) {
         catch (e: FileNotFoundException) {
             Log.w(TAG, "Failed to load settings file.", e)
         }
+        catch (e: JSONException) {
+            Log.w(TAG, "Corrupt settings file", e)
+        }
     }
 
     private fun save(): Unit {
@@ -53,35 +57,47 @@ class ConfigurationManager(val context: Context) {
 }
 
 class AppConfiguration: Observable() {
-    class Planes {
-        var up = ChannelConfiguration.blank
-        var forward = ChannelConfiguration.blank
-        var down = ChannelConfiguration.blank
+    private val _planes = mutableMapOf<Direction, ChannelConfiguration>(
+            Direction.UP to ChannelConfiguration.blank,
+            Direction.FORWARD to ChannelConfiguration.blank,
+            Direction.DOWN to ChannelConfiguration.blank
+    )
+    val planes: Map<Direction, ChannelConfiguration>
+        get() = _planes
 
-        fun toJson(): JSONObject {
-            return JSONObject(mapOf<String, Any>(
-                    "up" to up.toJson(),
-                    "forward" to forward.toJson(),
-                    "down" to down.toJson()
-            ))
+    fun updatePlane(jsonDirection: String, jsonConfig: JSONObject, skipNotify: Boolean = false) {
+        val direction = when (jsonDirection) {
+            "up" -> Direction.UP
+            "forward" -> Direction.FORWARD
+            "down" -> Direction.DOWN
+            else -> { throw IllegalArgumentException("Unknown direction $jsonDirection") }
+        }
+
+        _planes[direction] = ChannelConfiguration(jsonConfig)
+
+        setChanged()
+        if (!skipNotify) {
+            notifyObservers()
         }
     }
-    val planes = Planes()
 
     fun updateWithJson(json: JSONObject) {
         val planesJson = json.getJSONObject("planes")
 
-        planes.up = ChannelConfiguration(planesJson.getJSONObject("up"))
-        planes.forward = ChannelConfiguration(planesJson.getJSONObject("forward"))
-        planes.down = ChannelConfiguration(planesJson.getJSONObject("down"))
+        updatePlane("up", planesJson.getJSONObject("up"), skipNotify = true)
+        updatePlane("forward", planesJson.getJSONObject("forward"), skipNotify = true)
+        updatePlane("down", planesJson.getJSONObject("down"), skipNotify = true)
 
-        setChanged()
         notifyObservers()
     }
 
     fun toJson(): JSONObject {
         return JSONObject(mapOf(
-                "planes" to planes.toJson()
+                "planes" to mapOf(
+                        "up" to planes[Direction.UP]?.toJson(includingSecrets = true),
+                        "forward" to planes[Direction.FORWARD]?.toJson(includingSecrets = true),
+                        "down" to planes[Direction.DOWN]?.toJson(includingSecrets = true)
+                )
         ))
     }
 }
@@ -91,7 +107,9 @@ class AppConfiguration: Observable() {
 class ChannelConfiguration(val type: String, val settings: JSONObject, val secret: JSONObject?) : Parcelable {
     constructor(json: JSONObject) : this(
             json.getString("type"),
-            jsonObjectRemovingSecret(json),
+            json.clone().also {
+                it.remove("secret")
+            },
             json.optJSONObject("secret")
     )
 
@@ -121,10 +139,4 @@ class ChannelConfiguration(val type: String, val settings: JSONObject, val secre
             return ChannelConfiguration(JSONObject(parcel.readString()))
         }
     }
-}
-
-private fun jsonObjectRemovingSecret(json: JSONObject): JSONObject {
-    val copy = json.clone()
-    copy.remove("secret")
-    return copy
 }

@@ -18,12 +18,14 @@ class MainActivity : Activity() {
 
     val accelerometer = Accelerometer()
     val accelerometerObserver = Observer { _, _ -> accelerometerUpdated() }
+    val appConfigObserver = Observer { _, _ -> appConfigUpdated() }
     val channels = mutableMapOf<Direction, Channel>()
     var visibleChannel: Channel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         accelerometer.addObserver(accelerometerObserver)
+        App.instance.config.addObserver(appConfigObserver)
 
         // TODO(joerick): remove this! 🔥🔥🔥🔥
         App.instance.config.updateWithJson(JSONObject(
@@ -49,6 +51,7 @@ class MainActivity : Activity() {
     override fun onDestroy() {
         super.onDestroy()
         accelerometer.deleteObserver(accelerometerObserver)
+        App.instance.config.deleteObserver(appConfigObserver)
         accelerometer.close()
     }
 
@@ -70,15 +73,14 @@ class MainActivity : Activity() {
         updateVisibleChannel()
     }
 
-    private fun updateChannels() {
-        val configDict = mapOf<Direction, ChannelConfiguration>(
-                Direction.UP to App.instance.config.planes.up,
-                Direction.FORWARD to App.instance.config.planes.forward,
-                Direction.DOWN to App.instance.config.planes.down
-        )
+    private fun appConfigUpdated() {
+        updateChannels()
+        updateVisibleChannel()
+    }
 
+    private fun updateChannels() {
         for (direction in Direction.values()) {
-            val incomingChannelConfig = configDict[direction]!!
+            val incomingChannelConfig = App.instance.config.planes[direction]!!
             val prevChannel = channels[direction]
 
             val needsRefresh =

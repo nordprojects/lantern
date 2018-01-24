@@ -8,13 +8,39 @@ import com.google.android.gms.nearby.connection.PayloadTransferUpdate
 import com.google.android.gms.tasks.Task
 import org.json.JSONObject
 
-
-data class ConfigurationMessage(val type: String,
-                                val arguments: JSONObject? = null,
+/**
+ * Describes a configuration message as sent to/from the projector over Nearby.
+ *
+ * See appendix of
+ * https://docs.google.com/presentation/d/1_CN25gQte2tOFkQx5syV5iguWDHzroUSsXSrBZzaMqY
+ * for message format.
+ */
+data class ConfigurationMessage(val type: Type,
+                                val arguments: JSONObject = JSONObject(),
                                 val body: JSONObject? = null) {
+    enum class Type(val jsonName: String) {
+        Error("error"),
+        StateUpdate("state-update"),
+        AvailableChannels("available-channels"),
+        SetPlane("set-plane"),
+        ListAvailableChannels("list-available-channels"),
+        Reset("reset");
+
+        companion object {
+            fun withJsonName(jsonName: String): Type {
+                val result = Type.values().find { it.jsonName == jsonName }
+
+                if (result == null) {
+                    throw IllegalArgumentException("Unknown message type '$jsonName'")
+                }
+
+                return result
+            }
+        }
+    }
 
     constructor(json: JSONObject) : this(
-            json.getString("type"),
+            Type.withJsonName(json.getString("type")),
             json.clone().also {
                 it.remove("type")
                 it.remove("body")
@@ -25,8 +51,8 @@ data class ConfigurationMessage(val type: String,
     constructor(jsonBytes: ByteArray) : this(JSONObject(String(jsonBytes)))
 
     fun toJson(): JSONObject {
-        val json = arguments?.clone() ?: JSONObject()
-        json.put("type", type)
+        val json = arguments.clone()
+        json.put("type", type.name)
         json.put("body", body)
         return json
     }
@@ -43,7 +69,8 @@ class ConfigurationConnectionTransport(val client: ConnectionsClient,
 
     enum class ResponseErrorType {
         BadPayloadType,
-        MessageDecodeError
+        MessageDecodeError,
+        UnexpectedErrorWhileHandlingMessage
     }
     val payloadCallback = object : PayloadCallback() {
         override fun onPayloadReceived(endpointId: String, payload: Payload) {
@@ -63,7 +90,14 @@ class ConfigurationConnectionTransport(val client: ConnectionsClient,
                 return
             }
 
-            onMessageReceived?.invoke(message)
+            try {
+                onMessageReceived?.invoke(message)
+            }
+            catch (e: Exception) {
+                Log.e(TAG, "Error while handling message $message", e)
+                sendErrorMessage(ResponseErrorType.UnexpectedErrorWhileHandlingMessage)
+                return
+            }
         }
 
         override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {
@@ -75,8 +109,11 @@ class ConfigurationConnectionTransport(val client: ConnectionsClient,
         return client.sendPayload(endpointId, Payload.fromBytes(messageBytes))
     }
     fun sendErrorMessage(errorType: ResponseErrorType): Task<Void> {
-        val errorMessage = ConfigurationMessage("error", null,
-                JSONObject(mapOf("type" to errorType.name))
+        val errorMessage = ConfigurationMessage(
+                ConfigurationMessage.Type.Error,
+                body = JSONObject(mapOf(
+                        "type" to errorType.name
+                ))
         )
         return sendMessage(errorMessage)
     }
