@@ -8,7 +8,6 @@ import android.util.Log
 import kotlinx.android.parcel.Parceler
 import kotlinx.android.parcel.Parcelize
 import org.json.JSONObject
-import java.io.File
 import java.io.FileNotFoundException
 import java.util.*
 

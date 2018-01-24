@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import co.nordprojects.lantern.Channel
-import co.nordprojects.lantern.ChannelConfiguration
-
 import co.nordprojects.lantern.R
 
 class CalendarChannel() : Channel() {

@@ -1,13 +1,11 @@
 package co.nordprojects.lantern.channels
 
-import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import co.nordprojects.lantern.Channel
-import co.nordprojects.lantern.ChannelConfiguration
 
 /**
  * A full black channel.

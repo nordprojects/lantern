@@ -1,6 +1,5 @@
 package co.nordprojects.lantern.channels
 
-import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import co.nordprojects.lantern.Channel
-import co.nordprojects.lantern.ChannelConfiguration
 
 
 /**

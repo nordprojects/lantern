@@ -1,11 +1,8 @@
 package co.nordprojects.lantern
 
 import android.app.Activity
-import android.app.Fragment
 import android.os.Bundle
 import android.util.Log
-import android.view.ViewGroup
-import android.widget.FrameLayout
 import co.nordprojects.lantern.channels.BlankChannel
 import co.nordprojects.lantern.channels.CalendarChannel
 import co.nordprojects.lantern.channels.ErrorChannel
