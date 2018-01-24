@@ -2,7 +2,9 @@ package co.nordprojects.lantern
 
 import android.os.Build
 
-
+/**
+ * Holds the hardware-specific parameters of the app.
+ */
 object BoardDefaults {
     private val DEVICE_RPI3 = "rpi3"
 

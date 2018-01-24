@@ -9,7 +9,10 @@ import co.nordprojects.lantern.channels.ErrorChannel
 import org.json.JSONObject
 import java.util.*
 
-
+/**
+ * The main activity coordinates the display of channels, depending on the current orientation
+ * and the config.
+ */
 class MainActivity : Activity() {
     val TAG = MainActivity::class.java.simpleName
 
