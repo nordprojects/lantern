@@ -14,13 +14,13 @@ import java.util.*
  * and the config.
  */
 class MainActivity : Activity() {
-    val TAG = MainActivity::class.java.simpleName
+    private val TAG = MainActivity::class.java.simpleName
 
-    val accelerometer = Accelerometer()
-    val accelerometerObserver = Observer { _, _ -> accelerometerUpdated() }
-    val appConfigObserver = Observer { _, _ -> appConfigUpdated() }
-    val channels = mutableMapOf<Direction, Channel>()
-    var visibleChannel: Channel? = null
+    private val accelerometer = Accelerometer()
+    private val accelerometerObserver = Observer { _, _ -> accelerometerUpdated() }
+    private val appConfigObserver = Observer { _, _ -> appConfigUpdated() }
+    private val channels = mutableMapOf<Direction, Channel>()
+    private var visibleChannel: Channel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,13 +87,13 @@ class MainActivity : Activity() {
                     if (prevChannel == null) {
                         true
                     } else {
-                        (incomingChannelConfig  != prevChannel.config)
+                        (incomingChannelConfig != prevChannel.config)
                     }
 
             if (needsRefresh) {
                 val newChannel = newChannelForConfig(incomingChannelConfig)
                 channels[direction] = newChannel
-                Log.i(TAG, "Channel for ${direction} is now ${newChannel}")
+                Log.i(TAG, "Channel for $direction is now $newChannel")
                 updateVisibleChannel()
             }
         }
