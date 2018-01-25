@@ -1,0 +1,40 @@
+package co.nordprojects.lantern.home
+
+import android.content.Intent
+import android.support.v7.app.AppCompatActivity
+import android.os.Bundle
+import co.nordprojects.lantern.R
+import co.nordprojects.lantern.channels.ChannelsListActivity
+import co.nordprojects.lantern.settings.SettingsActivity
+import kotlinx.android.synthetic.main.activity_home.*
+import java.nio.channels.Channels
+
+class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSelectedListener {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_home)
+
+        settings_button.setOnClickListener { showSettings() }
+
+        val projectorFragment = ProjectorDisplayFragment()
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.add(R.id.fragment_container, projectorFragment)
+        fragmentTransaction.commit()
+    }
+
+    override fun onDirectionSelected(direction: String) {
+        showChannelList(direction)
+    }
+
+    private fun showSettings() {
+        val intent = Intent(this, SettingsActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun showChannelList(direction: String) {
+        val intent = Intent(this, ChannelsListActivity::class.java)
+        intent.putExtra("direction", direction)
+        startActivity(intent)
+    }
+}
