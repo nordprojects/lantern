@@ -2,6 +2,7 @@ package co.nordprojects.lantern
 
 import android.os.Handler
 import android.os.Looper
+import co.nordprojects.lantern.shared.Direction
 import com.cacaosd.adxl345.ADXL345
 import java.util.*
 import kotlin.concurrent.fixedRateTimer
@@ -11,24 +12,16 @@ import kotlin.concurrent.fixedRateTimer
  *
  * Created by joerick on 22/01/18.
  */
-enum class Direction {
-    UP {
-        override val vector: Vector3D
-            get() = Vector3D(0.0, 0.0, -1.0)
-    },
-    FORWARD {
-        override val vector: Vector3D
-            get() = Vector3D(0.0, 1.0, 0.0)
-    },
-    DOWN {
-        override val vector: Vector3D
-            get() = Vector3D(0.0, 0.0, 1.0)
-    };
 
-    abstract val vector: Vector3D
-    fun alignmentWithVector(vector: Vector3D): Double {
-        return this.vector.normalized().dot(vector.normalized())
+val Direction.vector: Vector3D get() {
+    return when (this) {
+        Direction.UP -> Vector3D(0.0, 0.0, -1.0)
+        Direction.FORWARD -> Vector3D(0.0, 1.0, 0.0)
+        Direction.DOWN -> Vector3D(0.0, 0.0, 1.0)
     }
+}
+fun Direction.alignmentWithVector(vector: Vector3D): Double {
+    return this.vector.normalized().dot(vector.normalized())
 }
 
 class Accelerometer: Observable(), AutoCloseable {

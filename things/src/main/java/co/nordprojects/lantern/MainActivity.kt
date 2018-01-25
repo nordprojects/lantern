@@ -6,6 +6,7 @@ import android.util.Log
 import co.nordprojects.lantern.channels.BlankChannel
 import co.nordprojects.lantern.channels.CalendarChannel
 import co.nordprojects.lantern.channels.ErrorChannel
+import co.nordprojects.lantern.shared.Direction
 import org.json.JSONObject
 import java.util.*
 
@@ -16,7 +17,6 @@ import java.util.*
 class MainActivity : Activity() {
     private val TAG = MainActivity::class.java.simpleName
 
-    private val accelerometer = Accelerometer()
     private val accelerometerObserver = Observer { _, _ -> accelerometerUpdated() }
     private val appConfigObserver = Observer { _, _ -> appConfigUpdated() }
     private val channels = mutableMapOf<Direction, Channel>()
@@ -24,7 +24,7 @@ class MainActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        accelerometer.addObserver(accelerometerObserver)
+        App.instance.accelerometer.addObserver(accelerometerObserver)
         App.instance.config.addObserver(appConfigObserver)
 
         // TODO(joerick): remove this! 🔥🔥🔥🔥
@@ -50,26 +50,23 @@ class MainActivity : Activity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        accelerometer.deleteObserver(accelerometerObserver)
+        App.instance.accelerometer.deleteObserver(accelerometerObserver)
         App.instance.config.deleteObserver(appConfigObserver)
-        accelerometer.close()
     }
 
     override fun onStart() {
         super.onStart()
         updateVisibleChannel()
-        accelerometer.startUpdating()
         Log.d(TAG, "Main activity started.")
     }
 
     override fun onStop() {
         super.onStop()
-        accelerometer.stopUpdating()
         Log.d(TAG, "Main activity stopped.")
     }
 
     private fun accelerometerUpdated() {
-        Log.d(TAG, "accelerometer direction updated to ${accelerometer.direction}")
+        Log.d(TAG, "accelerometer direction updated to ${App.instance.accelerometer.direction}")
         updateVisibleChannel()
     }
 
@@ -100,7 +97,7 @@ class MainActivity : Activity() {
     }
 
     private fun updateVisibleChannel() {
-        val newVisibleChannel = channels[accelerometer.direction]
+        val newVisibleChannel = channels[App.instance.accelerometer.direction]
         if (visibleChannel == newVisibleChannel) {
             return
         }
