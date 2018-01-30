@@ -67,7 +67,9 @@ class AppConfiguration: Observable() {
 
 @SuppressLint("ParcelCreator")
 @Parcelize
-class ChannelConfiguration(val type: String, val settings: JSONObject, val secret: JSONObject?) : Parcelable {
+class ChannelConfiguration(val type: String,
+                           val settings: JSONObject,
+                           val secret: JSONObject?) : Parcelable {
     constructor(json: JSONObject) : this(
             json.getString("type"),
             json.clone().also {

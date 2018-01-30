@@ -13,11 +13,6 @@ class ProjectorSearchActivity : AppCompatActivity(), ProjectorSelectFragment.OnP
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_projector_search)
 
-        showProjectorSearchFragment()
-
-        Handler().postDelayed({
-            showProjectorListFragment()
-        }, 1500)
     }
 
     override fun onProjectorSelected(position: Int) {
@@ -27,7 +22,7 @@ class ProjectorSearchActivity : AppCompatActivity(), ProjectorSelectFragment.OnP
     private fun showProjectorSearchFragment() {
         val searchFragment = ProjectorSearchFragment()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.add(R.id.fragment_container, searchFragment)
+        fragmentTransaction.replace(R.id.fragment_container, searchFragment)
         fragmentTransaction.commit()
     }
 

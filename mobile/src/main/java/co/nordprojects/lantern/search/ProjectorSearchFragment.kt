@@ -9,11 +9,7 @@ import android.view.ViewGroup
 import co.nordprojects.lantern.R
 
 
-/**
- * A simple [Fragment] subclass.
- */
 class ProjectorSearchFragment : Fragment() {
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -21,4 +17,6 @@ class ProjectorSearchFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_projector_search, container, false)
     }
 
-}// Required empty public constructor
+
+
+}
