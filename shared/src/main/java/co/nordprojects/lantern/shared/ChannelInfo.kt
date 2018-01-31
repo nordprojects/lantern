@@ -10,7 +10,7 @@ import org.json.JSONObject
 data class ChannelInfo(val id: String,
                        val name: String,
                        val description: String,
-                       val iconUri: Uri?) {
+                       val iconUri: Uri? = null) {
     constructor(json: JSONObject) : this(
             json.getString("id"),
             json.getString("name"),
