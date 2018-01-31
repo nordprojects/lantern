@@ -33,8 +33,8 @@ object ChannelsRegistry {
             )),
             Pair(::LampChannel, ChannelInfo(
                     "lamp",
-                    "Lamp",
-                    "Sometimes you just want a dumb lamp."
+                    "Spotlight",
+                    "Bring a little drama to your desk."
             )),
             Pair(::BlankChannel, ChannelInfo(
                     "blank",
@@ -61,7 +61,7 @@ object ChannelsRegistry {
         // write data uri header
         outputStream.write("data:image/webp;base64,".toByteArray())
 
-        // write base64-encoded png data
+        // write base64-encoded webp data
         val success = bitmap.compress(
                 Bitmap.CompressFormat.WEBP,
                 20,
