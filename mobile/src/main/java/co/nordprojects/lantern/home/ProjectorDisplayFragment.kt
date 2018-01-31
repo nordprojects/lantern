@@ -80,7 +80,15 @@ class ProjectorDisplayFragment : Fragment() {
         for (direction in Direction.values()) {
             val channel = App.instance.projector!!.planes[direction]!!
             val view = planeViews[direction]!!
-            view.text = channel.type
+
+            val channelInfo = App.instance.projector!!.channelInfoForChannelType(channel.type)
+
+            if (channelInfo == null) {
+                view.text = channel.type
+            } else {
+                view.text = channelInfo.name
+            }
+
         }
 
         directionTextView.text = App.instance.projector!!.direction.name
