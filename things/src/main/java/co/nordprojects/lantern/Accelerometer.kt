@@ -2,8 +2,10 @@ package co.nordprojects.lantern
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import co.nordprojects.lantern.shared.Direction
 import com.cacaosd.adxl345.ADXL345
+import java.io.IOException
 import java.util.*
 import kotlin.concurrent.fixedRateTimer
 
@@ -25,6 +27,8 @@ fun Direction.alignmentWithVector(vector: Vector3D): Double {
 }
 
 class Accelerometer: Observable(), AutoCloseable {
+    val TAG = this::class.java.simpleName
+
     val device = ADXL345(BoardDefaults.busForAccelerometer)
     var updateTimer: Timer? = null
     var direction: Direction? = null
@@ -34,8 +38,16 @@ class Accelerometer: Observable(), AutoCloseable {
         if (updateTimer != null) {
             stopUpdating()
         }
+
+        update()
+
         updateTimer = fixedRateTimer("Accelerometer", startAt = Date(), period = 200) {
-            update()
+            try {
+                update()
+            }
+            catch (e: IOException) {
+                Log.e(TAG, "Failed to update accelerometer.", e)
+            }
         }
     }
 

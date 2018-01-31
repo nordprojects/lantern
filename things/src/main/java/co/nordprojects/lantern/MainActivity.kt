@@ -32,13 +32,13 @@ class MainActivity : Activity() {
                 """{
                     "planes": {
                         "up": {
-                            "type": "blank"
+                            "type": "bat-signal"
                         },
                         "forward": {
-                            "type": "calendar-countdown"
+                            "type": "now-playing"
                         },
                         "down": {
-                            "type": "blork"
+                            "type": "lamp"
                         }
                     }
                 }"""))
@@ -110,14 +110,18 @@ class MainActivity : Activity() {
     private fun newChannelForConfig(config: ChannelConfiguration): Channel {
         val args = Bundle()
         args.putParcelable(Channel.ARG_CONFIG, config)
+        var channel: Channel? = null
 
-        val channel = when (config.type) {
-            "calendar-countdown" -> CalendarChannel()
-            "blank" -> BlankChannel()
-            else -> {
-                args.putString(ErrorChannel.ARG_MESSAGE, "Unknown channel type '${config.type}'")
-                ErrorChannel()
+        for ((channelConstructor, info) in ChannelsRegistry.channelsWithInfo) {
+            if (info.id == config.type) {
+                channel = channelConstructor()
+                break
             }
+        }
+
+        if (channel == null) {
+            channel = ErrorChannel()
+            args.putString(ErrorChannel.ARG_MESSAGE, "Unknown channel type '${config.type}'")
         }
 
         channel.arguments = args

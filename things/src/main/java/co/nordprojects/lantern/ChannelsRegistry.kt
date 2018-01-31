@@ -5,8 +5,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Base64
 import android.util.Base64OutputStream
-import co.nordprojects.lantern.channels.CalendarChannel
-import co.nordprojects.lantern.channels.NowPlayingChannel
+import co.nordprojects.lantern.channels.*
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -30,6 +29,21 @@ object ChannelsRegistry {
                     "Now Playing",
                     "Displays the track currently playing on your Cast-enabled speaker",
                     ChannelInfo.dataUriForDrawableResource(R.drawable.now_playing_icon)
+            )),
+            Pair(::LampChannel, ChannelInfo(
+                    "lamp",
+                    "Lamp",
+                    "Sometimes you just want a dumb lamp."
+            )),
+            Pair(::BlankChannel, ChannelInfo(
+                    "blank",
+                    "Blank",
+                    "Show nothing in this direction."
+            )),
+            Pair(::BatSignalChannel, ChannelInfo(
+                    "bat-signal",
+                    "The Bat Signal",
+                    "Summons the caped crusader to your location, as long as you're in Gotham. Only use in an emergency!"
             ))
     )
 
@@ -39,7 +53,7 @@ object ChannelsRegistry {
 data class ChannelInfo(val id: String,
                        val name: String,
                        val description: String,
-                       val iconUri: Uri?) {
+                       val iconUri: Uri? = null) {
     constructor(json: JSONObject) : this(
             json.getString("id"),
             json.getString("name"),
