@@ -52,7 +52,7 @@ data class ConfigurationMessage(val type: Type,
 
     fun toJson(): JSONObject {
         val json = arguments.clone()
-        json.put("type", type.name)
+        json.put("type", type.jsonName)
         json.put("body", body)
         return json
     }

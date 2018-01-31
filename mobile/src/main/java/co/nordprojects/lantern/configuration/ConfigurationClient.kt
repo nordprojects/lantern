@@ -11,17 +11,47 @@ import com.google.android.gms.tasks.OnSuccessListener
 /**
  * Created by Michael Colville on 29/01/2018.
  */
+
+data class Endpoint(val id: String, val info: DiscoveredEndpointInfo)
+
+enum class ConnectionState {
+    UNKNOWN,
+    LOOKING_FOR_ENDPOINTS,
+    ENDPOINTS_AVAILABLE,
+    CONNECTING_TO_ENDPOINT,
+    CONNECTED
+}
+
 class ConfigurationClient(val context: Context) {
 
     private val connectionsClient = Nearby.getConnectionsClient(context)
-    val endpoints: MutableList<DiscoveredEndpointInfo> = mutableListOf()
+    val endpoints: ArrayList<Endpoint> = arrayListOf()
     var activeConnection: ProjectorConfigurationConnection? = null
+    var listener: ConfigurationClientUpdatedListener? = null
+    var endpointsUpdatedListener: EndpointsUpdatedListener? = null
+    var connectionState: ConnectionState = ConnectionState.UNKNOWN
+        set(value) {
+            val oldValue = field
+            field = value
+            if (oldValue != value) {
+                listener?.onConfigurationClientUpdated()
+            }
+        }
 
     companion object {
         val TAG: String = ConfigurationClient::class.java.simpleName
     }
 
+    interface EndpointsUpdatedListener {
+        fun onEndpointsUpdated()
+    }
+
+    interface ConfigurationClientUpdatedListener {
+        fun onConfigurationClientUpdated()
+    }
+
     fun startDiscovery() {
+        connectionState = ConnectionState.LOOKING_FOR_ENDPOINTS
         connectionsClient.startDiscovery(
                 "co.nordprojects.lantern.projector",
                 endpointDiscoveryCallback,
@@ -31,6 +61,8 @@ class ConfigurationClient(val context: Context) {
     }
 
     fun connectTo(endpointId: String) {
+        connectionState = ConnectionState.CONNECTING_TO_ENDPOINT
+        Log.i(TAG, "connect to $endpointId")
         connectionsClient.requestConnection(
                 "device name", //TODO
                 endpointId,
@@ -43,12 +75,21 @@ class ConfigurationClient(val context: Context) {
         override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
             // TODO - add to endpoints, update fragment
             Log.i(TAG, "Endpoint found $endpointId")
-            endpoints.add(info)
+            endpoints.add(Endpoint(endpointId, info))
+            connectionState = ConnectionState.ENDPOINTS_AVAILABLE
+            endpointsUpdatedListener?.onEndpointsUpdated()
         }
 
         override fun onEndpointLost(endpointId: String) {
             // TODO - remove from endpoints, update fragment
             Log.i(TAG, "Endpoint lost $endpointId")
+            val endpoint = endpoints.find { it.id == endpointId }
+            endpoints.remove(endpoint)
+
+            if (endpoints.size == 0) {
+                connectionState = ConnectionState.LOOKING_FOR_ENDPOINTS
+            }
+            endpointsUpdatedListener?.onEndpointsUpdated()
         }
     }
 
@@ -65,6 +106,7 @@ class ConfigurationClient(val context: Context) {
         override fun onConnectionResult(endpointId: String, resolution: ConnectionResolution) {
             if (resolution.status.isSuccess) {
                 activeConnection?.onConnectionAccepted()
+                connectionState = ConnectionState.CONNECTED
             } else {
                 activeConnection?.onDisconnected()
                 activeConnection = null
@@ -72,6 +114,7 @@ class ConfigurationClient(val context: Context) {
         }
 
         override fun onDisconnected(endpointId: String) {
+            // TODO - decide what to do here. Show warning on HomeActivity or go back to SearchActivity?
             activeConnection?.onDisconnected()
             activeConnection = null
         }

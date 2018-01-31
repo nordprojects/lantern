@@ -4,19 +4,32 @@ package co.nordprojects.lantern.search
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import co.nordprojects.lantern.R
 import kotlinx.android.synthetic.main.fragment_projector_select.*
+import android.support.v7.widget.RecyclerView
+import android.util.Log
+import co.nordprojects.lantern.App
+import co.nordprojects.lantern.configuration.ConfigurationClient
+import co.nordprojects.lantern.configuration.Endpoint
+import com.google.android.gms.nearby.connection.DiscoveredEndpointInfo
+import kotlinx.android.synthetic.main.item_row_projector.view.*
 
 
-class ProjectorSelectFragment : Fragment() {
+class ProjectorSelectFragment : Fragment(),
+    ConfigurationClient.EndpointsUpdatedListener {
 
     private var mCallback: OnProjectorSelectedListener? = null
 
+    companion object {
+        var TAG: String = ProjectorSelectFragment::class.java.simpleName
+    }
+
     interface OnProjectorSelectedListener {
-        fun onProjectorSelected(position: Int)
+        fun onProjectorSelected(endpointID: String)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -26,9 +39,17 @@ class ProjectorSelectFragment : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        recyclerView.setHasFixedSize(true)
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.adapter = EndpointAdapter(App.instance.configClient.endpoints, mCallback)
 
-        button2.setOnClickListener { onProjectorClick(button2) }
-        button3.setOnClickListener { onProjectorClick(button3) }
+        App.instance.configClient.endpointsUpdatedListener = this
+    }
+
+    override fun onEndpointsUpdated() {
+        // TODO - Use LiveData or similar to observe changes
+        recyclerView.adapter = EndpointAdapter(App.instance.configClient.endpoints, mCallback)
+        recyclerView.invalidate()
     }
 
     override fun onAttach(context: Context?) {
@@ -36,8 +57,37 @@ class ProjectorSelectFragment : Fragment() {
         val activity = activity
         if (activity is OnProjectorSelectedListener) mCallback = activity
     }
+}
 
-    private fun onProjectorClick(view: View) {
-        mCallback?.onProjectorSelected(0)
+class EndpointAdapter(private val endpoints: ArrayList<Endpoint>,
+                      private val listener: ProjectorSelectFragment.OnProjectorSelectedListener?):
+        RecyclerView.Adapter<EndpointAdapter.ViewHolder>() {
+
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent?.context)
+                .inflate(R.layout.item_row_projector, parent, false)
+        return ViewHolder(view, listener)
+
+    }
+
+    override fun getItemCount(): Int {
+        return endpoints.size
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
+        holder?.bindEndpoint(endpoints[position])
+    }
+
+    class ViewHolder(var view: View,
+                     private val listener: ProjectorSelectFragment.OnProjectorSelectedListener?):
+            RecyclerView.ViewHolder(view) {
+
+        var endpoint: Endpoint? = null
+
+        fun bindEndpoint(endpoint: Endpoint) {
+            this.endpoint = endpoint
+            view.endpointIDTextView.text = "${endpoint.id} | ${endpoint.info.endpointName} | ${endpoint.info.serviceId}"
+            view.setOnClickListener { listener?.onProjectorSelected(endpoint.id) }
+        }
     }
 }

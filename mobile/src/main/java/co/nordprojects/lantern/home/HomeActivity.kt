@@ -7,6 +7,7 @@ import co.nordprojects.lantern.R
 import co.nordprojects.lantern.channels.ChannelsListActivity
 import co.nordprojects.lantern.settings.SettingsActivity
 import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.fragment_projector_display.*
 import java.nio.channels.Channels
 
 class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSelectedListener {
@@ -22,6 +23,7 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
         fragmentTransaction.add(R.id.fragment_container, projectorFragment)
         fragmentTransaction.commit()
     }
+
 
     override fun onDirectionSelected(direction: String) {
         showChannelList(direction)

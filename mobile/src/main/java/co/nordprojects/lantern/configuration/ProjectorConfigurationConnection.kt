@@ -13,14 +13,14 @@ class ProjectorConfigurationConnection(val transport: ConfigurationConnectionTra
         val TAG: String = ProjectorConfigurationConnection::class.java.simpleName
     }
 
+
+
     init {
         transport.onMessageReceived = { m -> onMessageReceived(m) }
     }
 
     fun onConnectionAccepted() {
         Log.i(TAG, "Connected to ${transport.endpointId}")
-
-        //TODO - create ProjectorConfig instance? or wait for state message?
     }
 
     private fun onMessageReceived(message: ConfigurationMessage) {
@@ -29,6 +29,9 @@ class ProjectorConfigurationConnection(val transport: ConfigurationConnectionTra
         when (message.type) {
             ConfigurationMessage.Type.StateUpdate -> {
                 //TODO - change projector config state
+            }
+            ConfigurationMessage.Type.AvailableChannels -> {
+                //TODO - save for channels activity
             }
             else -> { throw IllegalArgumentException("Can't handle message type ${message.type}") }
         }
