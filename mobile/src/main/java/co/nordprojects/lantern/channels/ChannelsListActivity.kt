@@ -15,5 +15,12 @@ class ChannelsListActivity : AppCompatActivity() {
         val directionString = intent.getStringExtra("direction")
         val direction = Direction.valueOf(directionString)
         direction_text.text = direction.name
+
+        supportFragmentManager.beginTransaction().apply {
+            add(R.id.fragmentContainer, ChannelListFragment())
+            commit()
+        }
     }
+
+
 }

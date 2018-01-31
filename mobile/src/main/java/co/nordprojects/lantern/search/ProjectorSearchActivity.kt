@@ -10,7 +10,7 @@ import co.nordprojects.lantern.configuration.ConfigurationClient
 import co.nordprojects.lantern.configuration.ConnectionState
 
 class ProjectorSearchActivity : AppCompatActivity(),
-        ProjectorSelectFragment.OnProjectorSelectedListener,
+        ProjectorListFragment.OnProjectorSelectedListener,
         ConfigurationClient.ConfigurationClientUpdatedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +64,7 @@ class ProjectorSearchActivity : AppCompatActivity(),
     }
 
     private fun showProjectorListFragment() {
-        val listFragment = ProjectorSelectFragment()
+        val listFragment = ProjectorListFragment()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment_container, listFragment)
         fragmentTransaction.commit()

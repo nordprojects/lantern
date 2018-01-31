@@ -11,21 +11,19 @@ import android.view.ViewGroup
 import co.nordprojects.lantern.R
 import kotlinx.android.synthetic.main.fragment_projector_select.*
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import co.nordprojects.lantern.App
 import co.nordprojects.lantern.configuration.ConfigurationClient
 import co.nordprojects.lantern.configuration.Endpoint
-import com.google.android.gms.nearby.connection.DiscoveredEndpointInfo
 import kotlinx.android.synthetic.main.item_row_projector.view.*
 
 
-class ProjectorSelectFragment : Fragment(),
+class ProjectorListFragment : Fragment(),
     ConfigurationClient.EndpointsUpdatedListener {
 
-    private var mCallback: OnProjectorSelectedListener? = null
+    private var onProjectorSelectedListener: OnProjectorSelectedListener? = null
 
     companion object {
-        var TAG: String = ProjectorSelectFragment::class.java.simpleName
+        var TAG: String = ProjectorListFragment::class.java.simpleName
     }
 
     interface OnProjectorSelectedListener {
@@ -41,21 +39,21 @@ class ProjectorSelectFragment : Fragment(),
         super.onViewCreated(view, savedInstanceState)
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = EndpointAdapter(App.instance.configClient.endpoints, mCallback)
+        recyclerView.adapter = EndpointAdapter(App.instance.configClient.endpoints, onProjectorSelectedListener)
 
         App.instance.configClient.endpointsUpdatedListener = this
     }
 
     override fun onEndpointsUpdated() {
         // TODO - Use LiveData or similar to observe changes
-        recyclerView.adapter = EndpointAdapter(App.instance.configClient.endpoints, mCallback)
+        recyclerView.adapter = EndpointAdapter(App.instance.configClient.endpoints, onProjectorSelectedListener)
         recyclerView.invalidate()
     }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         val activity = activity
-        if (activity is OnProjectorSelectedListener) mCallback = activity
+        if (activity is OnProjectorSelectedListener) onProjectorSelectedListener = activity
     }
 
     override fun onDestroy() {
@@ -65,7 +63,7 @@ class ProjectorSelectFragment : Fragment(),
 }
 
 class EndpointAdapter(private val endpoints: ArrayList<Endpoint>,
-                      private val listener: ProjectorSelectFragment.OnProjectorSelectedListener?):
+                      private val listener: ProjectorListFragment.OnProjectorSelectedListener?):
         RecyclerView.Adapter<EndpointAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
@@ -84,14 +82,14 @@ class EndpointAdapter(private val endpoints: ArrayList<Endpoint>,
     }
 
     class ViewHolder(var view: View,
-                     private val listener: ProjectorSelectFragment.OnProjectorSelectedListener?):
+                     private val listener: ProjectorListFragment.OnProjectorSelectedListener?):
             RecyclerView.ViewHolder(view) {
 
         var endpoint: Endpoint? = null
 
         fun bindEndpoint(endpoint: Endpoint) {
             this.endpoint = endpoint
-            view.endpointIDTextView.text = "${endpoint.id} | ${endpoint.info.endpointName} | ${endpoint.info.serviceId}"
+            view.endpointIDTextView.text = "${endpoint.id} | ${endpoint.info.endpointName}"
             view.setOnClickListener { listener?.onProjectorSelected(endpoint.id) }
         }
     }
