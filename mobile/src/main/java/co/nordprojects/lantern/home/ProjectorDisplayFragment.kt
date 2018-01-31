@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import co.nordprojects.lantern.App
 
 import co.nordprojects.lantern.R
@@ -17,11 +18,12 @@ import java.util.Observer
 
 class ProjectorDisplayFragment : Fragment() {
 
-    private var mCallback: OnDirectionSelectedListener? = null
+    private var directionSelectedListener: OnDirectionSelectedListener? = null
     private val projectorConfigObserver = Observer { _, _ -> projectorConfigUpdated() }
+    private var planeViews: Map<Direction, TextView> = mapOf()
 
     interface OnDirectionSelectedListener {
-        fun onDirectionSelected(direction: String)
+        fun onDirectionSelected(direction: Direction)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +32,7 @@ class ProjectorDisplayFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_projector_display, container, false)
 
         val activity = activity
-        if (activity is OnDirectionSelectedListener) mCallback = activity
+        if (activity is OnDirectionSelectedListener) directionSelectedListener = activity
 
         return view
     }
@@ -38,33 +40,49 @@ class ProjectorDisplayFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        up_button.setOnClickListener { update() }
+        planeViews = mapOf(
+                Direction.UP to upTextView,
+                Direction.FORWARD to forwardTextView,
+                Direction.DOWN to downTextView
+        )
 
-       // up_button.setOnClickListener { mCallback?.onDirectionSelected("up") }
-        forward_button.setOnClickListener { mCallback?.onDirectionSelected("forward")}
-        down_button.setOnClickListener { mCallback?.onDirectionSelected("down")}
+        up_button.setOnClickListener {
+            directionSelectedListener?.onDirectionSelected(Direction.UP)
+        }
+        forward_button.setOnClickListener {
+            directionSelectedListener?.onDirectionSelected(Direction.FORWARD)
+        }
+        down_button.setOnClickListener {
+            directionSelectedListener?.onDirectionSelected(Direction.DOWN)
+        }
 
+        update()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        App.instance.configClient.activeConnection?.projectorConfig?.addObserver(projectorConfigObserver)
+        App.instance.projector?.addObserver(projectorConfigObserver)
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        App.instance.configClient.activeConnection!!.projectorConfig.deleteObserver(projectorConfigObserver)
+        App.instance.projector?.deleteObserver(projectorConfigObserver)
     }
+
     fun projectorConfigUpdated() {
         update()
     }
 
     fun update() {
-        val config = App.instance.configClient.activeConnection!!.projectorConfig
-        forwardTextView.text = config.planes[Direction.FORWARD]?.type
 
-        directionTextView.text = config.direction.name
+        for (direction in Direction.values()) {
+            val channel = App.instance.projector!!.planes[direction]!!
+            val view = planeViews[direction]!!
+            view.text = channel.type
+        }
+
+        directionTextView.text = App.instance.projector!!.direction.name
     }
 }
