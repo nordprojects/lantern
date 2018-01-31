@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.TextView
 import co.nordprojects.lantern.App
 
@@ -88,9 +88,18 @@ class ProjectorDisplayFragment : Fragment() {
             } else {
                 view.text = channelInfo.name
             }
-
         }
 
-        directionTextView.text = App.instance.projector!!.direction.name
+        val projectorHeadAngle: Float = when(App.instance.projector?.direction) {
+            Direction.UP -> -90F
+            Direction.FORWARD -> 0F
+            Direction.DOWN -> 90F
+            null -> 0F
+        }
+
+        projectorHeadImageView.animate().apply {
+            interpolator = AccelerateDecelerateInterpolator()
+            duration = 300
+        }.rotation(projectorHeadAngle)
     }
 }
