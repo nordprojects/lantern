@@ -3,7 +3,6 @@ package co.nordprojects.lantern.search
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import co.nordprojects.lantern.App
 import co.nordprojects.lantern.home.HomeActivity
 import co.nordprojects.lantern.R
@@ -21,7 +20,15 @@ class ProjectorSearchActivity : AppCompatActivity(),
         update()
     }
 
+    override fun onPause() {
+        super.onPause()
+        App.instance.configClient.listener = null
+    }
 
+    override fun onResume() {
+        super.onResume()
+        App.instance.configClient.listener = this
+    }
 
     override fun onConfigurationClientUpdated() {
         update()

@@ -57,6 +57,11 @@ class ProjectorSelectFragment : Fragment(),
         val activity = activity
         if (activity is OnProjectorSelectedListener) mCallback = activity
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        App.instance.configClient.endpointsUpdatedListener = null
+    }
 }
 
 class EndpointAdapter(private val endpoints: ArrayList<Endpoint>,
