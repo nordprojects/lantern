@@ -9,6 +9,7 @@ import co.nordprojects.lantern.shared.clone
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
 import com.google.android.gms.tasks.Task
+import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Observer
 
@@ -118,7 +119,7 @@ class ConfigurationConnection(val transport: ConfigurationConnectionTransport) {
 
     private fun sendAvailableChannels() {
         val body = JSONObject()
-        body.put("channels", ChannelsRegistry.channelsInfo.map { it.toJson() })
+        body.put("channels", JSONArray(ChannelsRegistry.channelsInfo.map { it.toJson() }))
         val message = ConfigurationMessage(ConfigurationMessage.Type.AvailableChannels, body = body)
         transport.sendMessage(message)
     }
