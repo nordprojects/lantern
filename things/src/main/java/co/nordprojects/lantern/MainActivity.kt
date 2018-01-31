@@ -6,6 +6,7 @@ import android.util.Log
 import co.nordprojects.lantern.channels.BlankChannel
 import co.nordprojects.lantern.channels.CalendarChannel
 import co.nordprojects.lantern.channels.ErrorChannel
+import co.nordprojects.lantern.shared.ChannelConfiguration
 import co.nordprojects.lantern.shared.Direction
 import org.json.JSONObject
 import java.util.*

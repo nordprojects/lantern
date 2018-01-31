@@ -1,6 +1,7 @@
 package co.nordprojects.lantern
 
 import android.app.Fragment
+import co.nordprojects.lantern.shared.ChannelConfiguration
 
 /**
  * Created by joerick on 18/01/18.

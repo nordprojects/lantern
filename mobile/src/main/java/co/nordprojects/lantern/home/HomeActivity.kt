@@ -24,7 +24,6 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
         fragmentTransaction.commit()
     }
 
-
     override fun onDirectionSelected(direction: String) {
         showChannelList(direction)
     }

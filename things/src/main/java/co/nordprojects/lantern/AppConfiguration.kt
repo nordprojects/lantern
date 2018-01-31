@@ -1,15 +1,9 @@
 package co.nordprojects.lantern
 
-import android.annotation.SuppressLint
-import android.os.Parcel
-import android.os.Parcelable
+import co.nordprojects.lantern.shared.ChannelConfiguration
 import co.nordprojects.lantern.shared.Direction
-import co.nordprojects.lantern.shared.clone
-import kotlinx.android.parcel.Parceler
-import kotlinx.android.parcel.Parcelize
 import org.json.JSONObject
 import java.util.*
-
 
 class AppConfiguration: Observable() {
     private val _planes = mutableMapOf<Direction, ChannelConfiguration>(
@@ -62,46 +56,5 @@ class AppConfiguration: Observable() {
                         "down" to planes[Direction.DOWN]?.toJson(includingSecrets = includingSecrets)
                 )
         ))
-    }
-}
-
-@SuppressLint("ParcelCreator")
-@Parcelize
-class ChannelConfiguration(val type: String,
-                           val settings: JSONObject,
-                           val secret: JSONObject?) : Parcelable {
-    constructor(json: JSONObject) : this(
-            json.getString("type"),
-            json.clone().also {
-                it.remove("secret")
-            },
-            json.optJSONObject("secret")
-    )
-
-    fun toJson(includingSecrets: Boolean = false): JSONObject {
-        val json = settings.clone()
-        json.put("type", type)
-        if (includingSecrets) {
-            json.put("secret", secret)
-        }
-        return json
-    }
-
-    companion object : Parceler<ChannelConfiguration> {
-        val blank: ChannelConfiguration
-            get() = ChannelConfiguration(JSONObject("""{"type": "blank"}"""))
-
-        fun error(message: String): ChannelConfiguration {
-            val config = JSONObject("""{"type": "error"}""")
-            config.put("message", message)
-            return ChannelConfiguration(config)
-        }
-
-        override fun ChannelConfiguration.write(parcel: Parcel, flags: Int) {
-            parcel.writeString(toJson(includingSecrets = true).toString())
-        }
-        override fun create(parcel: Parcel): ChannelConfiguration {
-            return ChannelConfiguration(JSONObject(parcel.readString()))
-        }
     }
 }

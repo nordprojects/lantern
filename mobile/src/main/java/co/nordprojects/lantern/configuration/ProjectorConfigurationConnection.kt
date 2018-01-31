@@ -9,11 +9,10 @@ import co.nordprojects.lantern.shared.ConfigurationMessage
  */
 class ProjectorConfigurationConnection(val transport: ConfigurationConnectionTransport) {
 
+    var projectorConfig: ProjectorConfiguration = ProjectorConfiguration()
     companion object {
         val TAG: String = ProjectorConfigurationConnection::class.java.simpleName
     }
-
-
 
     init {
         transport.onMessageReceived = { m -> onMessageReceived(m) }
@@ -28,7 +27,7 @@ class ProjectorConfigurationConnection(val transport: ConfigurationConnectionTra
 
         when (message.type) {
             ConfigurationMessage.Type.StateUpdate -> {
-                //TODO - change projector config state
+                projectorConfig.updateWithJSON(message.body!!)
             }
             ConfigurationMessage.Type.AvailableChannels -> {
                 //TODO - save for channels activity

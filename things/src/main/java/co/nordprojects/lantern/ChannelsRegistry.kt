@@ -22,13 +22,13 @@ object ChannelsRegistry {
                     "calendar-clock",
                     "Calendar Clock",
                     "Augments a real-world clock with your appointments from Google Calendar",
-                    ChannelInfo.dataUriForDrawableResource(R.drawable.calendar_clock_icon)
+                    dataUriForDrawableResource(R.drawable.calendar_clock_icon)
             )),
             Pair(::NowPlayingChannel, ChannelInfo(
                     "now-playing",
                     "Now Playing",
                     "Displays the track currently playing on your Cast-enabled speaker",
-                    ChannelInfo.dataUriForDrawableResource(R.drawable.now_playing_icon)
+                    dataUriForDrawableResource(R.drawable.now_playing_icon)
             )),
             Pair(::LampChannel, ChannelInfo(
                     "lamp",
@@ -48,28 +48,7 @@ object ChannelsRegistry {
     )
 
     val channelsInfo = channelsWithInfo.map { it.second }
-}
 
-data class ChannelInfo(val id: String,
-                       val name: String,
-                       val description: String,
-                       val iconUri: Uri? = null) {
-    constructor(json: JSONObject) : this(
-            json.getString("id"),
-            json.getString("name"),
-            json.getString("description"),
-            json.optString("icon")?.let { Uri.parse(it) }
-    )
-    fun toJson(): JSONObject {
-        return JSONObject(mapOf(
-                "id" to id,
-                "name" to name,
-                "description" to description,
-                "icon" to iconUri?.toString()
-        ))
-    }
-
-    companion object {
         fun dataUriForDrawableResource(resourceId: Int): Uri {
             var bitmap = BitmapFactory.decodeResource(App.instance.resources, resourceId)
             val outputStream = ByteArrayOutputStream()
@@ -94,6 +73,7 @@ data class ChannelInfo(val id: String,
 
             return Uri.parse(outputStream.toString())
         }
-    }
+
 }
+
 
