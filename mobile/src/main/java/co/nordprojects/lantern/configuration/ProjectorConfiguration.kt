@@ -1,6 +1,7 @@
 package co.nordprojects.lantern.configuration
 
 import co.nordprojects.lantern.shared.ChannelConfiguration
+import co.nordprojects.lantern.shared.ChannelInfo
 import co.nordprojects.lantern.shared.Direction
 import org.json.JSONObject
 import java.util.*
@@ -21,6 +22,8 @@ class ProjectorConfiguration: Observable() {
 
     var direction: Direction = Direction.FORWARD
 
+    var availableChannels: List<ChannelInfo> = listOf()
+
     fun updateWithJSON(json: JSONObject) {
         val planesJson = json.getJSONObject("planes")
 
@@ -39,5 +42,23 @@ class ProjectorConfiguration: Observable() {
         _planes[direction] = ChannelConfiguration(jsonConfig)
     }
 
+    fun updateAvailableChannelsWithJSON(messageBody: JSONObject) {
+        val channelsInfoJson = messageBody.getJSONArray("channels")
+        val channelsInfo = arrayListOf<ChannelInfo>()
 
+        for (i in 0 until channelsInfoJson.length()) {
+            val channelInfoJson = channelsInfoJson.getJSONObject(i)
+            val channelInfo = ChannelInfo(channelInfoJson)
+            channelsInfo.add(channelInfo)
+        }
+
+        availableChannels = channelsInfo
+
+        setChanged()
+        notifyObservers()
+    }
+
+    fun channelInfoForChannelType(type: String): ChannelInfo? {
+        return availableChannels.find { it.id == type }
+    }
 }

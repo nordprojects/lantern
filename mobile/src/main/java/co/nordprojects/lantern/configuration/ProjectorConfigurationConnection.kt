@@ -30,7 +30,7 @@ class ProjectorConfigurationConnection(val transport: ConfigurationConnectionTra
                 projectorConfig.updateWithJSON(message.body!!)
             }
             ConfigurationMessage.Type.AvailableChannels -> {
-                //TODO - save for channels activity
+                projectorConfig.updateAvailableChannelsWithJSON(message.body!!)
             }
             else -> { throw IllegalArgumentException("Can't handle message type ${message.type}") }
         }
