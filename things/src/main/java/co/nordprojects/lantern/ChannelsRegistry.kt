@@ -45,6 +45,11 @@ object ChannelsRegistry {
                     "bat-signal",
                     "The Bat Signal",
                     "Summons the caped crusader to your location, as long as you're in Gotham. Only use in an emergency!"
+            )),
+            Pair(::SpaceChannel, ChannelInfo(
+                    "space",
+                    "Space Porthole",
+                    "See the stars above you"
             ))
     )
 

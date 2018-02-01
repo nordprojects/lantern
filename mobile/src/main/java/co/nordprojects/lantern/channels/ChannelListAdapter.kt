@@ -40,6 +40,7 @@ class ChannelListAdapter(private val channels: List<ChannelInfo>,
         fun bindChannel(channel: ChannelInfo) {
             this.channel = channel
             view.channelNameTextView.text = "${channel.name}"
+            view.descriptionTextView.text = "${channel.description}"
             view.setOnClickListener { listener?.onChannelSelected(channel) }
         }
     }

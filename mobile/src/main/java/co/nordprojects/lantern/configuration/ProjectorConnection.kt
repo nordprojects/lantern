@@ -1,17 +1,18 @@
 package co.nordprojects.lantern.configuration
 
 import android.util.Log
-import co.nordprojects.lantern.shared.ConfigurationConnectionTransport
-import co.nordprojects.lantern.shared.ConfigurationMessage
+import co.nordprojects.lantern.App
+import co.nordprojects.lantern.shared.*
+import org.json.JSONObject
 
 /**
  * Created by Michael Colville on 30/01/2018.
  */
-class ProjectorConfigurationConnection(val transport: ConfigurationConnectionTransport) {
+class ProjectorConnection(val transport: ConfigurationConnectionTransport) {
 
     var projectorConfig: ProjectorConfiguration = ProjectorConfiguration()
     companion object {
-        val TAG: String = ProjectorConfigurationConnection::class.java.simpleName
+        val TAG: String = ProjectorConnection::class.java.simpleName
     }
 
     init {
@@ -40,6 +41,16 @@ class ProjectorConfigurationConnection(val transport: ConfigurationConnectionTra
         Log.i(TAG, "Disconnected from ${transport.endpointId}")
 
         // TODO - either reconnect or destroy projector config
-        // OR may not be needed as this object is destroyed on disconnect
+        // TODO - OR may not be needed as this object is destroyed on disconnect
+    }
+
+    fun sendSetPlane(direction: Direction, configuration: ChannelConfiguration) {
+
+        val body = configuration.toJson(includingSecrets = true)
+        val arguments = JSONObject().apply {
+            put("plane", direction.jsonName)
+        }
+        val message = ConfigurationMessage(ConfigurationMessage.Type.SetPlane, arguments, body)
+        transport.sendMessage(message)
     }
 }

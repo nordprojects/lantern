@@ -5,8 +5,6 @@ import android.util.Log
 import co.nordprojects.lantern.shared.ConfigurationConnectionTransport
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
 
 /**
  * Created by Michael Colville on 29/01/2018.
@@ -26,7 +24,7 @@ class ConfigurationClient(val context: Context) {
 
     private val connectionsClient = Nearby.getConnectionsClient(context)
     val endpoints: ArrayList<Endpoint> = arrayListOf()
-    var activeConnection: ProjectorConfigurationConnection? = null
+    var activeConnection: ProjectorConnection? = null
     var listener: ConfigurationClientUpdatedListener? = null
     var endpointsUpdatedListener: EndpointsUpdatedListener? = null
     var connectionState: ConnectionState = ConnectionState.UNKNOWN
@@ -99,7 +97,7 @@ class ConfigurationClient(val context: Context) {
             val transport = ConfigurationConnectionTransport(connectionsClient, endpointId)
             connectionsClient.acceptConnection(endpointId, transport.payloadCallback)
 
-            val connection = ProjectorConfigurationConnection(transport)
+            val connection = ProjectorConnection(transport)
             activeConnection = connection
         }
 

@@ -19,15 +19,6 @@
             android:text="Calendar"
             android:textAlignment="center" />
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/titleTextView"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="35dp"
-            android:indeterminate="true" />
     </RelativeLayout>
 
 </FrameLayout>

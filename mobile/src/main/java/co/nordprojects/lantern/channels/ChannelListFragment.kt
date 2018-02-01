@@ -1,6 +1,7 @@
 package co.nordprojects.lantern.channels
 
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -45,6 +46,13 @@ class ChannelListFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = ChannelListAdapter(App.instance.projector!!.availableChannels, onChannelSelectedListener)
+    }
+
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        val activity = activity
+        if (activity is OnChannelSelectedListener) onChannelSelectedListener = activity
     }
 
     override fun onResume() {
