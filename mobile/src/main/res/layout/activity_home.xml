@@ -8,9 +8,8 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/fragment_container"
-        android:layout_width="368dp"
-        android:layout_height="471dp"
-        android:layout_marginBottom="8dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="80dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

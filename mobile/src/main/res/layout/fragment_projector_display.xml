@@ -4,36 +4,44 @@
     android:id="@+id/frameLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/defaultBackground"
     tools:context="co.nordprojects.lantern.home.ProjectorDisplayFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
-    <Button
+    <ImageButton
         android:id="@+id/up_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Up"
+        android:layout_marginBottom="84dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/up_plane"
+        app:layout_constraintBottom_toTopOf="@+id/projectorHeadImageView"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
         android:id="@+id/upTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:fontFamily="@font/roboto_medium"
         android:text="Space"
+        android:textAllCaps="true"
+        android:textColor="@color/upPlane"
+        android:textSize="16sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/up_button" />
 
-    <Button
+    <ImageButton
         android:id="@+id/forward_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="16dp"
-        android:text="Forward"
+        android:background="@android:color/transparent"
+        android:contentDescription="Set forward"
+        android:src="@drawable/forward_plane"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -42,45 +50,100 @@
         android:id="@+id/forwardTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="70dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/roboto_medium"
+        android:rotation="90"
         android:text="Now Playing"
+        android:textAlignment="viewEnd"
+        android:textAllCaps="true"
+        android:textColor="@color/forwardPlane"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/forward_button"
         app:layout_constraintEnd_toEndOf="@+id/forward_button"
         app:layout_constraintStart_toStartOf="@+id/forward_button"
-        app:layout_constraintTop_toBottomOf="@+id/forward_button" />
+        app:layout_constraintTop_toTopOf="@+id/forward_button" />
 
     <TextView
         android:id="@+id/downTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="11dp"
+        android:fontFamily="@font/roboto_medium"
         android:text="Calendar"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textAllCaps="true"
+        android:textColor="@color/downPlane"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/down_button"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <Button
+    <ImageButton
         android:id="@+id/down_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="Down"
-        app:layout_constraintBottom_toTopOf="@+id/downTextView"
+        android:layout_marginBottom="15dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/down_plane"
+        app:layout_constraintBottom_toTopOf="@+id/currentChannelNameTextView"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="-8dp"
+        android:layout_marginTop="30dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/projector_arm"
+        app:layout_constraintEnd_toEndOf="@+id/projectorHeadImageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/projectorHeadImageView" />
 
     <ImageView
         android:id="@+id/projectorHeadImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:src="@drawable/lamp_forward"
+        android:layout_marginStart="40dp"
+        android:src="@drawable/projector_head_forward"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/forward_button"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.498" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/currentChannelNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/roboto_medium"
+        android:text="Now playing"
+        android:textAllCaps="true"
+        android:textColor="@color/forwardPlane"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/currentChannelSubtitleTextView2"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/currentChannelSubtitleTextView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        android:fontFamily="@font/roboto"
+        android:text="Subtitle"
+        android:textAllCaps="false"
+        android:textColor="@color/forwardPlane"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
