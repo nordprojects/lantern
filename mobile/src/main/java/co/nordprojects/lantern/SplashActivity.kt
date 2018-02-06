@@ -9,6 +9,10 @@ import android.os.Handler
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import co.nordprojects.lantern.search.ProjectorSearchActivity
+import android.support.design.widget.Snackbar
+import android.content.DialogInterface
+import android.content.DialogInterface.BUTTON_NEUTRAL
+import android.support.v7.app.AlertDialog
 
 
 class SplashActivity : AppCompatActivity() {
@@ -31,26 +35,38 @@ class SplashActivity : AppCompatActivity() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_REQUIRED_PERMISSIONS)
+            requestPermissions()
         } else {
             showProjectorSearchActivity()
         }
+    }
+
+    private fun requestPermissions() {
+        requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_REQUIRED_PERMISSIONS)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+        // Check ACCESS_COARSE_LOCATION permission
+        if ((grantResults.size >= 5 && grantResults[4] == PackageManager.PERMISSION_GRANTED)) {
             showProjectorSearchActivity()
         } else {
-            // TODO - display message that Nearby is required to use this app
+            showPermissionsRequiredAlert()
         }
     }
 
+    private fun showPermissionsRequiredAlert() {
+        val alertDialog = AlertDialog.Builder(this).create()
+        alertDialog.setTitle("Location Required")
+        alertDialog.setMessage("Gigavision requires location permissions to find nearby projectors")
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", { dialog, _ ->
+            dialog.dismiss()
+            requestPermissions()
+        })
+        alertDialog.show()
+    }
+
     private fun showProjectorSearchActivity() {
-
-        App.instance.configClient.startDiscovery()
-
         val intent = Intent(this, ProjectorSearchActivity::class.java)
         startActivity(intent)
         finish()

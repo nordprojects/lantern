@@ -13,7 +13,7 @@ import com.google.android.gms.nearby.connection.*
 data class Endpoint(val id: String, val info: DiscoveredEndpointInfo)
 
 enum class ConnectionState {
-    UNKNOWN,
+    UNINITIALISED,
     LOOKING_FOR_ENDPOINTS,
     ENDPOINTS_AVAILABLE,
     CONNECTING_TO_ENDPOINT,
@@ -27,7 +27,7 @@ class ConfigurationClient(val context: Context) {
     var activeConnection: ProjectorConnection? = null
     var listener: ConfigurationClientUpdatedListener? = null
     var endpointsUpdatedListener: EndpointsUpdatedListener? = null
-    var connectionState: ConnectionState = ConnectionState.UNKNOWN
+    var connectionState: ConnectionState = ConnectionState.UNINITIALISED
         set(value) {
             val oldValue = field
             field = value
@@ -46,16 +46,23 @@ class ConfigurationClient(val context: Context) {
 
     interface ConfigurationClientUpdatedListener {
         fun onConfigurationClientUpdated()
+        fun onStartDiscoveryFailure()
+        fun onRequestConnectionFailure()
     }
 
     fun startDiscovery() {
+        Log.i(TAG, "START DISCOVERY")
         connectionState = ConnectionState.LOOKING_FOR_ENDPOINTS
         connectionsClient.startDiscovery(
                 "co.nordprojects.lantern.projector",
                 endpointDiscoveryCallback,
                 DiscoveryOptions(Strategy.P2P_CLUSTER))
-                .addOnSuccessListener { Log.i(TAG, "Start Discovery success") } //TODO
-                .addOnFailureListener { Log.i(TAG, "Start Discovery failure") } //TODO
+                .addOnSuccessListener { Log.i(TAG, "Start Discovery success") }
+                .addOnFailureListener {
+                    Log.i(TAG, "Start Discovery failure")
+                    connectionState = ConnectionState.UNINITIALISED
+                    listener?.onStartDiscoveryFailure()
+                }
     }
 
     fun connectTo(endpointId: String) {
@@ -65,13 +72,16 @@ class ConfigurationClient(val context: Context) {
                 "device name", //TODO
                 endpointId,
                 connectionLifecycleCallback)
-                .addOnSuccessListener { Log.i(TAG, "Start Request Connection success") } //TODO
-                .addOnFailureListener { Log.i(TAG, "Start Request Connection failure") } //TODO
+                .addOnSuccessListener { Log.i(TAG, "Start Request Connection success") }
+                .addOnFailureListener {
+                    Log.i(TAG, "Start Request Connection failure")
+                    connectionState = ConnectionState.ENDPOINTS_AVAILABLE
+                    listener?.onRequestConnectionFailure()
+                }
     }
 
     private val endpointDiscoveryCallback = object : EndpointDiscoveryCallback() {
         override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
-            // TODO - add to endpoints, update fragment
             Log.i(TAG, "Endpoint found $endpointId")
             endpoints.add(Endpoint(endpointId, info))
             connectionState = ConnectionState.ENDPOINTS_AVAILABLE
@@ -79,11 +89,9 @@ class ConfigurationClient(val context: Context) {
         }
 
         override fun onEndpointLost(endpointId: String) {
-            // TODO - remove from endpoints, update fragment
             Log.i(TAG, "Endpoint lost $endpointId")
             val endpoint = endpoints.find { it.id == endpointId }
             endpoints.remove(endpoint)
-
             if (endpoints.size == 0) {
                 connectionState = ConnectionState.LOOKING_FOR_ENDPOINTS
             }

@@ -3,11 +3,15 @@ package co.nordprojects.lantern.search
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.Snackbar
+import android.support.design.widget.Snackbar.LENGTH_INDEFINITE
+import android.support.design.widget.Snackbar.LENGTH_LONG
 import co.nordprojects.lantern.App
 import co.nordprojects.lantern.home.HomeActivity
 import co.nordprojects.lantern.R
 import co.nordprojects.lantern.configuration.ConfigurationClient
 import co.nordprojects.lantern.configuration.ConnectionState
+import kotlinx.android.synthetic.main.activity_projector_search.*
 
 class ProjectorSearchActivity : AppCompatActivity(),
         ProjectorListFragment.OnProjectorSelectedListener,
@@ -16,8 +20,6 @@ class ProjectorSearchActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_projector_search)
-        App.instance.configClient.listener = this
-        update()
     }
 
     override fun onPause() {
@@ -28,10 +30,27 @@ class ProjectorSearchActivity : AppCompatActivity(),
     override fun onResume() {
         super.onResume()
         App.instance.configClient.listener = this
+
+        if (App.instance.configClient.connectionState == ConnectionState.UNINITIALISED) {
+            App.instance.configClient.startDiscovery()
+        }
+
+        update()
     }
 
     override fun onConfigurationClientUpdated() {
         update()
+    }
+
+    override fun onStartDiscoveryFailure() {
+        val snackBar = Snackbar.make(fragment_container, "Failed to start Nearby Connections", LENGTH_INDEFINITE)
+        snackBar.setAction("Try again", { App.instance.configClient.startDiscovery() })
+        snackBar.show()
+    }
+
+    override fun onRequestConnectionFailure() {
+        val snackBar = Snackbar.make(fragment_container, "Failed to connect to projector", LENGTH_LONG)
+        snackBar.show()
     }
 
     override fun onProjectorSelected(endpointID: String) {
@@ -52,7 +71,6 @@ class ProjectorSearchActivity : AppCompatActivity(),
             ConnectionState.CONNECTED -> {
                 showHomeActivity()
             }
-            else -> { throw IllegalArgumentException("Can't handle connection state ${App.instance.configClient.connectionState}") }
         }
     }
 
