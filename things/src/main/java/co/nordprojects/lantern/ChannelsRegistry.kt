@@ -6,8 +6,8 @@ import android.net.Uri
 import android.util.Base64
 import android.util.Base64OutputStream
 import co.nordprojects.lantern.channels.*
+import co.nordprojects.lantern.channels.nowplaying.NowPlayingChannel
 import co.nordprojects.lantern.shared.ChannelInfo
-import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 
