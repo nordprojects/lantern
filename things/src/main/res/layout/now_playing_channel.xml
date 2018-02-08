@@ -19,15 +19,20 @@
         <TextView
             android:id="@+id/titleTextView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginBottom="20dp"
             android:fontFamily="@font/lato_black_italic"
-            android:text="THE JESTER, THE TRAMP &amp; THE ACROBAT"
+            android:maxLines="3"
+            android:text="THE JESTER, THE TRAMP &amp; THE ACROBAT MAKES A MOVE"
             android:textAllCaps="true"
             android:textAppearance="@android:style/TextAppearance"
             android:textSize="57sp"
+            app:layout_constraintBottom_toTopOf="@+id/artistTextView"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/durationTextView"
