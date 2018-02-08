@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.Snackbar.LENGTH_INDEFINITE
 import android.support.design.widget.Snackbar.LENGTH_LONG
+import android.util.Log
 import co.nordprojects.lantern.App
 import co.nordprojects.lantern.home.HomeActivity
 import co.nordprojects.lantern.R
@@ -16,6 +17,10 @@ import kotlinx.android.synthetic.main.activity_projector_search.*
 class ProjectorSearchActivity : AppCompatActivity(),
         ProjectorListFragment.OnProjectorSelectedListener,
         ConfigurationClient.ConfigurationClientUpdatedListener {
+
+    companion object {
+        val TAG: String = ProjectorSearchActivity::class.java.simpleName
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,12 +34,11 @@ class ProjectorSearchActivity : AppCompatActivity(),
 
     override fun onResume() {
         super.onResume()
+        Log.i(TAG, "Projector search activity on resume")
         App.instance.configClient.listener = this
-
         if (App.instance.configClient.connectionState == ConnectionState.UNINITIALISED) {
             App.instance.configClient.startDiscovery()
         }
-
         update()
     }
 
@@ -58,6 +62,7 @@ class ProjectorSearchActivity : AppCompatActivity(),
     }
 
     private fun update() {
+        Log.i(TAG, "UPDATE CONNECTION ${App.instance.configClient.connectionState}")
         when (App.instance.configClient.connectionState) {
             ConnectionState.LOOKING_FOR_ENDPOINTS -> {
                 showProjectorSearchFragment()
@@ -97,6 +102,15 @@ class ProjectorSearchActivity : AppCompatActivity(),
 
     private fun showHomeActivity() {
         val intent = Intent(this, HomeActivity::class.java)
-        startActivity(intent)
+        startActivityForResult(intent, 1)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.i(TAG, "ACTIVITY RESULT $resultCode")
+        if (requestCode == 1 && resultCode == -1) {
+            val snackBar = Snackbar.make(fragment_container, "Lost connection to projector", LENGTH_LONG)
+            snackBar.show()
+        }
     }
 }

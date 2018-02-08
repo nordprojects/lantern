@@ -20,7 +20,6 @@ class ChannelListAdapter(private val channels: List<ChannelInfo>,
         val view = LayoutInflater.from(parent?.context)
                 .inflate(R.layout.item_row_channel, parent, false)
         return ViewHolder(view, listener)
-
     }
 
     override fun getItemCount(): Int {

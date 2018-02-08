@@ -21,7 +21,7 @@ import java.util.Observer
  */
 class ConfigurationServer(val context: Context) {
     private val TAG = ConfigurationServer::class.java.simpleName
-    private val DEVICE_NAME = "Mikey Projector Pi"
+    private val DEVICE_NAME = "Projector Pi"
     private val SERVICE_ID = "co.nordprojects.lantern.projector"
     private val connectionsClient = Nearby.getConnectionsClient(context)
     private val activeConnections: MutableMap<String, ConfigurationConnection> = mutableMapOf()

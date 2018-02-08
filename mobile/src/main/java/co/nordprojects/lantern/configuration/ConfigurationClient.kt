@@ -5,6 +5,7 @@ import android.util.Log
 import co.nordprojects.lantern.shared.ConfigurationConnectionTransport
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
+import java.util.*
 
 /**
  * Created by Michael Colville on 29/01/2018.
@@ -20,11 +21,16 @@ enum class ConnectionState {
     CONNECTED
 }
 
-class ConfigurationClient(val context: Context) {
+class ConfigurationClient(val context: Context): Observable() {
 
     private val connectionsClient = Nearby.getConnectionsClient(context)
     val endpoints: ArrayList<Endpoint> = arrayListOf()
     var activeConnection: ProjectorConnection? = null
+        set(value) {
+            field = value
+            setChanged()
+            notifyObservers()
+        }
     var listener: ConfigurationClientUpdatedListener? = null
     var endpointsUpdatedListener: EndpointsUpdatedListener? = null
     var connectionState: ConnectionState = ConnectionState.UNINITIALISED
@@ -80,6 +86,19 @@ class ConfigurationClient(val context: Context) {
                 }
     }
 
+    private fun connectionDidDisconnect() {
+        connectionState = if (endpoints.size > 0) {
+            ConnectionState.ENDPOINTS_AVAILABLE
+        } else {
+            ConnectionState.LOOKING_FOR_ENDPOINTS
+        }
+
+        // TODO - restart nearby discovering, remove all existing endpoints
+
+        activeConnection?.onDisconnected()
+        activeConnection = null
+    }
+
     private val endpointDiscoveryCallback = object : EndpointDiscoveryCallback() {
         override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
             Log.i(TAG, "Endpoint found $endpointId")
@@ -114,15 +133,14 @@ class ConfigurationClient(val context: Context) {
                 activeConnection?.onConnectionAccepted()
                 connectionState = ConnectionState.CONNECTED
             } else {
-                activeConnection?.onDisconnected()
-                activeConnection = null
+                Log.i(TAG, "On Connection Fail")
+                connectionDidDisconnect()
             }
         }
 
         override fun onDisconnected(endpointId: String) {
-            // TODO - decide what to do here. Show warning on HomeActivity or go back to SearchActivity?
-            activeConnection?.onDisconnected()
-            activeConnection = null
+            Log.i(TAG, "On Disconnected")
+            connectionDidDisconnect()
         }
     }
 }

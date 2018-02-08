@@ -77,11 +77,14 @@ class ProjectorDisplayFragment : Fragment() {
 
     fun update() {
 
+        val projector = App.instance.projector ?: return
+
         for (direction in Direction.values()) {
-            val channel = App.instance.projector!!.planes[direction]!!
+
+            val channel = projector.planes[direction]!!
             val view = planeViews[direction]!!
 
-            val channelInfo = App.instance.projector!!.channelInfoForChannelType(channel.type)
+            val channelInfo = projector.channelInfoForChannelType(channel.type)
 
             if (channelInfo == null) {
                 view.text = channel.type
@@ -90,7 +93,7 @@ class ProjectorDisplayFragment : Fragment() {
             }
         }
 
-        val projectorHeadAngle: Float = when(App.instance.projector?.direction) {
+        val projectorHeadAngle: Float = when(projector.direction) {
             Direction.UP -> -90F
             Direction.FORWARD -> 0F
             Direction.DOWN -> 90F
