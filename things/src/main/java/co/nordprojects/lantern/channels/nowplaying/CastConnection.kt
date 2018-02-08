@@ -139,9 +139,10 @@ class CastConnection(val host: String, val port: Int) {
             return
         }
 
+        val playerState = PlayerState.valueOf(status.optString("playerState") ?: "")
+        val currentTime = status.optDouble("currentTime")
         val media = status.optJSONObject("media")
         val metadata = media?.optJSONObject("metadata")
-        val playerState = PlayerState.valueOf(status.optString("playerState") ?: "")
 
         val mediaStatus = if (metadata != null) {
             var artist = metadata.optString("artist")
@@ -153,13 +154,16 @@ class CastConnection(val host: String, val port: Int) {
                     title = metadata.optString("title"),
                     artist = artist,
                     album = metadata.optString("albumName"),
-                    currentTime = status.optDouble("currentTime"),
+                    currentTime = currentTime,
                     duration = media.optDouble("duration"),
                     playerState = playerState
             )
         } else {
-            // if the media object isn't present, just update the playerState variable
-            previousMediaStatus?.copy(playerState = playerState)
+            // if the media object isn't present, just update the variables from `status`
+            previousMediaStatus?.copy(
+                    currentTime = currentTime,
+                    playerState = playerState
+            )
         }
 
         if (mediaStatus != null && mediaStatus != previousMediaStatus) {

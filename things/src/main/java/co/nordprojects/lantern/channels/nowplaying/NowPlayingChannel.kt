@@ -13,11 +13,18 @@ import co.nordprojects.lantern.Channel
 import co.nordprojects.lantern.R
 import java.io.IOException
 import kotlinx.android.synthetic.main.now_playing_channel.*
+import java.util.*
+import kotlin.concurrent.fixedRateTimer
 import kotlin.math.floor
+import kotlin.math.min
+import kotlin.math.round
 
 class NowPlayingChannel() : Channel() {
     val TAG = this::class.java.simpleName
     var mediaStatus: CastConnection.MediaStatus? = null
+    var mediaStatusUpdateDate: Date? = null
+
+    var updateTimer: Timer? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -37,23 +44,50 @@ class NowPlayingChannel() : Channel() {
                 NsdManager.PROTOCOL_DNS_SD,
                 discoveryListener
         )
+
+        updateTimer = fixedRateTimer("$this update", true, Date(), 1000) {
+            Handler(Looper.getMainLooper()).post {
+                update()
+            }
+        }
     }
 
     override fun onStop() {
-        super.onStop()
-
+        updateTimer?.cancel()
+        updateTimer = null
         discoveryManager.stopServiceDiscovery(discoveryListener)
         availableCastServices.clear()
+
+        super.onStop()
     }
 
     private fun update() {
         val mediaStatus = mediaStatus
+        val mediaStatusUpdateDate = mediaStatusUpdateDate
+        var trackTimeEstimate: Double? = mediaStatus?.currentTime
+
+        // if the track has been playing since the last update, keep incrementing the play time
+        if (trackTimeEstimate != null
+                && mediaStatusUpdateDate != null
+                && mediaStatus?.playerState == CastConnection.PlayerState.PLAYING) {
+
+            val timeSinceLastUpdateMs = Date().time - mediaStatusUpdateDate.time
+            trackTimeEstimate += timeSinceLastUpdateMs / 1000
+
+            // cap the time at the track duration as reported
+            if (mediaStatus.duration != null) {
+                trackTimeEstimate = min(trackTimeEstimate, mediaStatus.duration)
+            }
+        }
 
         titleTextView.text = mediaStatus?.title ?: ""
         artistTextView.text = mediaStatus?.artist ?: ""
-        durationTextView.text = if (mediaStatus?.duration != null) {
-            val minutes = floor(mediaStatus.duration / 60).toInt()
-            val seconds = floor(mediaStatus.duration % 60).toInt()
+        durationTextView.text = if (trackTimeEstimate != null) {
+            // round to the nearest second (to match other players)
+            trackTimeEstimate = round(trackTimeEstimate)
+            // split into minutes and seconds display
+            val minutes = floor(trackTimeEstimate / 60).toInt()
+            val seconds = floor(trackTimeEstimate % 60).toInt()
             "%d:%02d".format(minutes, seconds)
         } else {
             ""
@@ -99,6 +133,7 @@ class NowPlayingChannel() : Channel() {
             Log.i(TAG, "mediaStatusUpdate $mediaStatus")
 
             this@NowPlayingChannel.mediaStatus = mediaStatus
+            mediaStatusUpdateDate = Date()
             update()
         }
         override fun onDisconnect() {
