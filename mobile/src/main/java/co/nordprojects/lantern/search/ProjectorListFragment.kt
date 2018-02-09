@@ -89,7 +89,8 @@ class EndpointAdapter(private val endpoints: ArrayList<Endpoint>,
 
         fun bindEndpoint(endpoint: Endpoint) {
             this.endpoint = endpoint
-            view.endpointIDTextView.text = "${endpoint.id} | ${endpoint.info.endpointName}"
+            view.endpointNameTextView.text = "${endpoint.info.endpointName}"
+            view.idTextView.text = "Lantern: ${endpoint.id}"
             view.setOnClickListener { listener?.onProjectorSelected(endpoint.id) }
         }
     }

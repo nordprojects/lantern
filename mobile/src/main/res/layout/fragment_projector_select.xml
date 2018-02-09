@@ -6,14 +6,15 @@
     android:layout_height="match_parent"
     tools:context="co.nordprojects.lantern.search.ProjectorListFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
-        android:layout_height="19dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="Select a projector to connect to"
+        android:text="Connect to a Lantern nearby"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:fontFamily="@font/google_sans_regular"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

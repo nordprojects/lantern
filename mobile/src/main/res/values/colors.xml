@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#efefef</color>
     <color name="colorPrimaryDark">#c5c5c5</color>
-    <color name="colorAccent">#5E98F6</color>
+    <color name="colorAccent">#5e98f6</color>
     <color name="defaultBackground">#EFEFEF</color>
     <color name="downPlane">#FF9100</color>
     <color name="upPlane">#508EF5</color>
