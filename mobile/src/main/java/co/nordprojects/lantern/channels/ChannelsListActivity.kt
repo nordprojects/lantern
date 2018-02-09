@@ -20,7 +20,10 @@ class ChannelsListActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_channels_list)
+
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.setNavigationIcon(R.drawable.back_chevron)
 
         val directionString = intent.getStringExtra("direction")
         direction = Direction.valueOf(directionString)

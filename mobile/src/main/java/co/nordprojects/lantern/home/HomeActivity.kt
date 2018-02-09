@@ -26,6 +26,9 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
         setContentView(R.layout.activity_home)
 
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.setNavigationIcon(R.drawable.menu)
+        toolbar.setNavigationOnClickListener { showSettings() }
 
         val projectorFragment = ProjectorDisplayFragment()
         val fragmentTransaction = supportFragmentManager.beginTransaction()

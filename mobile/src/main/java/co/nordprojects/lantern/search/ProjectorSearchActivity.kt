@@ -27,6 +27,13 @@ class ProjectorSearchActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_projector_search)
+
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.setNavigationIcon(R.drawable.back_chevron)
+        toolbar.setNavigationOnClickListener {
+            //TODO - restart nearby discovery and clear endpoints?
+        }
     }
 
     override fun onPause() {
@@ -81,6 +88,7 @@ class ProjectorSearchActivity : AppCompatActivity(),
     }
 
     private fun showProjectorSearchFragment() {
+        supportActionBar?.hide()
         val searchFragment = ProjectorSearchFragment()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment_container, searchFragment)
@@ -88,6 +96,7 @@ class ProjectorSearchActivity : AppCompatActivity(),
     }
 
     private fun showProjectorListFragment() {
+        supportActionBar?.show()
         val listFragment = ProjectorListFragment()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment_container, listFragment)
@@ -95,6 +104,7 @@ class ProjectorSearchActivity : AppCompatActivity(),
     }
 
     private fun showProjectorConnectingFragment() {
+        supportActionBar?.show()
         val connectingFragment = ProjectorConnectingFragment()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment_container, connectingFragment)

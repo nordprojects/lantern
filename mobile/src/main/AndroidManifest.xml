@@ -17,7 +17,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".search.ProjectorSearchActivity" />
         <activity
             android:name=".SplashActivity"
             android:theme="@style/SplashTheme">
@@ -26,12 +25,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".search.ProjectorSearchActivity"
+            android:label="Connect to device" />
         <activity android:name=".home.HomeActivity"
             android:launchMode="singleTop" />
         <activity android:name=".settings.SettingsActivity"
-            android:parentActivityName=".home.HomeActivity"/>
+            android:parentActivityName=".home.HomeActivity"
+            android:label="Settings"/>
         <activity android:name=".channels.ChannelsListActivity"
-            android:parentActivityName=".home.HomeActivity"/>
+            android:parentActivityName=".home.HomeActivity"
+            android:label="Choose a channel" />
     </application>
 
 </manifest>
