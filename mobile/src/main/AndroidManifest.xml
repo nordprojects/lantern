@@ -26,9 +26,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".home.HomeActivity" />
-        <activity android:name=".settings.SettingsActivity" />
-        <activity android:name=".channels.ChannelsListActivity" />
+        <activity android:name=".home.HomeActivity"
+            android:launchMode="singleTop" />
+        <activity android:name=".settings.SettingsActivity"
+            android:parentActivityName=".home.HomeActivity"/>
+        <activity android:name=".channels.ChannelsListActivity"
+            android:parentActivityName=".home.HomeActivity"/>
     </application>
 
 </manifest>

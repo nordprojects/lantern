@@ -3,6 +3,7 @@ package co.nordprojects.lantern.home
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import co.nordprojects.lantern.App
 import co.nordprojects.lantern.R
 import co.nordprojects.lantern.channels.ChannelsListActivity
@@ -16,13 +17,13 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
     private val connectionObserver: Observer = Observer { _, _ -> onConnectionChanged() }
 
     companion object {
+        val TAG: String = HomeActivity::class.java.simpleName
         val RESULT_DISCONNECTED = 2
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        settings_button.setOnClickListener { showSettings() }
 
         val projectorFragment = ProjectorDisplayFragment()
         val fragmentTransaction = supportFragmentManager.beginTransaction()

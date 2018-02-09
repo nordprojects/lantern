@@ -97,7 +97,6 @@ class ProjectorDisplayFragment : Fragment() {
             Direction.UP -> -90F
             Direction.FORWARD -> 0F
             Direction.DOWN -> 90F
-            null -> 0F
         }
 
         projectorHeadImageView.animate().apply {
