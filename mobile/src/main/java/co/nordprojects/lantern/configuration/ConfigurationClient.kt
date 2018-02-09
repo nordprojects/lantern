@@ -25,6 +25,7 @@ class ConfigurationClient(val context: Context): Observable() {
 
     private val connectionsClient = Nearby.getConnectionsClient(context)
     val endpoints: ArrayList<Endpoint> = arrayListOf()
+    private var activeEndpointID: String? = null
     var activeConnection: ProjectorConnection? = null
         set(value) {
             field = value
@@ -73,6 +74,7 @@ class ConfigurationClient(val context: Context): Observable() {
 
     fun connectTo(endpointId: String) {
         connectionState = ConnectionState.CONNECTING_TO_ENDPOINT
+        activeEndpointID = endpointId
         Log.i(TAG, "connect to $endpointId")
         connectionsClient.requestConnection(
                 "device name", //TODO
@@ -86,17 +88,27 @@ class ConfigurationClient(val context: Context): Observable() {
                 }
     }
 
-    private fun connectionDidDisconnect() {
+    fun disconnect() {
+        val endpointID = activeEndpointID
+        if (endpointID != null) {
+            connectionsClient.disconnectFromEndpoint(endpointID)
+            resetConnectionState()
+        }
+    }
+
+    private fun resetConnectionState() {
         connectionState = if (endpoints.size > 0) {
             ConnectionState.ENDPOINTS_AVAILABLE
         } else {
             ConnectionState.LOOKING_FOR_ENDPOINTS
         }
+    }
 
-        // TODO - restart nearby discovering, remove all existing endpoints
-
+    private fun connectionDidDisconnect() {
+        resetConnectionState()
         activeConnection?.onDisconnected()
         activeConnection = null
+        // TODO - restart nearby discovering? remove all existing endpoints
     }
 
     private val endpointDiscoveryCallback = object : EndpointDiscoveryCallback() {
@@ -123,7 +135,6 @@ class ConfigurationClient(val context: Context): Observable() {
             // always accept connections
             val transport = ConfigurationConnectionTransport(connectionsClient, endpointId)
             connectionsClient.acceptConnection(endpointId, transport.payloadCallback)
-
             val connection = ProjectorConnection(transport)
             activeConnection = connection
         }

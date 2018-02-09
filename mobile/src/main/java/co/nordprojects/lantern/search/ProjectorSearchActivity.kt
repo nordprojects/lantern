@@ -1,5 +1,6 @@
 package co.nordprojects.lantern.search
 
+import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -20,6 +21,7 @@ class ProjectorSearchActivity : AppCompatActivity(),
 
     companion object {
         val TAG: String = ProjectorSearchActivity::class.java.simpleName
+        val HOME_ACTIVITY_REQUEST = 1
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +36,6 @@ class ProjectorSearchActivity : AppCompatActivity(),
 
     override fun onResume() {
         super.onResume()
-        Log.i(TAG, "Projector search activity on resume")
         App.instance.configClient.listener = this
         if (App.instance.configClient.connectionState == ConnectionState.UNINITIALISED) {
             App.instance.configClient.startDiscovery()
@@ -102,15 +103,21 @@ class ProjectorSearchActivity : AppCompatActivity(),
 
     private fun showHomeActivity() {
         val intent = Intent(this, HomeActivity::class.java)
-        startActivityForResult(intent, 1)
+        startActivityForResult(intent, HOME_ACTIVITY_REQUEST)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.i(TAG, "ACTIVITY RESULT $resultCode")
-        if (requestCode == 1 && resultCode == -1) {
-            val snackBar = Snackbar.make(fragment_container, "Lost connection to projector", LENGTH_LONG)
-            snackBar.show()
+        if (requestCode == HOME_ACTIVITY_REQUEST) {
+            when (resultCode) {
+                HomeActivity.RESULT_DISCONNECTED -> {
+                    val snackBar = Snackbar.make(fragment_container, "Lost connection to projector", LENGTH_LONG)
+                    snackBar.show()
+                }
+                Activity.RESULT_CANCELED -> {
+                    App.instance.configClient.disconnect()
+                }
+            }
         }
     }
 }
