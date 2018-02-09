@@ -7,4 +7,5 @@
     <color name="downPlane">#FF9100</color>
     <color name="upPlane">#508EF5</color>
     <color name="forwardPlane">#EB4C3F</color>
+    <color name="text_dark">#1d1d1d</color>
 </resources>
