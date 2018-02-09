@@ -42,7 +42,7 @@ class MainActivity : Activity() {
                             "type": "webview",
                             "settings": {
                                 "url": "https://youtu.be/6ZfuNTqbHE8",
-                                "scrollTo": "30"
+                                "scrollTo": 30
                             }
                         }
                     }
