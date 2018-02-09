@@ -7,8 +7,11 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
-    <application android:name=".App">
+    <application android:name=".App"
+        android:hardwareAccelerated="true">
+
         <uses-library android:name="com.google.android.things" />
 
         <activity android:name=".MainActivity" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">

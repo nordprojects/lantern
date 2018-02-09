@@ -39,7 +39,11 @@ class MainActivity : Activity() {
                             "type": "now-playing"
                         },
                         "down": {
-                            "type": "lamp"
+                            "type": "webview",
+                            "settings": {
+                                "url": "https://youtu.be/6ZfuNTqbHE8",
+                                "scrollTo": "30"
+                            }
                         }
                     }
                 }"""))

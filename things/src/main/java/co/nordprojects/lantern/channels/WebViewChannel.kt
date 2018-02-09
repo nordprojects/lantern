@@ -13,6 +13,9 @@ import android.webkit.WebViewClient
 import co.nordprojects.lantern.Channel
 import co.nordprojects.lantern.R
 import kotlinx.android.synthetic.*
+import android.graphics.BitmapFactory
+
+
 
 /**
  * Created by dingxu on 2/5/18.
@@ -49,6 +52,7 @@ class WebViewChannel: Channel() {
             webChromeClient = object: WebChromeClient() {
                 override fun onProgressChanged(view: WebView?, newProgress: Int) {
                     super.onProgressChanged(view, newProgress)
+                    // loading progress
                 }
 
                 override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
@@ -60,6 +64,10 @@ class WebViewChannel: Channel() {
                     super.onHideCustomView()
                     // fullscreen
                 }
+
+                // default video icon override
+                /*override fun getDefaultVideoPoster(): Bitmap {
+                }*/
             }
 
             webViewClient = object: WebViewClient() {
@@ -70,7 +78,6 @@ class WebViewChannel: Channel() {
                     if(config.settings.has("scrollTo")) {
                         scrollTo(0, config.settings.getInt("scrollTo"));
                     }
-
                 }
 
                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {

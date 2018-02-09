@@ -50,6 +50,11 @@ object ChannelsRegistry {
                     "space",
                     "Space Porthole",
                     "See the stars above you"
+            )),
+            Pair(::WebViewChannel, ChannelInfo(
+                    "webview",
+                    "Web View",
+                    "Show any web page you want to explore."
             ))
     )
 
