@@ -101,6 +101,9 @@ class ConfigurationConnection(val transport: ConfigurationConnectionTransport) {
             ConfigurationMessage.Type.ListAvailableChannels -> {
                 sendAvailableChannels()
             }
+            ConfigurationMessage.Type.Error -> {
+                Log.e(TAG, "Error message received via $this. $message")
+            }
             else -> { throw IllegalArgumentException("Can't handle message type ${message.type}") }
         }
     }

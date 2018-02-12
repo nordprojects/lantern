@@ -33,6 +33,9 @@ class ProjectorConnection(val transport: ConfigurationConnectionTransport) {
             ConfigurationMessage.Type.AvailableChannels -> {
                 projectorConfig.updateAvailableChannelsWithJSON(message.body!!)
             }
+            ConfigurationMessage.Type.Error -> {
+                Log.e(TAG, "Error message received from $this. $message")
+            }
             else -> { throw IllegalArgumentException("Can't handle message type ${message.type}") }
         }
     }
