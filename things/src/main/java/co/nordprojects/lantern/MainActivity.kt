@@ -36,10 +36,11 @@ class MainActivity : Activity() {
                             "type": "bat-signal"
                         },
                         "forward": {
-                            "type": "now-playing"
+                            "type": "calendar-clock",
+                            "url": "https://calendar.google.com/calendar/ical/nordprojects.co_gjfo1dqt495ll9dt7vmoicjfu4%40group.calendar.google.com/public/basic.ics"
                         },
                         "down": {
-                            "type": "lamp"
+                            "type": "now-playing"
                         }
                     }
                 }"""))
