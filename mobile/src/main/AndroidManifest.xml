@@ -22,19 +22,28 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".search.ProjectorSearchActivity"
+        <activity
+            android:name=".search.ProjectorSearchActivity"
             android:label="Connect to device" />
-        <activity android:name=".home.HomeActivity"
+        <activity
+            android:name=".home.HomeActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".settings.SettingsActivity"
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:label="Settings"
+            android:parentActivityName=".home.HomeActivity" />
+        <activity
+            android:name=".channels.ChannelsListActivity"
+            android:label="Choose a channel"
             android:parentActivityName=".home.HomeActivity"
-            android:label="Settings"/>
-        <activity android:name=".channels.ChannelsListActivity"
-            android:parentActivityName=".home.HomeActivity"
-            android:label="Choose a channel" />
+            android:launchMode="singleTop" />
+        <activity android:name=".channels.config.MessageConfigActivity"
+            android:label="Customize"
+            android:parentActivityName=".channels.ChannelsListActivity"/>
     </application>
 
 </manifest>

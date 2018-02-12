@@ -29,7 +29,8 @@ object ChannelsRegistry {
                     "now-playing",
                     "Now Playing",
                     "Displays the track currently playing on your Cast-enabled speaker",
-                    dataUriForDrawableResource(R.drawable.now_playing_icon)
+                    dataUriForDrawableResource(R.drawable.now_playing_icon),
+                    customizable = true
             )),
             Pair(::LampChannel, ChannelInfo(
                     "lamp",
@@ -50,6 +51,12 @@ object ChannelsRegistry {
                     "space",
                     "Space Porthole",
                     "See the stars above you"
+            )),
+            Pair(::MessageChannel, ChannelInfo(
+                    "message",
+                    "Message",
+                    "Display a short message",
+                    customizable = true
             ))
     )
 
