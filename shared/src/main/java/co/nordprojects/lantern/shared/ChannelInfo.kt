@@ -10,19 +10,19 @@ import org.json.JSONObject
 data class ChannelInfo(val id: String,
                        val name: String,
                        val description: String,
-                       val iconUri: Uri? = null) {
+                       val imageUri: Uri? = null) {
     constructor(json: JSONObject) : this(
             json.getString("id"),
             json.getString("name"),
             json.getString("description"),
-            json.optString("icon")?.let { Uri.parse(it) }
+            json.optString("image")?.let { Uri.parse(it) }
     )
     fun toJson(): JSONObject {
         return JSONObject(mapOf(
                 "id" to id,
                 "name" to name,
                 "description" to description,
-                "icon" to iconUri?.toString()
+                "image" to imageUri?.toString()
         ))
     }
 }
