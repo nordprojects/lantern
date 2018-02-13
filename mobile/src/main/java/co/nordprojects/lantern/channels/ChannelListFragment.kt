@@ -45,9 +45,11 @@ class ChannelListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = ChannelListAdapter(App.instance.projector!!.availableChannels, onChannelSelectedListener)
+        val projector = App.instance.projector
+        if (projector != null) {
+            recyclerView.adapter = ChannelListAdapter(projector.availableChannels, onChannelSelectedListener)
+        }
     }
-
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
