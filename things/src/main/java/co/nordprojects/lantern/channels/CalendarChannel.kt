@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import biweekly.Biweekly
 import biweekly.component.VEvent
 import co.nordprojects.lantern.Channel
+import co.nordprojects.lantern.R
 import java.io.InputStream
 import java.net.URL
 import java.util.*
@@ -33,12 +34,27 @@ class CalendarChannel() : Channel() {
         return object : View(context) {
             val whitePaint = Paint().apply {
                 color = Color.WHITE
+                strokeWidth = 4.0f
+                typeface = context.resources.getFont(R.font.pt_sans)
+                textSize = 20.0f
+            }
+            val leftAlignPaint = Paint(whitePaint).apply {
+                textAlign = Paint.Align.LEFT
+            }
+            val centerAlignPaint = Paint(whitePaint).apply {
+                textAlign = Paint.Align.CENTER
+            }
+            val rightAlignPaint = Paint(whitePaint).apply {
+                textAlign = Paint.Align.RIGHT
             }
 
             override fun onDraw(canvas: Canvas) {
                 super.onDraw(canvas)
 
-                val segmentRadius = canvas.height/2.0 * 0.7
+                val lineStartRadius = canvas.height/2.0f * 0.7f
+                val lineEndRadius = canvas.height/2.0f * 0.8f
+                val textRadius = canvas.height/2.0f * 0.85f
+
                 canvas.drawColor(Color.BLACK)
                 val calendar = Calendar.getInstance()
 
@@ -48,12 +64,34 @@ class CalendarChannel() : Channel() {
                     val hour = calendar.get(Calendar.HOUR_OF_DAY)
                     val minute = calendar.get(Calendar.MINUTE)
 
-                    val angle = (hour + minute/60.0) * 2.0*PI / 12.0
+                    val angle = (hour + minute/60.0f) * 2.0f*PI.toFloat() / 12.0f
 
-                    val x = canvas.width/2.0F + segmentRadius * sin(angle)
-                    val y = canvas.height/2.0F - segmentRadius * cos(angle)
-                    canvas.drawCircle(x.toFloat(), y.toFloat(), 10F, whitePaint)
-                    canvas.drawText(event.summary.value, x.toFloat(), y.toFloat(), whitePaint)
+                    val centerX = canvas.width/2.0f
+                    val centerY = canvas.height/2.0f
+
+                    canvas.drawLine(
+                            centerX + lineStartRadius * sin(angle),
+                            centerY - lineStartRadius * cos(angle),
+                            centerX + lineEndRadius * sin(angle),
+                            centerY - lineEndRadius * cos(angle),
+                            whitePaint
+                    )
+
+                    val angleDeg = angle * 180f/PI.toFloat()
+                    val textPaint = when (angleDeg) {
+                        in 0..30 -> centerAlignPaint
+                        in 30..150 -> leftAlignPaint
+                        in 150..210 -> centerAlignPaint
+                        in 210..330 -> rightAlignPaint
+                        else -> centerAlignPaint
+                    }
+
+                    canvas.drawText(
+                            event.summary.value,
+                            centerX + textRadius * sin(angle),
+                            centerY - textRadius * cos(angle),
+                            textPaint
+                    )
                 }
             }
         }
@@ -113,7 +151,7 @@ class CalendarChannel() : Channel() {
             update()
         }
 
-        private fun filteredEventsWithin12Hours(events: List<VEvent>, date: Date): List<VEvent>? {
+        private fun filteredEventsWithin12Hours(events: List<VEvent>, date: Date): List<VEvent> {
             val result = mutableListOf<VEvent>()
             val startDate = Date(date.time - 6*60*60*1000)
             val endDate = Date(date.time + 6*60*60*1000)
