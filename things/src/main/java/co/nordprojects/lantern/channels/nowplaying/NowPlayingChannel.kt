@@ -62,6 +62,10 @@ class NowPlayingChannel() : Channel() {
     }
 
     private fun update() {
+        if (view == null) {
+            return
+        }
+
         val mediaStatus = mediaStatus
         val mediaStatusUpdateDate = mediaStatusUpdateDate
         var trackTimeEstimate: Double? = mediaStatus?.currentTime
