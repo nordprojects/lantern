@@ -15,20 +15,19 @@ import org.json.JSONObject
 @Parcelize
 class ChannelConfiguration(val type: String,
                            val settings: JSONObject,
-                           val secret: JSONObject?) : Parcelable {
+                           val secrets: JSONObject?) : Parcelable {
     constructor(json: JSONObject) : this(
             json.getString("type"),
-            json.clone().also {
-                it.remove("secret")
-            },
-            json.optJSONObject("secret")
+            json.optJSONObject("settings") ?: JSONObject(),
+            json.optJSONObject("secrets")
     )
 
     fun toJson(includingSecrets: Boolean = false): JSONObject {
-        val json = settings.clone()
+        val json = JSONObject()
         json.put("type", type)
+        json.put("settings", settings)
         if (includingSecrets) {
-            json.put("secret", secret)
+            json.put("secrets", secrets)
         }
         return json
     }
