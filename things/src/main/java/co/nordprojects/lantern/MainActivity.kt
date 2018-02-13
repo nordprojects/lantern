@@ -41,8 +41,8 @@ class MainActivity : Activity() {
                         "down": {
                             "type": "webview",
                             "settings": {
-                                "url": "https://youtu.be/6ZfuNTqbHE8",
-                                "scrollTo": 30
+                                "url": "http://bbc.co.uk",
+                                "scrollTo": 0
                             }
                         }
                     }
