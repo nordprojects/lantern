@@ -14,8 +14,8 @@ import org.json.JSONObject
 @SuppressLint("ParcelCreator")
 @Parcelize
 class ChannelConfiguration(val type: String,
-                           val settings: JSONObject,
-                           val secrets: JSONObject?) : Parcelable {
+                           val settings: JSONObject = JSONObject(),
+                           val secrets: JSONObject? = null) : Parcelable {
     constructor(json: JSONObject) : this(
             json.getString("type"),
             json.optJSONObject("settings") ?: JSONObject(),
@@ -34,12 +34,13 @@ class ChannelConfiguration(val type: String,
 
     companion object : Parceler<ChannelConfiguration> {
         val blank: ChannelConfiguration
-            get() = ChannelConfiguration(JSONObject("""{"type": "blank"}"""))
+            get() = ChannelConfiguration(type = "blank")
 
         fun error(message: String): ChannelConfiguration {
-            val config = JSONObject("""{"type": "error"}""")
-            config.put("message", message)
-            return ChannelConfiguration(config)
+            return ChannelConfiguration(
+                    type = "error",
+                    settings = JSONObject(mapOf("message" to message))
+            )
         }
 
         override fun ChannelConfiguration.write(parcel: Parcel, flags: Int) {
