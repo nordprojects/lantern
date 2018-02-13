@@ -36,11 +36,14 @@ class MainActivity : Activity() {
                             "type": "bat-signal"
                         },
                         "forward": {
-                            "type": "calendar-clock",
-                            "url": "https://calendar.google.com/calendar/ical/nordprojects.co_gjfo1dqt495ll9dt7vmoicjfu4%40group.calendar.google.com/public/basic.ics"
+                            "type": "now-playing"
                         },
                         "down": {
-                            "type": "now-playing"
+                            "type": "webview",
+                            "settings": {
+                                "url": "http://bbc.co.uk",
+                                "scrollTo": 0
+                            }
                         }
                     }
                 }"""))

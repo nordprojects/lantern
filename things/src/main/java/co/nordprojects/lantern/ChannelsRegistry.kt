@@ -57,6 +57,11 @@ object ChannelsRegistry {
                     "Message",
                     "Display a short message",
                     customizable = true
+            )),
+            Pair(::WebViewChannel, ChannelInfo(
+                    "webview",
+                    "Web View",
+                    "Show any web page you want to explore."
             ))
     )
 
