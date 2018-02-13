@@ -1,6 +1,7 @@
 package co.nordprojects.lantern.home
 
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -75,10 +76,8 @@ class ProjectorDisplayFragment : Fragment() {
         update()
     }
 
-    fun update() {
-
+    private fun update() {
         val projector = App.instance.projector ?: return
-
         for (direction in Direction.values()) {
 
             val channel = projector.planes[direction]!!
@@ -89,7 +88,7 @@ class ProjectorDisplayFragment : Fragment() {
             if (channelInfo == null) {
                 view.text = channel.type
             } else {
-                view.text = channelInfo.name
+                view.text = "‘${channelInfo.name}’"
             }
         }
 
@@ -99,9 +98,17 @@ class ProjectorDisplayFragment : Fragment() {
             Direction.DOWN -> 90F
         }
 
+        val projectorHeadImage: Int = when(projector.direction) {
+            Direction.UP -> R.drawable.projector_head_up
+            Direction.FORWARD -> R.drawable.projector_head_forward
+            Direction.DOWN -> R.drawable.projector_head_down
+        }
+
         projectorHeadImageView.animate().apply {
             interpolator = AccelerateDecelerateInterpolator()
             duration = 300
         }.rotation(projectorHeadAngle)
+
+        projectorHeadImageView.setImageResource(projectorHeadImage)
     }
 }
