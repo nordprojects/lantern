@@ -30,7 +30,7 @@ class AppConfiguration: Observable() {
             {
                 "planes": {
                     "up": {"type": "blank"},
-                    "forward": {"type": "calendar-clock"},
+                    "forward": {"type": "lamp"},
                     "down": {"type": "now-playing"}
                 }
             }

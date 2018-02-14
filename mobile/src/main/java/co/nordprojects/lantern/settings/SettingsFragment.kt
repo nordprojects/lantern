@@ -1,6 +1,8 @@
 package co.nordprojects.lantern.settings
 
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
@@ -10,8 +12,8 @@ import android.view.ViewGroup
 import co.nordprojects.lantern.App
 
 import co.nordprojects.lantern.R
+import co.nordprojects.lantern.search.ProjectorSearchActivity
 import kotlinx.android.synthetic.main.fragment_settings.*
-import kotlinx.android.synthetic.main.item_row_channel.*
 
 
 class SettingsFragment : Fragment() {
@@ -48,15 +50,19 @@ class SettingsFragment : Fragment() {
     }
 
     private fun onDisconnectClicked() {
-        Log.i(TAG, "onDisconnectClicked")
+        val intent = Intent("disconnect_from_projector")
+        activity?.sendBroadcast(intent)
+        activity?.finish()
     }
 
     private fun onResetDeviceClicked() {
-        Log.i(TAG, "onResetDeviceClicked")
+        App.instance.configClient.activeConnection?.sendResetDevice()
+        activity?.finish()
     }
 
     private fun onLearnMoreClicked() {
-        Log.i(TAG, "onLearnMoreClick")
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://developer.android.com/things/index.html"))
+        startActivity(intent)
     }
 
 }

@@ -33,7 +33,6 @@ class ProjectorSearchFragment : Fragment() {
             ObjectAnimator.ofFloat(lampHead, "rotation", it).apply {
                 duration = 500
                 startDelay = 500
-                interpolator = AccelerateDecelerateInterpolator()
             }
         }
         val animatorSet = AnimatorSet().apply {

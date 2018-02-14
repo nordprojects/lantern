@@ -61,4 +61,9 @@ class ProjectorConnection(val transport: ConfigurationConnectionTransport,
         val message = ConfigurationMessage(ConfigurationMessage.Type.SetPlane, arguments, body)
         transport.sendMessage(message)
     }
+
+    fun sendResetDevice() {
+        val message = ConfigurationMessage(ConfigurationMessage.Type.Reset)
+        transport.sendMessage(message)
+    }
 }

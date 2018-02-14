@@ -1,6 +1,9 @@
 package co.nordprojects.lantern.home
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -21,6 +24,16 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
         val RESULT_DISCONNECTED = 2
     }
 
+    val broadcastReceiver = object : BroadcastReceiver() {
+
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val action = intent!!.action
+            if (action == "disconnect_from_projector") {
+                finish()
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -34,6 +47,9 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.add(R.id.fragment_container, projectorFragment)
         fragmentTransaction.commit()
+
+
+        registerReceiver(broadcastReceiver, IntentFilter("finish_activity"))
     }
 
     override fun onResume() {
@@ -70,5 +86,10 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
     private fun showProjectorSearchOnDisconnect() {
         setResult(RESULT_DISCONNECTED)
         finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(broadcastReceiver)
     }
 }
