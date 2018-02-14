@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#c5c5c5</color>
     <color name="colorAccent">#5e98f6</color>
     <color name="defaultBackground">#EFEFEF</color>
-    <color name="downPlane">#FF9100</color>
+    <color name="downPlane">#FABC0A</color>
     <color name="upPlane">#508EF5</color>
     <color name="forwardPlane">#EB4C3F</color>
     <color name="text_dark">#1d1d1d</color>

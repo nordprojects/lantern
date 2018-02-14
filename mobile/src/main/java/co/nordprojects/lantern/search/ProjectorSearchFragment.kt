@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
 import co.nordprojects.lantern.R
 import kotlinx.android.synthetic.main.fragment_projector_search.*
 
@@ -30,7 +31,9 @@ class ProjectorSearchFragment : Fragment() {
         lampHead.rotation = 45F
         val animations = listOf(0F, -45F, -135F, -180F, -270F, -315F).map {
             ObjectAnimator.ofFloat(lampHead, "rotation", it).apply {
-                duration = 1000
+                duration = 500
+                startDelay = 500
+                interpolator = AccelerateDecelerateInterpolator()
             }
         }
         val animatorSet = AnimatorSet().apply {

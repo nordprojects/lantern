@@ -37,8 +37,8 @@
         android:id="@+id/lampHead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="76dp"
-        android:layout_marginStart="12dp"
+        android:layout_marginBottom="78dp"
+        android:layout_marginStart="20dp"
         android:src="@drawable/search_projector_head"
         app:layout_constraintBottom_toBottomOf="@+id/imageView3"
         app:layout_constraintStart_toStartOf="@+id/imageView3" />
