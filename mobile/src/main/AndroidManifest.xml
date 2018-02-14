@@ -19,7 +19,9 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".SplashActivity"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,22 +30,32 @@
         </activity>
         <activity
             android:name=".search.ProjectorSearchActivity"
-            android:label="Connect to device" />
+            android:label="Connect to device"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".home.HomeActivity"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".settings.SettingsActivity"
             android:label="Settings"
-            android:parentActivityName=".home.HomeActivity" />
+            android:parentActivityName=".home.HomeActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".channels.ChannelsListActivity"
             android:label="Choose a channel"
             android:parentActivityName=".home.HomeActivity"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <activity android:name=".channels.config.MessageConfigActivity"
             android:label="Customize"
-            android:parentActivityName=".channels.ChannelsListActivity"/>
+            android:parentActivityName=".channels.ChannelsListActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
