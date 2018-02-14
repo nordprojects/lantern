@@ -18,17 +18,19 @@ import java.util.*
 class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSelectedListener {
 
     private val connectionObserver: Observer = Observer { _, _ -> onConnectionChanged() }
+    private val projectorConfigObserver = Observer { _, _ -> projectorConfigUpdated() }
 
     companion object {
         val TAG: String = HomeActivity::class.java.simpleName
         val RESULT_DISCONNECTED = 2
+        val DISCONNECT_ACTIVITY = "disconnect_from_projector"
     }
 
     val broadcastReceiver = object : BroadcastReceiver() {
 
         override fun onReceive(context: Context?, intent: Intent?) {
             val action = intent!!.action
-            if (action == "disconnect_from_projector") {
+            if (action == DISCONNECT_ACTIVITY) {
                 finish()
             }
         }
@@ -42,24 +44,35 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationIcon(R.drawable.menu)
         toolbar.setNavigationOnClickListener { showSettings() }
+        App.instance.projector?.let {
+            title = it.name
+        }
 
         val projectorFragment = ProjectorDisplayFragment()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.add(R.id.fragment_container, projectorFragment)
         fragmentTransaction.commit()
 
+        registerReceiver(broadcastReceiver, IntentFilter(DISCONNECT_ACTIVITY))
+    }
 
-        registerReceiver(broadcastReceiver, IntentFilter("finish_activity"))
+    private fun projectorConfigUpdated() {
+        App.instance.projector?.let {
+            title = it.name
+        }
     }
 
     override fun onResume() {
         super.onResume()
+        App.instance.projector?.addObserver(projectorConfigObserver)
         App.instance.configClient.addObserver(connectionObserver)
+        projectorConfigUpdated()
     }
 
     override fun onPause() {
         super.onPause()
         App.instance.configClient.deleteObserver(connectionObserver)
+        App.instance.projector?.deleteObserver(projectorConfigObserver)
     }
 
     private fun onConnectionChanged() {
