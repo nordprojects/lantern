@@ -8,8 +8,7 @@ import org.json.JSONObject
 /**
  * Created by Michael Colville on 30/01/2018.
  */
-class ProjectorConnection(val transport: ConfigurationConnectionTransport,
-                          val projectorName: String) {
+class ProjectorConnection(val transport: ConfigurationConnectionTransport) {
 
     var projectorConfig: ProjectorConfiguration = ProjectorConfiguration()
 
@@ -25,7 +24,6 @@ class ProjectorConnection(val transport: ConfigurationConnectionTransport,
         Log.i(TAG, "Connected to ${transport.endpointId}")
 
         projectorConfig.deviceID = transport.endpointId
-        projectorConfig.name = projectorName
     }
 
     private fun onMessageReceived(message: ConfigurationMessage) {

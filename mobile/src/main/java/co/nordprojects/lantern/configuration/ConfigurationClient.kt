@@ -135,7 +135,7 @@ class ConfigurationClient(val context: Context): Observable() {
             // always accept connections
             val transport = ConfigurationConnectionTransport(connectionsClient, endpointId)
             connectionsClient.acceptConnection(endpointId, transport.payloadCallback)
-            val connection = ProjectorConnection(transport, connectionInfo.endpointName)
+            val connection = ProjectorConnection(transport)
             activeConnection = connection
         }
 

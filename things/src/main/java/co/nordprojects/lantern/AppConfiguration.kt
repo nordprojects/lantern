@@ -51,7 +51,7 @@ class AppConfiguration: Observable() {
     }
 
     fun updateWithJson(json: JSONObject) {
-        updateName(json.optString("name") ?: defaultName(), skipNotify = true)
+        updateName(json.optString("name", defaultName()), skipNotify = true)
 
         val planesJson = json.getJSONObject("planes")
         updatePlane("up", planesJson.getJSONObject("up"), skipNotify = true)

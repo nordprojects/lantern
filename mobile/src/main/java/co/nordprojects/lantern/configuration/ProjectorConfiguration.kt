@@ -23,8 +23,6 @@ class ProjectorConfiguration: Observable() {
     var name: String = ""
     var deviceID: String = ""
 
-    var name: String = ""
-
     fun updateWithJSON(json: JSONObject) {
         val planesJson = json.getJSONObject("planes")
 
