@@ -59,14 +59,15 @@
                 app:srcCompat="@drawable/banner_clock" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/selectButton"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginBottom="8dp"
-                android:layout_marginRight="16dp"
-                android:text="Select"
+                android:layout_marginRight="8dp"
                 android:fontFamily="@font/roboto_medium"
+                android:text="Select"
+                android:textAlignment="viewEnd"
                 android:textColor="@color/colorAccent"
                 app:layout_constraintRight_toRightOf="parent"
                 card_view:layout_constraintBottom_toBottomOf="parent" />

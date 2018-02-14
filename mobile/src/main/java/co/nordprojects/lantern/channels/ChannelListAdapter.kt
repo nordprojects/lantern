@@ -1,11 +1,13 @@
 package co.nordprojects.lantern.channels
 
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import co.nordprojects.lantern.R
 import co.nordprojects.lantern.shared.ChannelInfo
+import co.nordprojects.lantern.shared.Direction
 import kotlinx.android.synthetic.main.item_row_channel.view.*
 
 /**
@@ -13,13 +15,14 @@ import kotlinx.android.synthetic.main.item_row_channel.view.*
  */
 
 class ChannelListAdapter(private val channels: List<ChannelInfo>,
-                      private val listener: ChannelListFragment.OnChannelSelectedListener?):
+                         private val listener: ChannelListFragment.OnChannelSelectedListener?,
+                         private val direction: Direction):
         RecyclerView.Adapter<ChannelListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent?.context)
                 .inflate(R.layout.item_row_channel, parent, false)
-        return ViewHolder(view, listener)
+        return ViewHolder(view, listener, direction)
     }
 
     override fun getItemCount(): Int {
@@ -31,7 +34,8 @@ class ChannelListAdapter(private val channels: List<ChannelInfo>,
     }
 
     class ViewHolder(var view: View,
-                     private val listener: ChannelListFragment.OnChannelSelectedListener?):
+                     private val listener: ChannelListFragment.OnChannelSelectedListener?,
+                     private val direction: Direction):
             RecyclerView.ViewHolder(view) {
 
         private var channel: ChannelInfo? = null
@@ -41,6 +45,9 @@ class ChannelListAdapter(private val channels: List<ChannelInfo>,
             view.channelNameTextView.text = "${channel.name}"
             view.descriptionTextView.text = "${channel.description}"
             view.setOnClickListener { listener?.onChannelSelected(channel) }
+            view.selectButton.setTextColor(ContextCompat.getColor(view.context, direction.color))
+            view.selectButton.setOnClickListener { listener?.onChannelSelected(channel) }
+
         }
     }
 }

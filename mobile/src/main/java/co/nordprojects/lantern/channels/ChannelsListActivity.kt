@@ -42,34 +42,13 @@ class ChannelsListActivity : AppCompatActivity(),
         val directionString = intent.getStringExtra("direction")
         direction = Direction.valueOf(directionString)
 
-        val projectorDirectionAngle: Float = when(direction) {
-            Direction.UP -> -90F
-            Direction.FORWARD -> 0F
-            Direction.DOWN -> 90F
-        }
 
-        val directionText: String = when(direction) {
-            Direction.UP -> "upwards"
-            Direction.FORWARD -> "forwards"
-            Direction.DOWN -> "downwards"
-        }
-
-        val directionColor: Int = when(direction) {
-            Direction.UP -> R.color.upPlane
-            Direction.FORWARD -> R.color.forwardPlane
-            Direction.DOWN -> R.color.downPlane
-        }
-
-        val text = "Choose content to project"
-        val spannable = SpannableString("$text $directionText")
-        spannable.setSpan(ForegroundColorSpan(Color.BLACK), 0, text.length, 0)
-        spannable.setSpan(ForegroundColorSpan(ContextCompat.getColor(this, directionColor)),
-                text.length + 1, text.length + 1 + directionText.length, 0)
-//        direction_text.text = spannable
-//        projectorDirection.rotation = projectorDirectionAngle
-
+        val channelFragment = ChannelListFragment()
+        val args = Bundle()
+        args.putString("direction", directionString)
+        channelFragment.arguments = args
         supportFragmentManager.beginTransaction().apply {
-            add(R.id.fragmentContainer, ChannelListFragment())
+            add(R.id.fragmentContainer, channelFragment)
             commit()
         }
     }
