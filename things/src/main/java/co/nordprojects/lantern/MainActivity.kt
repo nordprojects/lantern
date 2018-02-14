@@ -33,7 +33,11 @@ class MainActivity : Activity() {
                 """{
                     "planes": {
                         "up": {
-                            "type": "ambient-weather"
+                            "type": "ambient-weather",
+                            "settings": {
+                                "latitude": 51.5,
+                                "longitude": -0.1
+                            }
                         },
                         "forward": {
                             "type": "now-playing"
