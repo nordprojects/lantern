@@ -63,9 +63,6 @@ class ConfigurationManager(val context: Context) {
                 else -> throw e
             }
         }
-        catch (e: JSONException) {
-            Log.w(TAG, "Corrupt settings file", e)
-        }
     }
 
     private fun save(): Unit {

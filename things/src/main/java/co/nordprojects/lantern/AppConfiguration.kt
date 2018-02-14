@@ -1,5 +1,6 @@
 package co.nordprojects.lantern
 
+import android.provider.Settings.Secure
 import co.nordprojects.lantern.shared.ChannelConfiguration
 import co.nordprojects.lantern.shared.Direction
 import org.json.JSONObject
@@ -11,6 +12,8 @@ class AppConfiguration: Observable() {
             Direction.FORWARD to ChannelConfiguration.blank,
             Direction.DOWN to ChannelConfiguration.blank
     )
+    var name: String = defaultName()
+        private set
     val planes: Map<Direction, ChannelConfiguration>
         get() = _planes
 
@@ -18,6 +21,15 @@ class AppConfiguration: Observable() {
         val direction = Direction.withJsonName(jsonDirection)
 
         _planes[direction] = ChannelConfiguration(jsonConfig)
+
+        setChanged()
+        if (!skipNotify) {
+            notifyObservers()
+        }
+    }
+
+    fun updateName(name: String, skipNotify: Boolean = false) {
+        this.name = name
 
         setChanged()
         if (!skipNotify) {
@@ -39,8 +51,9 @@ class AppConfiguration: Observable() {
     }
 
     fun updateWithJson(json: JSONObject) {
-        val planesJson = json.getJSONObject("planes")
+        updateName(json.optString("name") ?: defaultName(), skipNotify = true)
 
+        val planesJson = json.getJSONObject("planes")
         updatePlane("up", planesJson.getJSONObject("up"), skipNotify = true)
         updatePlane("forward", planesJson.getJSONObject("forward"), skipNotify = true)
         updatePlane("down", planesJson.getJSONObject("down"), skipNotify = true)
@@ -50,11 +63,17 @@ class AppConfiguration: Observable() {
 
     fun toJson(includingSecrets: Boolean = false): JSONObject {
         return JSONObject(mapOf(
+                "name" to name,
                 "planes" to mapOf(
                         "up" to planes[Direction.UP]?.toJson(includingSecrets = includingSecrets),
                         "forward" to planes[Direction.FORWARD]?.toJson(includingSecrets = includingSecrets),
                         "down" to planes[Direction.DOWN]?.toJson(includingSecrets = includingSecrets)
                 )
         ))
+    }
+
+    private fun defaultName(): String {
+        val hardwareId = Secure.getString(App.instance.contentResolver, Secure.ANDROID_ID)
+        return "Lantern-${hardwareId.takeLast(4)}"
     }
 }

@@ -23,6 +23,8 @@ class ProjectorConfiguration: Observable() {
     var name: String = ""
     var deviceID: String = ""
 
+    var name: String = ""
+
     fun updateWithJSON(json: JSONObject) {
         val planesJson = json.getJSONObject("planes")
 
@@ -31,6 +33,7 @@ class ProjectorConfiguration: Observable() {
         updatePlane("down", planesJson.getJSONObject("down"))
 
         direction = Direction.withJsonName(json.getString("direction"))
+        name = json.getString("name")
 
         setChanged()
         notifyObservers()

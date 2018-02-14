@@ -24,6 +24,7 @@ data class ConfigurationMessage(val type: Type,
         AvailableChannels("available-channels"),
         SetPlane("set-plane"),
         ListAvailableChannels("list-available-channels"),
+        SetName("set-name"),
         Reset("reset");
 
         companion object {

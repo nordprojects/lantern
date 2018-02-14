@@ -53,7 +53,6 @@ class ProjectorConnection(val transport: ConfigurationConnectionTransport,
     }
 
     fun sendSetPlane(direction: Direction, configuration: ChannelConfiguration) {
-
         val body = configuration.toJson(includingSecrets = true)
         val arguments = JSONObject().apply {
             put("plane", direction.jsonName)
@@ -64,6 +63,14 @@ class ProjectorConnection(val transport: ConfigurationConnectionTransport,
 
     fun sendResetDevice() {
         val message = ConfigurationMessage(ConfigurationMessage.Type.Reset)
+        transport.sendMessage(message)
+    }
+
+    fun sendSetName(name: String) {
+        val message = ConfigurationMessage(
+                ConfigurationMessage.Type.SetName,
+                body = JSONObject(mapOf("name" to name))
+        )
         transport.sendMessage(message)
     }
 }

@@ -21,13 +21,14 @@ import java.util.Observer
  */
 class ConfigurationServer(val context: Context) {
     private val TAG = ConfigurationServer::class.java.simpleName
-    private val DEVICE_NAME = "Projector Pi"
+
     private val SERVICE_ID = "co.nordprojects.lantern.projector"
     private val connectionsClient = Nearby.getConnectionsClient(context)
     private val activeConnections: MutableMap<String, ConfigurationConnection> = mutableMapOf()
 
     fun startAdvertising() {
-        connectionsClient.startAdvertising(DEVICE_NAME,
+        connectionsClient.startAdvertising(
+                App.instance.config.name,
                 SERVICE_ID,
                 connectionLifecycleCallback,
                 AdvertisingOptions(Strategy.P2P_CLUSTER))
@@ -100,6 +101,10 @@ class ConfigurationConnection(val transport: ConfigurationConnectionTransport) {
             }
             ConfigurationMessage.Type.ListAvailableChannels -> {
                 sendAvailableChannels()
+            }
+            ConfigurationMessage.Type.SetName -> {
+                val newName = message.body!!.getString("name")
+                App.instance.config.updateName(newName)
             }
             ConfigurationMessage.Type.Error -> {
                 Log.e(TAG, "Error message received via $this. $message")
