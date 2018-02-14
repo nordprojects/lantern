@@ -11,7 +11,6 @@ import java.util.*
  */
 
 class ProjectorConfiguration: Observable() {
-
     private val _planes = mutableMapOf<Direction, ChannelConfiguration>(
             Direction.UP to ChannelConfiguration.blank,
             Direction.FORWARD to ChannelConfiguration.blank,
@@ -19,10 +18,10 @@ class ProjectorConfiguration: Observable() {
     )
     val planes: Map<Direction, ChannelConfiguration>
         get() = _planes
-
     var direction: Direction = Direction.FORWARD
-
     var availableChannels: List<ChannelInfo> = listOf()
+    var name: String = ""
+    var deviceID: String = ""
 
     fun updateWithJSON(json: JSONObject) {
         val planesJson = json.getJSONObject("planes")
@@ -37,7 +36,7 @@ class ProjectorConfiguration: Observable() {
         notifyObservers()
     }
 
-    fun updatePlane(jsonDirection: String, jsonConfig: JSONObject) {
+    private fun updatePlane(jsonDirection: String, jsonConfig: JSONObject) {
         val direction = Direction.withJsonName(jsonDirection)
         _planes[direction] = ChannelConfiguration(jsonConfig)
     }
