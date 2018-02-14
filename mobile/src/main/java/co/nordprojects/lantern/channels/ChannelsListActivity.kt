@@ -65,8 +65,8 @@ class ChannelsListActivity : AppCompatActivity(),
         spannable.setSpan(ForegroundColorSpan(Color.BLACK), 0, text.length, 0)
         spannable.setSpan(ForegroundColorSpan(ContextCompat.getColor(this, directionColor)),
                 text.length + 1, text.length + 1 + directionText.length, 0)
-        direction_text.text = spannable
-        projectorDirection.rotation = projectorDirectionAngle
+//        direction_text.text = spannable
+//        projectorDirection.rotation = projectorDirectionAngle
 
         supportFragmentManager.beginTransaction().apply {
             add(R.id.fragmentContainer, ChannelListFragment())

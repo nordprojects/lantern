@@ -35,6 +35,8 @@ class ProjectorConnectingFragment : Fragment() {
     private fun startConnectingAnimation() {
         val halfDuration: Long = 500
 
+        // TODO - this animation is dependent on screen density, redo in an independent way
+
         // GROW
         val grow = ObjectAnimator.ofFloat(rainbow, "scaleX", 4.0f).apply {
             duration = halfDuration
@@ -53,7 +55,7 @@ class ProjectorConnectingFragment : Fragment() {
             duration = halfDuration
             interpolator = LinearInterpolator()
         }
-        val translate2 = ObjectAnimator.ofFloat(rainbow, "translationX", 220.0f).apply {
+        val translate2 = ObjectAnimator.ofFloat(rainbow, "translationX", 240.0f).apply {
             duration = halfDuration
             interpolator = LinearInterpolator()
         }

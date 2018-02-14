@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context="co.nordprojects.lantern.channels.ChannelListFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
@@ -15,5 +13,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingTop="30dp"
+        android:clipToPadding="false"/>
+
 </android.support.constraint.ConstraintLayout>
