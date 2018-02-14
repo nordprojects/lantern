@@ -33,7 +33,7 @@ class MainActivity : Activity() {
                 """{
                     "planes": {
                         "up": {
-                            "type": "bat-signal"
+                            "type": "ambient-weather"
                         },
                         "forward": {
                             "type": "now-playing"

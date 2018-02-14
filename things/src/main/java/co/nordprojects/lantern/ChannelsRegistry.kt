@@ -62,6 +62,11 @@ object ChannelsRegistry {
                     "webview",
                     "Web View",
                     "Show any web page you want to explore."
+            )),
+            Pair(::AmbientWeatherChannel, ChannelInfo(
+                    "ambient-weather",
+                    "Weather Caustics",
+                    "Ambient water reflections react to Google weather data for a chosen location."
             ))
     )
 
