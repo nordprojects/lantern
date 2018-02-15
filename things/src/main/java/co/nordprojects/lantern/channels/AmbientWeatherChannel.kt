@@ -157,13 +157,14 @@ class AmbientWeatherChannel : Channel() {
     }
 
     enum class WeatherConditions {
-        CALM, SUNNY, RAIN, GENTLE_WIND, WINDY;
+        CALM, SUNNY, RAIN, HEAVY_RAIN, GENTLE_WIND, WINDY;
 
         val videoUrl: Uri get() {
             return when(this) {
                 CALM -> Uri.parse("https://s3.amazonaws.com/lantern-resources/calm.mp4")
                 SUNNY -> Uri.parse("https://s3.amazonaws.com/lantern-resources/sunny.mp4")
                 RAIN -> Uri.parse("https://s3.amazonaws.com/lantern-resources/rain.mp4")
+                HEAVY_RAIN -> Uri.parse("https://s3.amazonaws.com/lantern-resources/heavy-rain.mp4")
                 GENTLE_WIND -> Uri.parse("https://s3.amazonaws.com/lantern-resources/gentle-wind.mp4")
                 WINDY -> Uri.parse("https://s3.amazonaws.com/lantern-resources/windy.mp4")
             }
@@ -176,34 +177,34 @@ class AmbientWeatherChannel : Channel() {
                 return when (id) {
                     200 -> RAIN // thunderstorm with light rain
                     201 -> RAIN // thunderstorm with rain
-                    202 -> RAIN // thunderstorm with heavy rain
+                    202 -> HEAVY_RAIN // thunderstorm with heavy rain
                     210 -> RAIN // light thunderstorm
                     211 -> RAIN // thunderstorm
-                    212 -> RAIN // heavy thunderstorm
-                    221 -> RAIN // ragged thunderstorm
+                    212 -> HEAVY_RAIN // heavy thunderstorm
+                    221 -> HEAVY_RAIN // ragged thunderstorm
                     230 -> RAIN // thunderstorm with light drizzle
                     231 -> RAIN // thunderstorm with drizzle
-                    232 -> RAIN // thunderstorm with heavy drizzle
+                    232 -> HEAVY_RAIN // thunderstorm with heavy drizzle
 
                     300 -> RAIN // light intensity drizzle
                     301 -> RAIN // drizzle
-                    302 -> RAIN // heavy intensity drizzle
+                    302 -> HEAVY_RAIN // heavy intensity drizzle
                     310 -> RAIN // light intensity drizzle rain
                     311 -> RAIN // drizzle rain
-                    312 -> RAIN // heavy intensity drizzle rain
+                    312 -> HEAVY_RAIN // heavy intensity drizzle rain
                     313 -> RAIN // shower rain and drizzle
-                    314 -> RAIN // heavy shower rain and drizzle
+                    314 -> HEAVY_RAIN // heavy shower rain and drizzle
                     321 -> RAIN // shower drizzle
 
                     500 -> RAIN // light rain
                     501 -> RAIN // moderate rain
-                    502 -> RAIN // heavy intensity rain
-                    503 -> RAIN // very heavy rain
-                    504 -> RAIN // extreme rain
+                    502 -> HEAVY_RAIN // heavy intensity rain
+                    503 -> HEAVY_RAIN // very heavy rain
+                    504 -> HEAVY_RAIN // extreme rain
                     511 -> RAIN // freezing rain
                     520 -> RAIN // light intensity shower rain
-                    521 -> RAIN // shower rain
-                    522 -> RAIN // heavy intensity shower rain
+                    521 -> HEAVY_RAIN // shower rain
+                    522 -> HEAVY_RAIN // heavy intensity shower rain
                     531 -> RAIN // ragged shower rain
 
                     600 -> CALM // light snow
