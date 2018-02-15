@@ -55,7 +55,8 @@ object ChannelsRegistry {
                     "webview",
                     "Web view",
                     "Load a URL for your favourite site, a recipe or a fun web app you’re building",
-                    Uri.parse("android.resource://co.nordprojects.lantern/drawable/banner_web_page")
+                    Uri.parse("android.resource://co.nordprojects.lantern/drawable/banner_web_page"),
+                    customizable = true
             )),
             Pair(::BlankChannel, ChannelInfo(
                     "blank",
