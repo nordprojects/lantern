@@ -10,11 +10,15 @@ import android.app.Application as AndroidApplication
 
 
 class App : AndroidApplication() {
-    val configManager: ConfigurationManager by lazy { ConfigurationManager(this) }
-    val config: AppConfiguration
-        get() = configManager.appConfig
-    val configServer: ConfigurationServer by lazy { ConfigurationServer(this) }
+    private val TAG = this::class.java.simpleName
+    private val CONFIG_FILE_PATH = "config.json"
+
+    val config: AppConfiguration by lazy { AppConfiguration(this) }
     val accelerometer: Accelerometer by lazy { Accelerometer() }
+
+    private val configServer: ConfigurationServer by lazy { ConfigurationServer(this) }
+    private val configObserver = Observer { _, _ -> configUpdated() }
+    private lateinit var previousName: String
 
     companion object {
         lateinit var instance: App
@@ -24,54 +28,55 @@ class App : AndroidApplication() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+
+        loadConfig()
+        previousName = config.name
+
         configServer.startAdvertising()
         accelerometer.startUpdating()
-    }
-}
 
-
-/**
- * Provides access to, and persists, app configuration.
- *
- * Created by joerick on 16/01/18.
- */
-class ConfigurationManager(val context: Context) {
-    val TAG = ConfigurationManager::class.java.simpleName
-    val CONFIG_FILE_PATH = "config.json"
-    val appConfig = AppConfiguration()
-    val appConfigObserver = Observer { _, _ -> save() }
-
-    init {
-        load()
-        appConfig.addObserver(appConfigObserver)
+        config.addObserver(configObserver)
     }
 
-    private fun load(): Unit {
+    private fun configUpdated() {
+        saveConfig()
+
+        if (previousName != config.name) {
+            previousName = config.name
+
+            // for the name change to be reflected in the nearby advertisement, we have to restart
+            // advertising.
+            configServer.stopAdvertising()
+            configServer.startAdvertising()
+        }
+    }
+
+    private fun loadConfig() {
         try {
-            val file = context.openFileInput(CONFIG_FILE_PATH)
+            val file = openFileInput(CONFIG_FILE_PATH)
             val jsonObject = JSONObject(file.reader().readText())
             file.close()
-            appConfig.updateWithJson(jsonObject)
+            config.updateWithJson(jsonObject)
         }
         catch (e: Exception) {
             when (e) {
                 is FileNotFoundException,
                 is JSONException -> {
                     Log.w(TAG, "Failed to load settings file.", e)
-                    appConfig.resetToDefaults()
+                    config.resetToDefaults()
                 }
                 else -> throw e
             }
         }
     }
 
-    private fun save(): Unit {
-        val file = context.openFileOutput(CONFIG_FILE_PATH, Context.MODE_PRIVATE)
+    private fun saveConfig() {
+        val file = openFileOutput(CONFIG_FILE_PATH, Context.MODE_PRIVATE)
         val fileWriter = file.writer()
-        fileWriter.write(appConfig.toJson().toString(2))
+        fileWriter.write(config.toJson().toString(2))
         fileWriter.close()
         file.close()
 
-        Log.d(TAG, "Saved settings to ${CONFIG_FILE_PATH}")
+        Log.d(TAG, "Saved settings to $CONFIG_FILE_PATH")
     }
 }

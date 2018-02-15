@@ -4,9 +4,10 @@ import android.provider.Settings.Secure
 import co.nordprojects.lantern.shared.ChannelConfiguration
 import co.nordprojects.lantern.shared.Direction
 import org.json.JSONObject
+import android.content.Context
 import java.util.*
 
-class AppConfiguration: Observable() {
+class AppConfiguration(private val context: Context): Observable() {
     private val _planes = mutableMapOf<Direction, ChannelConfiguration>(
             Direction.UP to ChannelConfiguration.blank,
             Direction.FORWARD to ChannelConfiguration.blank,
@@ -73,7 +74,7 @@ class AppConfiguration: Observable() {
     }
 
     private fun defaultName(): String {
-        val hardwareId = Secure.getString(App.instance.contentResolver, Secure.ANDROID_ID)
+        val hardwareId = Secure.getString(context.contentResolver, Secure.ANDROID_ID)
         return "Lantern-${hardwareId.takeLast(4)}"
     }
 }
