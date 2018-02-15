@@ -58,7 +58,7 @@ class SplashActivity : AppCompatActivity() {
     private fun showPermissionsRequiredAlert() {
         val alertDialog = AlertDialog.Builder(this).create()
         alertDialog.setTitle("Location Required")
-        alertDialog.setMessage("Gigavision requires location permissions to find nearby projectors")
+        alertDialog.setMessage("Lantern requires location permissions to find nearby projectors")
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", { dialog, _ ->
             dialog.dismiss()
             requestPermissions()
