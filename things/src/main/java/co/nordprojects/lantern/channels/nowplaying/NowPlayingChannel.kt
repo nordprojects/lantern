@@ -131,10 +131,10 @@ class NowPlayingChannel() : Channel() {
 
     val castConnectionListener = object : CastConnection.Listener() {
         override fun onStatusUpdate(appName: String?, status: String?) {
-            Log.i(TAG, "onStatusUpdate $status")
+            Log.i(TAG, "Cast device updated status: $status")
         }
         override fun onMediaStatusUpdate(mediaStatus: CastConnection.MediaStatus) {
-            Log.i(TAG, "mediaStatusUpdate $mediaStatus")
+            Log.i(TAG, "Cast device updated media: $mediaStatus")
 
             this@NowPlayingChannel.mediaStatus = mediaStatus
             mediaStatusUpdateDate = Date()
