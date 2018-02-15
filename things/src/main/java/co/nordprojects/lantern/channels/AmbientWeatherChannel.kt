@@ -67,6 +67,7 @@ class AmbientWeatherChannel : Channel() {
         super.onDestroyView()
 
         videoView.stopPlayback()
+        videoUri = null
     }
 
     private fun update() {
