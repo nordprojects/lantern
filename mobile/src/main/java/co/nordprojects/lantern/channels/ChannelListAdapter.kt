@@ -42,12 +42,14 @@ class ChannelListAdapter(private val channels: List<ChannelInfo>,
 
         fun bindChannel(channel: ChannelInfo) {
             this.channel = channel
-            view.channelNameTextView.text = "${channel.name}"
-            view.descriptionTextView.text = "${channel.description}"
-            view.setOnClickListener { listener?.onChannelSelected(channel) }
-            view.selectButton.setTextColor(ContextCompat.getColor(view.context, direction.color))
-            view.selectButton.setOnClickListener { listener?.onChannelSelected(channel) }
-
+            view.apply {
+                channelNameTextView.text = "${channel.name}"
+                descriptionTextView.text = "${channel.description}"
+                setOnClickListener { listener?.onChannelSelected(channel) }
+                selectButton.setTextColor(ContextCompat.getColor(view.context, direction.color))
+                selectButton.setOnClickListener { listener?.onChannelSelected(channel) }
+                bannerImageView.setImageURI(channel.imageUri)
+            }
         }
     }
 }

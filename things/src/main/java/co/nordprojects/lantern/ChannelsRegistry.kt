@@ -21,52 +21,59 @@ object ChannelsRegistry {
     val channelsWithInfo = arrayOf<Pair<() -> Channel, ChannelInfo>>(
             Pair(::CalendarChannel, ChannelInfo(
                     "calendar-clock",
-                    "Calendar Clock",
-                    "Augments a real-world clock with your appointments from Google Calendar",
-                    dataUriForDrawableResource(R.drawable.calendar_clock_icon)
+                    "Augmented clock",
+                    "Projects your google calendar events around a real-world clock",
+                    Uri.parse("android.resource://co.nordprojects.lantern/drawable/banner_clock")
             )),
             Pair(::NowPlayingChannel, ChannelInfo(
                     "now-playing",
-                    "Now Playing",
-                    "Displays the track currently playing on your Cast-enabled speaker",
-                    dataUriForDrawableResource(R.drawable.now_playing_icon),
+                    "Now playing",
+                    "Displays song information for whatever's playing through your Cast-enabled speaker",
+                    Uri.parse("android.resource://co.nordprojects.lantern/drawable/banner_now_playing"),
                     customizable = true
+            )),
+            Pair(::AmbientWeatherChannel, ChannelInfo(
+                    "ambient-weather",
+                    "Weather caustics",
+                    "Ambient water reflections react to Google weather data for a chosen location.",
+                    Uri.parse("android.resource://co.nordprojects.lantern/drawable/banner_weather")
+                    )),
+            Pair(::SpaceChannel, ChannelInfo(
+                    "space",
+                    "Space porthole",
+                    "Explore the galaxy with this virtual telescope. Look out for the ISS!",
+                    Uri.parse("android.resource://co.nordprojects.lantern/drawable/banner_space")
             )),
             Pair(::LampChannel, ChannelInfo(
                     "lamp",
                     "Spotlight",
-                    "Bring a little drama to your desk."
+                    "Bring a little drama to your desktop",
+                    Uri.parse("android.resource://co.nordprojects.lantern/drawable/banner_spotlight")
+            )),
+            Pair(::WebViewChannel, ChannelInfo(
+                    "webview",
+                    "Web view",
+                    "Load a URL for your favourite site, a recipe or a fun web app you’re building",
+                    Uri.parse("android.resource://co.nordprojects.lantern/drawable/banner_web_page")
             )),
             Pair(::BlankChannel, ChannelInfo(
                     "blank",
                     "Blank",
-                    "Show nothing in this direction."
+                    "Kill projections for this direction",
+                    Uri.parse("android.resource://co.nordprojects.lantern/drawable/banner_blank")
             )),
             Pair(::BatSignalChannel, ChannelInfo(
                     "bat-signal",
-                    "The Bat Signal",
-                    "Summons the caped crusader to your location, as long as you're in Gotham. Only use in an emergency!"
-            )),
-            Pair(::SpaceChannel, ChannelInfo(
-                    "space",
-                    "Space Porthole",
-                    "See the stars above you"
+                    "Bat-Signal",
+                    "Summon the Batman when troubles about",
+                    Uri.parse("android.resource://co.nordprojects.lantern/drawable/banner_bat_signal")
             )),
             Pair(::MessageChannel, ChannelInfo(
                     "message",
                     "Message",
                     "Display a short message",
+                    Uri.parse("android.resource://co.nordprojects.lantern/drawable/banner_blank"),
                     customizable = true
-            )),
-            Pair(::WebViewChannel, ChannelInfo(
-                    "webview",
-                    "Web View",
-                    "Show any web page you want to explore."
-            )),
-            Pair(::AmbientWeatherChannel, ChannelInfo(
-                    "ambient-weather",
-                    "Weather Caustics",
-                    "Ambient water reflections react to Google weather data for a chosen location."
             ))
     )
 
@@ -97,5 +104,3 @@ object ChannelsRegistry {
         return Uri.parse(outputStream.toString())
     }
 }
-
-
