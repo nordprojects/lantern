@@ -18,6 +18,7 @@ class WebConfigActivity : ChannelConfigActivity() {
 
     private fun updateConfig() {
         config.settings.put("url", editText.text)
+        config.settings.put("subtitle", "‘${editText.text}’")
         finishWithConfigUpdate()
     }
 }

@@ -17,6 +17,9 @@ class BlankChannel() : Channel() {
                               savedInstanceState: Bundle?): View? {
         val view = View(this.context)
         view.setBackgroundColor(Color.BLACK)
+
+        config.settings.put("subtitle", "Projections hidden for this direction")
+
         return view
     }
 }

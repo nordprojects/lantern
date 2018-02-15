@@ -4,6 +4,7 @@ package co.nordprojects.lantern.home
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import android.widget.TextView
 import co.nordprojects.lantern.App
 
 import co.nordprojects.lantern.R
+import co.nordprojects.lantern.channels.color
 import co.nordprojects.lantern.shared.Direction
 import kotlinx.android.synthetic.main.fragment_projector_display.*
 import java.util.Observer
@@ -72,7 +74,7 @@ class ProjectorDisplayFragment : Fragment() {
         App.instance.projector?.deleteObserver(projectorConfigObserver)
     }
 
-    fun projectorConfigUpdated() {
+    private fun projectorConfigUpdated() {
         update()
     }
 
@@ -110,5 +112,17 @@ class ProjectorDisplayFragment : Fragment() {
         }.rotation(projectorHeadAngle)
 
         projectorHeadImageView.setImageResource(projectorHeadImage)
+
+        val channel = projector.planes[projector.direction]
+        if (channel != null) {
+            val channelInfo = projector.channelInfoForChannelType(channel.type)
+            val color = ContextCompat.getColor(context!!, projector.direction.color)
+            currentChannelNameTextView.text = channelInfo?.name ?: ""
+            currentChannelNameTextView.setTextColor(color)
+
+            val subtitle = channel.settings.optString("subtitle", "")
+            currentChannelSubtitleTextView.text = subtitle
+            currentChannelSubtitleTextView.setTextColor(color)
+        }
     }
 }
