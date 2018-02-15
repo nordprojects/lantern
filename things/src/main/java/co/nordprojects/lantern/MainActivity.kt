@@ -40,7 +40,10 @@ class MainActivity : Activity() {
                             }
                         },
                         "forward": {
-                            "type": "now-playing"
+                            "type": "now-playing",
+                            "settings": {
+                                 "castId": "0307628b65a84e3ed2efa89c8ab90b5a"
+                            }
                         },
                         "down": {
                             "type": "webview",

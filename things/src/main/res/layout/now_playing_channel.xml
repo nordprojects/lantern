@@ -26,7 +26,7 @@
             android:text="THE JESTER, THE TRAMP &amp; THE ACROBAT MAKES A MOVE"
             android:textAllCaps="true"
             android:textAppearance="@android:style/TextAppearance"
-            android:textSize="57sp"
+            android:textSize="38sp"
             app:layout_constraintBottom_toTopOf="@+id/artistTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/lato_bold_italic"
             android:text="3:23"
-            android:textSize="29sp"
+            android:textSize="19sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/lato_bold_italic"
             android:text="Kevin Morby"
-            android:textSize="40sp"
+            android:textSize="27sp"
             app:layout_constraintBottom_toTopOf="@+id/durationTextView"
             app:layout_constraintStart_toStartOf="parent" />
     </android.support.constraint.ConstraintLayout>

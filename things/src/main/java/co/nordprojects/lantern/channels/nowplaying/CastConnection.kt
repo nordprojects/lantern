@@ -140,7 +140,7 @@ class CastConnection(val host: String, val port: Int) {
         }
 
         val playerState = PlayerState.valueOf(status.optString("playerState") ?: "")
-        val currentTime = status.optDouble("currentTime")
+        val currentTime = status.opt("currentTime") as? Double
         val media = status.optJSONObject("media")
         val metadata = media?.optJSONObject("metadata")
 
@@ -155,7 +155,7 @@ class CastConnection(val host: String, val port: Int) {
                     artist = artist,
                     album = metadata.optString("albumName"),
                     currentTime = currentTime,
-                    duration = media.optDouble("duration"),
+                    duration = media.opt("duration") as? Double,
                     playerState = playerState
             )
         } else {

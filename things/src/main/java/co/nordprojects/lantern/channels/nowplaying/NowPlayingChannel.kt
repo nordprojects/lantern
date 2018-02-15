@@ -21,9 +21,12 @@ import kotlin.math.round
 
 class NowPlayingChannel() : Channel() {
     val TAG = this::class.java.simpleName
+    val configDeviceId by lazy { config.settings.opt("castId") as? String }
+
     var mediaStatus: CastConnection.MediaStatus? = null
     var mediaStatusUpdateDate: Date? = null
 
+    val discoveryManager by lazy { CastDiscoveryManager(this.context) }
     var updateTimer: Timer? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -39,11 +42,12 @@ class NowPlayingChannel() : Channel() {
     override fun onStart() {
         super.onStart()
 
-        discoveryManager.discoverServices(
-                "_googlecast._tcp",
-                NsdManager.PROTOCOL_DNS_SD,
-                discoveryListener
-        )
+        discoveryManager.listener = object : CastDiscoveryManager.Listener {
+            override fun devicesUpdated() {
+                connectToAvailableCastDevice()
+            }
+        }
+        discoveryManager.startDiscovering()
 
         updateTimer = fixedRateTimer("$this update", true, Date(), 1000) {
             Handler(Looper.getMainLooper()).post {
@@ -55,8 +59,8 @@ class NowPlayingChannel() : Channel() {
     override fun onStop() {
         updateTimer?.cancel()
         updateTimer = null
-        discoveryManager.stopServiceDiscovery(discoveryListener)
-        availableCastServices.clear()
+        discoveryManager.listener = null
+        discoveryManager.stopDiscovering()
 
         super.onStop()
     }
@@ -98,37 +102,6 @@ class NowPlayingChannel() : Channel() {
         }
     }
 
-    val discoveryManager: NsdManager by lazy {
-        this.context.getSystemService(NsdManager::class.java) as NsdManager
-    }
-    val availableCastServices = mutableListOf<NsdServiceInfo>()
-
-    val discoveryListener = object : NsdManager.DiscoveryListener {
-        val TAG = this::class.java.simpleName
-        override fun onServiceFound(serviceInfo: NsdServiceInfo) {
-            discoveryManager.resolveService(serviceInfo, object : NsdManager.ResolveListener {
-                override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
-                    availableCastServices.add(serviceInfo)
-                    connectToAvailableCastDevice()
-                }
-                override fun onResolveFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {
-                    Log.w(TAG, "Resolve error $errorCode for service $serviceInfo")
-                }
-            })
-        }
-        override fun onServiceLost(serviceInfo: NsdServiceInfo) {
-            availableCastServices.remove(serviceInfo)
-        }
-        override fun onStartDiscoveryFailed(serviceType: String?, errorCode: Int) {
-            Log.w(TAG, "Start discovery error $errorCode for serviceType $serviceType")
-        }
-        override fun onStopDiscoveryFailed(serviceType: String?, errorCode: Int) {
-            Log.w(TAG, "Stop discovery error $errorCode for serviceType $serviceType")
-        }
-        override fun onDiscoveryStarted(serviceType: String?) {}
-        override fun onDiscoveryStopped(serviceType: String?) {}
-    }
-
     val castConnectionListener = object : CastConnection.Listener() {
         override fun onStatusUpdate(appName: String?, status: String?) {
             Log.i(TAG, "Cast device updated status: $status")
@@ -152,15 +125,18 @@ class NowPlayingChannel() : Channel() {
             return
         }
 
-        Log.d(TAG, "available cast services: $availableCastServices")
+        Log.d(TAG, "Available cast devices: ${discoveryManager.devices}")
 
-        val filteredServices = availableCastServices.filter {
-            it.serviceName.contains("0307")
+        val filteredDevices = discoveryManager.devices.filter {
+            if (configDeviceId == null)
+                true
+            else
+                it.id == configDeviceId
         }
 
-        val service = filteredServices.lastOrNull() ?: return
+        val device = filteredDevices.lastOrNull() ?: return
 
-        connectToCastDevice(service.host.hostAddress, service.port)
+        connectToCastDevice(device.hostString, device.port)
     }
 
     var castConnection: CastConnection? = null
