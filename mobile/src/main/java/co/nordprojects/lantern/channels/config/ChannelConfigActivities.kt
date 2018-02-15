@@ -6,6 +6,7 @@ package co.nordprojects.lantern.channels.config
  */
 object ChannelConfigActivities {
     val channelTypeToActivity = mapOf(
-            "message" to MessageConfigActivity::class.java
+            "message" to MessageConfigActivity::class.java,
+            "calendar-clock" to CalendarConfigActivity::class.java
     )
 }

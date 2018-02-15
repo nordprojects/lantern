@@ -19,9 +19,9 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".SplashActivity"
-            android:theme="@style/SplashTheme"
             android:configChanges="orientation"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,32 +30,38 @@
         </activity>
         <activity
             android:name=".search.ProjectorSearchActivity"
-            android:label="Connect to device"
             android:configChanges="orientation"
+            android:label="Connect to device"
             android:screenOrientation="portrait" />
         <activity
             android:name=".home.HomeActivity"
-            android:launchMode="singleTop"
             android:configChanges="orientation"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".settings.SettingsActivity"
+            android:configChanges="orientation"
             android:label="Settings"
             android:parentActivityName=".home.HomeActivity"
-            android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
             android:name=".channels.ChannelsListActivity"
-            android:label="Choose a channel"
-            android:parentActivityName=".home.HomeActivity"
-            android:launchMode="singleTop"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".channels.config.MessageConfigActivity"
+            android:label="Choose a channel"
+            android:launchMode="singleTop"
+            android:parentActivityName=".home.HomeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".channels.config.MessageConfigActivity"
+            android:configChanges="orientation"
             android:label="Customize"
             android:parentActivityName=".channels.ChannelsListActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".channels.config.CalendarConfigActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:label="Customize"
+            android:parentActivityName=".channels.ChannelsListActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

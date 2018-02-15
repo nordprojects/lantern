@@ -23,7 +23,8 @@ object ChannelsRegistry {
                     "calendar-clock",
                     "Augmented clock",
                     "Projects your google calendar events around a real-world clock",
-                    Uri.parse("android.resource://co.nordprojects.lantern/drawable/banner_clock")
+                    Uri.parse("android.resource://co.nordprojects.lantern/drawable/banner_clock"),
+                    customizable = true
             )),
             Pair(::NowPlayingChannel, ChannelInfo(
                     "now-playing",
