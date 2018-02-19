@@ -38,7 +38,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
     compileOnly 'com.google.android.things:androidthings:+'
-    implementation 'com.github.MichaelColville:AndroidThings-ADXL345:update-DP6-SNAPSHOT'
+    implementation 'com.github.nordprojects:AndroidThings-ADXL345:fix-overflow-race-SNAPSHOT'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation 'com.google.android.gms:play-services-nearby:11.6.0'
     implementation project(":shared")
