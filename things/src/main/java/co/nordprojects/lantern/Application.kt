@@ -2,6 +2,8 @@ package co.nordprojects.lantern
 
 import android.content.Context
 import android.util.Log
+import co.nordprojects.lantern.comms.ConfigurationServer
+import co.nordprojects.lantern.hardware.Accelerometer
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.FileNotFoundException

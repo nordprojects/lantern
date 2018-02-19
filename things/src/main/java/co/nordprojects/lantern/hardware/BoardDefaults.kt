@@ -1,4 +1,4 @@
-package co.nordprojects.lantern
+package co.nordprojects.lantern.hardware
 
 import android.os.Build
 

@@ -1,14 +1,15 @@
-package co.nordprojects.lantern
+package co.nordprojects.lantern.comms
 
 import android.content.Context
 import android.os.Handler
 import android.util.Log
+import co.nordprojects.lantern.App
+import co.nordprojects.lantern.ChannelsRegistry
 import co.nordprojects.lantern.shared.ConfigurationConnectionTransport
 import co.nordprojects.lantern.shared.ConfigurationMessage
 import co.nordprojects.lantern.shared.clone
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
-import com.google.android.gms.tasks.Task
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Observer

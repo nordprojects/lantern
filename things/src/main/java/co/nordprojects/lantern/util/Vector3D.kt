@@ -1,4 +1,4 @@
-package co.nordprojects.lantern
+package co.nordprojects.lantern.util
 
 import kotlin.math.sqrt
 
@@ -12,10 +12,10 @@ data class Vector3D(val x: Double, val y: Double, val z: Double) {
         get() = sqrt(x*x + y*y + z*z)
 
     fun normalized(): Vector3D {
-        return Vector3D(x/length, y/length, z/length)
+        return Vector3D(x / length, y / length, z / length)
     }
 
     fun dot(other: Vector3D): Double {
-        return x*other.x + y*other.y + + z*other.z
+        return x*other.x + y*other.y + z*other.z
     }
 }

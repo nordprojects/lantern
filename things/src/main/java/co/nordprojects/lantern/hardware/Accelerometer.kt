@@ -1,9 +1,10 @@
-package co.nordprojects.lantern
+package co.nordprojects.lantern.hardware
 
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import co.nordprojects.lantern.shared.Direction
+import co.nordprojects.lantern.util.Vector3D
 import com.cacaosd.adxl345.ADXL345
 import java.io.IOException
 import java.util.*
@@ -15,7 +16,8 @@ import kotlin.concurrent.fixedRateTimer
  * Created by joerick on 22/01/18.
  */
 
-val Direction.vector: Vector3D get() {
+val Direction.vector: Vector3D
+    get() {
     return when (this) {
         Direction.UP -> Vector3D(0.0, 0.0, -1.0)
         Direction.FORWARD -> Vector3D(0.0, 1.0, 0.0)
