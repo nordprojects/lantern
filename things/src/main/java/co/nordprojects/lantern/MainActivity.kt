@@ -28,33 +28,6 @@ class MainActivity : Activity() {
         App.instance.accelerometer.addObserver(accelerometerObserver)
         App.instance.config.addObserver(appConfigObserver)
 
-        // TODO(joerick): remove this! 🔥🔥🔥🔥
-        App.instance.config.updateWithJson(JSONObject(
-                """{
-                    "planes": {
-                        "up": {
-                            "type": "ambient-weather",
-                            "settings": {
-                                "latitude": 51.5,
-                                "longitude": -0.1
-                            }
-                        },
-                        "forward": {
-                            "type": "now-playing",
-                            "settings": {
-                                 "castId": "0307628b65a84e3ed2efa89c8ab90b5a"
-                            }
-                        },
-                        "down": {
-                            "type": "webview",
-                            "settings": {
-                                "url": "http://bbc.co.uk",
-                                "scrollTo": 0
-                            }
-                        }
-                    }
-                }"""))
-
         setContentView(R.layout.main_activity_layout)
         updateChannels()
         Log.d(TAG, "Main activity created.")
