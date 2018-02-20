@@ -95,7 +95,7 @@ class NowPlayingChannel : Channel() {
         }
 
         titleTextView.text = mediaStatus?.title ?: ""
-        artistTextView.text = mediaStatus?.artist ?: ""
+        artistTextView.text = mediaStatus?.artist ?: mediaStatus?.subtitle ?: ""
         durationTextView.text = if (trackTimeEstimate != null) {
             // round to the nearest second (to match other players)
             trackTimeEstimate = round(trackTimeEstimate)

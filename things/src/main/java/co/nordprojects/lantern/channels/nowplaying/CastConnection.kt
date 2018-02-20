@@ -26,6 +26,7 @@ import kotlin.concurrent.fixedRateTimer
 class CastConnection(val host: String, val port: Int) {
     enum class PlayerState { IDLE, BUFFERING, PLAYING, PAUSED }
     data class MediaStatus(val title: String?,
+                           val subtitle: String?,
                            val artist: String?,
                            val album: String?,
                            val duration: Double?,
@@ -139,21 +140,22 @@ class CastConnection(val host: String, val port: Int) {
             return
         }
 
-        val playerState = PlayerState.valueOf(status.optString("playerState") ?: "")
+        val playerState = PlayerState.valueOf(status.optString("playerState"))
         val currentTime = status.opt("currentTime") as? Double
         val media = status.optJSONObject("media")
         val metadata = media?.optJSONObject("metadata")
 
         val mediaStatus = if (metadata != null) {
-            var artist = metadata.optString("artist")
+            var artist = metadata.opt("artist") as? String
             if (artist.isNullOrEmpty()) {
-                artist = metadata.optString("albumArtist")
+                artist = metadata.opt("albumArtist") as? String
             }
 
             MediaStatus(
-                    title = metadata.optString("title"),
+                    title = metadata.opt("title") as? String,
+                    subtitle = metadata.opt("subtitle") as? String,
                     artist = artist,
-                    album = metadata.optString("albumName"),
+                    album = metadata.opt("albumName") as? String,
                     currentTime = currentTime,
                     duration = media.opt("duration") as? Double,
                     playerState = playerState
