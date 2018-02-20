@@ -76,19 +76,34 @@ class MainActivity : Activity() {
                 val newChannel = newChannelForConfig(incomingChannelConfig)
                 channels[direction] = newChannel
                 Log.i(TAG, "Channel for $direction is now $newChannel")
-                updateVisibleChannel()
             }
         }
+        updateVisibleChannel()
+        cleanupRemovedChannels()
     }
 
     private fun updateVisibleChannel() {
         val newVisibleChannel = channels[App.instance.accelerometer.direction]
-        if (visibleChannel == newVisibleChannel) {
+        val oldVisibleChannel = visibleChannel
+
+        if (oldVisibleChannel == newVisibleChannel) {
             return
         }
 
+        visibleChannel = newVisibleChannel
+
         val transaction = fragmentManager.beginTransaction()
-        transaction.replace(R.id.viewGroup, newVisibleChannel)
+
+        if (oldVisibleChannel != null) {
+            transaction.hide(oldVisibleChannel)
+        }
+        if (newVisibleChannel != null) {
+            if (fragmentManager.fragments.contains(newVisibleChannel)) {
+                transaction.show(newVisibleChannel)
+            } else {
+                transaction.add(R.id.viewGroup, newVisibleChannel)
+            }
+        }
 
         try {
             transaction.commitNow()
@@ -101,6 +116,18 @@ class MainActivity : Activity() {
             presentErrorTransaction.replace(R.id.viewGroup, ErrorChannel.newInstance(errorMessage))
             presentErrorTransaction.commit()
         }
+    }
+
+    private fun cleanupRemovedChannels() {
+        // removes previously hidden channels from the fragment manager
+        val fragmentsToRemove = fragmentManager.fragments.subtract(channels.values)
+        val transaction = fragmentManager.beginTransaction()
+
+        for (fragment in fragmentsToRemove) {
+            transaction.remove(fragment)
+        }
+
+        transaction.commit()
     }
 
     private fun newChannelForConfig(config: ChannelConfiguration): Channel {
