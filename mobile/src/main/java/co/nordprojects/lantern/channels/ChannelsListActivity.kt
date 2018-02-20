@@ -9,6 +9,7 @@ import co.nordprojects.lantern.App
 import co.nordprojects.lantern.R
 import co.nordprojects.lantern.channels.config.ChannelConfigActivity
 import co.nordprojects.lantern.channels.config.ChannelConfigActivities
+import co.nordprojects.lantern.home.HomeActivity
 import co.nordprojects.lantern.shared.ChannelConfiguration
 import co.nordprojects.lantern.shared.ChannelInfo
 import co.nordprojects.lantern.shared.Direction
@@ -35,13 +36,13 @@ class ChannelsListActivity : AppCompatActivity(),
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationIcon(R.drawable.back_chevron)
 
-        val directionString = intent.getStringExtra("direction")
+        val directionString = intent.getStringExtra(HomeActivity.ARG_DIRECTION)
         direction = Direction.valueOf(directionString)
 
 
         val channelFragment = ChannelListFragment()
         val args = Bundle()
-        args.putString("direction", directionString)
+        args.putString(HomeActivity.ARG_DIRECTION, directionString)
         channelFragment.arguments = args
         supportFragmentManager.beginTransaction().apply {
             add(R.id.fragmentContainer, channelFragment)

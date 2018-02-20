@@ -15,8 +15,8 @@ open class ChannelConfigActivity : AppCompatActivity() {
     }
 
     companion object {
-        val ARG_CONFIG = "config"
-        val RESULT_CONFIG_SET = 2
+        const val ARG_CONFIG = "config"
+        const val RESULT_CONFIG_SET = 2
     }
 
     fun finishWithConfigUpdate() {

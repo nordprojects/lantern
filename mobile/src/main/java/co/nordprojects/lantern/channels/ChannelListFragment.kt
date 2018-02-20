@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import co.nordprojects.lantern.App
 
 import co.nordprojects.lantern.R
+import co.nordprojects.lantern.home.HomeActivity
 import co.nordprojects.lantern.search.ProjectorListFragment
 import co.nordprojects.lantern.shared.ChannelInfo
 import co.nordprojects.lantern.shared.Direction
@@ -30,7 +31,7 @@ class ChannelListFragment : Fragment() {
     private var onChannelSelectedListener: OnChannelSelectedListener? = null
     private val projectorObserver = Observer { _, _ -> update() }
     private val direction: Direction by lazy {
-            val directionString = arguments?.getString("direction")
+            val directionString = arguments?.getString(HomeActivity.ARG_DIRECTION)
             Direction.valueOf(directionString ?: "forward")
         }
 

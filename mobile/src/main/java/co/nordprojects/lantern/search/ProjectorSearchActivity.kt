@@ -22,8 +22,8 @@ class ProjectorSearchActivity : AppCompatActivity(),
         ProjectorClient.ProjectorClientFailureListener {
 
     companion object {
-        val TAG: String = ProjectorSearchActivity::class.java.simpleName
-        val HOME_ACTIVITY_REQUEST = 1
+        private val TAG: String = ProjectorSearchActivity::class.java.simpleName
+        const val HOME_ACTIVITY_REQUEST = 1
     }
 
     private val clientObserver: Observer = Observer { _, _ -> onClientUpdated() }
