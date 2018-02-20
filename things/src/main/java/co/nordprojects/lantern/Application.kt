@@ -2,12 +2,14 @@ package co.nordprojects.lantern
 
 import android.content.Context
 import android.util.Log
+import android.view.Display
 import co.nordprojects.lantern.comms.ConfigurationServer
 import co.nordprojects.lantern.hardware.Accelerometer
+import com.google.android.things.device.ScreenManager
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.FileNotFoundException
-import java.util.Observer
+import java.util.*
 import android.app.Application as AndroidApplication
 
 
@@ -30,6 +32,8 @@ class App : AndroidApplication() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+
+        setDisplayDPI()
 
         loadConfig()
         previousName = config.name
@@ -80,5 +84,10 @@ class App : AndroidApplication() {
         file.close()
 
         Log.d(TAG, "Saved settings to $CONFIG_FILE_PATH")
+    }
+
+    private fun setDisplayDPI() {
+        val screenManager = ScreenManager(Display.DEFAULT_DISPLAY)
+        screenManager.setDisplayDensity(213) // 720p TV density
     }
 }
