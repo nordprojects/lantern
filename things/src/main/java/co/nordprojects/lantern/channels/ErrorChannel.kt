@@ -21,6 +21,14 @@ class ErrorChannel : Channel() {
 
     companion object {
         val ARG_MESSAGE = "message"
+
+        fun newInstance(errorMessage: String): ErrorChannel {
+            val channel = ErrorChannel()
+            channel.arguments = Bundle().apply {
+                putString(ARG_MESSAGE, errorMessage)
+            }
+            return channel
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

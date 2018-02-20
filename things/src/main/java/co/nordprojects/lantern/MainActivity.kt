@@ -89,7 +89,18 @@ class MainActivity : Activity() {
 
         val transaction = fragmentManager.beginTransaction()
         transaction.replace(R.id.viewGroup, newVisibleChannel)
-        transaction.commit()
+
+        try {
+            transaction.commitNow()
+        }
+        catch (e: Exception) {
+            val errorMessage = "Failed to make channel $newVisibleChannel visible.\n\n$e"
+            Log.e(TAG, errorMessage, e)
+
+            val presentErrorTransaction = fragmentManager.beginTransaction()
+            presentErrorTransaction.replace(R.id.viewGroup, ErrorChannel.newInstance(errorMessage))
+            presentErrorTransaction.commit()
+        }
     }
 
     private fun newChannelForConfig(config: ChannelConfiguration): Channel {
