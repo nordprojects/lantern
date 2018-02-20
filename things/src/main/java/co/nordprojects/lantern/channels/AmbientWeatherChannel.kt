@@ -63,6 +63,17 @@ class AmbientWeatherChannel : Channel() {
         }
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+
+        // pause the video while hidden to be efficient
+        if (hidden) {
+            videoView.pause()
+        } else {
+            videoView.start()
+        }
+    }
+
     override fun onStop() {
         super.onStop()
 
