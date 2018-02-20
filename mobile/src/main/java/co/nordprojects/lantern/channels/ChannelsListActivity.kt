@@ -1,14 +1,10 @@
 package co.nordprojects.lantern.channels
 
 import android.content.Intent
-import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.Snackbar.LENGTH_LONG
-import android.support.v4.content.ContextCompat
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
 import co.nordprojects.lantern.App
 import co.nordprojects.lantern.R
 import co.nordprojects.lantern.channels.config.ChannelConfigActivity
@@ -95,7 +91,7 @@ class ChannelsListActivity : AppCompatActivity(),
     }
 
     private fun sendConfig(config: ChannelConfiguration) {
-        val connection = App.instance.configClient.activeConnection!!
+        val connection = App.instance.client.activeConnection!!
         connection.sendSetPlane(direction, config)
 
         App.instance.projector?.addObserver(projectorObserver)

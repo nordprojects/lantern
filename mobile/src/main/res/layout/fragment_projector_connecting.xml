@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context="co.nordprojects.lantern.search.ProjectorConnectingFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <ImageView
         android:id="@+id/rainbow"
         android:layout_width="wrap_content"

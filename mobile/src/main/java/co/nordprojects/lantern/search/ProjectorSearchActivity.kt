@@ -11,18 +11,23 @@ import android.util.Log
 import co.nordprojects.lantern.App
 import co.nordprojects.lantern.home.HomeActivity
 import co.nordprojects.lantern.R
-import co.nordprojects.lantern.configuration.ConfigurationClient
+import co.nordprojects.lantern.configuration.ProjectorClient
 import co.nordprojects.lantern.configuration.ConnectionState
+import co.nordprojects.lantern.configuration.DiscoveryState
 import kotlinx.android.synthetic.main.activity_projector_search.*
+import java.util.*
 
 class ProjectorSearchActivity : AppCompatActivity(),
         ProjectorListFragment.OnProjectorSelectedListener,
-        ConfigurationClient.ConfigurationClientUpdatedListener {
+        ProjectorClient.ProjectorClientFailureListener {
 
     companion object {
         val TAG: String = ProjectorSearchActivity::class.java.simpleName
         val HOME_ACTIVITY_REQUEST = 1
     }
+
+    private val clientObserver: Observer = Observer { _, _ -> onClientUpdated() }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,27 +41,29 @@ class ProjectorSearchActivity : AppCompatActivity(),
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        App.instance.configClient.listener = null
-    }
-
     override fun onResume() {
         super.onResume()
-        App.instance.configClient.listener = this
-        if (App.instance.configClient.connectionState == ConnectionState.UNINITIALISED) {
-            App.instance.configClient.startDiscovery()
+        App.instance.client.addObserver(clientObserver)
+        App.instance.client.failureListener = this
+        if (App.instance.client.discoveryState == DiscoveryState.UNINITIALISED) {
+            App.instance.client.startDiscovery()
         }
         update()
     }
 
-    override fun onConfigurationClientUpdated() {
+    override fun onPause() {
+        super.onPause()
+        App.instance.client.deleteObserver(clientObserver)
+        App.instance.client.failureListener = null
+    }
+
+    private fun onClientUpdated() {
         update()
     }
 
     override fun onStartDiscoveryFailure() {
         val snackBar = Snackbar.make(fragment_container, "Failed to start Nearby Connections", LENGTH_INDEFINITE)
-        snackBar.setAction("Try again", { App.instance.configClient.startDiscovery() })
+        snackBar.setAction("Try again", { App.instance.client.startDiscovery() })
         snackBar.show()
     }
 
@@ -66,23 +73,29 @@ class ProjectorSearchActivity : AppCompatActivity(),
     }
 
     override fun onProjectorSelected(endpointID: String) {
-        App.instance.configClient.connectTo(endpointID)
+        App.instance.client.connectTo(endpointID)
     }
 
     private fun update() {
-        Log.i(TAG, "UPDATE CONNECTION ${App.instance.configClient.connectionState}")
-        when (App.instance.configClient.connectionState) {
-            ConnectionState.LOOKING_FOR_ENDPOINTS -> {
+        Log.i(TAG, "UPDATE CONNECTION ${App.instance.client.connectionState}")
+
+        // TODO - this is a mess, lets rethink
+        when (App.instance.client.discoveryState) {
+            DiscoveryState.LOOKING_FOR_ENDPOINTS -> {
                 showProjectorSearchFragment()
             }
-            ConnectionState.ENDPOINTS_AVAILABLE -> {
-                showProjectorListFragment()
-            }
-            ConnectionState.CONNECTING_TO_ENDPOINT -> {
-                showProjectorConnectingFragment()
-            }
-            ConnectionState.CONNECTED -> {
-                showHomeActivity()
+            DiscoveryState.ENDPOINTS_AVAILABLE -> {
+                when (App.instance.client.connectionState) {
+                    ConnectionState.DISCONNECTED -> {
+                        showProjectorListFragment()
+                    }
+                    ConnectionState.CONNECTING_TO_ENDPOINT -> {
+                        showProjectorConnectingFragment()
+                    }
+                    ConnectionState.CONNECTED -> {
+                        showHomeActivity()
+                    }
+                }
             }
         }
     }
@@ -125,7 +138,7 @@ class ProjectorSearchActivity : AppCompatActivity(),
                     snackBar.show()
                 }
                 Activity.RESULT_CANCELED -> {
-                    App.instance.configClient.disconnect()
+                    App.instance.client.disconnect()
                 }
             }
         }

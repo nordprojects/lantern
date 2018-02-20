@@ -12,15 +12,15 @@ import co.nordprojects.lantern.R
 import kotlinx.android.synthetic.main.fragment_projector_select.*
 import android.support.v7.widget.RecyclerView
 import co.nordprojects.lantern.App
-import co.nordprojects.lantern.configuration.ConfigurationClient
 import co.nordprojects.lantern.configuration.Endpoint
 import kotlinx.android.synthetic.main.item_row_projector.view.*
+import java.util.*
 
 
-class ProjectorListFragment : Fragment(),
-    ConfigurationClient.EndpointsUpdatedListener {
+class ProjectorListFragment : Fragment() {
 
     private var onProjectorSelectedListener: OnProjectorSelectedListener? = null
+    private val clientObserver: Observer = Observer { _, _ -> onClientUpdated() }
 
     companion object {
         var TAG: String = ProjectorListFragment::class.java.simpleName
@@ -39,14 +39,14 @@ class ProjectorListFragment : Fragment(),
         super.onViewCreated(view, savedInstanceState)
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = EndpointAdapter(App.instance.configClient.endpoints, onProjectorSelectedListener)
+        recyclerView.adapter = EndpointAdapter(App.instance.client.endpoints, onProjectorSelectedListener)
 
-        App.instance.configClient.endpointsUpdatedListener = this
+        App.instance.client.addObserver(clientObserver)
     }
 
-    override fun onEndpointsUpdated() {
+    private fun onClientUpdated() {
         // TODO - Use LiveData or similar to observe changes
-        recyclerView.adapter = EndpointAdapter(App.instance.configClient.endpoints, onProjectorSelectedListener)
+        recyclerView.adapter = EndpointAdapter(App.instance.client.endpoints, onProjectorSelectedListener)
         recyclerView.invalidate()
     }
 
@@ -58,7 +58,7 @@ class ProjectorListFragment : Fragment(),
 
     override fun onDestroy() {
         super.onDestroy()
-        App.instance.configClient.endpointsUpdatedListener = null
+        App.instance.client.deleteObserver(clientObserver)
     }
 }
 
@@ -70,7 +70,6 @@ class EndpointAdapter(private val endpoints: ArrayList<Endpoint>,
         val view = LayoutInflater.from(parent?.context)
                 .inflate(R.layout.item_row_projector, parent, false)
         return ViewHolder(view, listener)
-
     }
 
     override fun getItemCount(): Int {

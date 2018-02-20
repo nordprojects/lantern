@@ -1,6 +1,7 @@
 package co.nordprojects.lantern.configuration
 
 import android.content.Context
+import android.provider.Settings
 import android.util.Log
 import co.nordprojects.lantern.shared.ConfigurationConnectionTransport
 import com.google.android.gms.nearby.Nearby
@@ -13,53 +14,57 @@ import java.util.*
 
 data class Endpoint(val id: String, val info: DiscoveredEndpointInfo)
 
-enum class ConnectionState {
+enum class DiscoveryState {
     UNINITIALISED,
     LOOKING_FOR_ENDPOINTS,
-    ENDPOINTS_AVAILABLE,
+    ENDPOINTS_AVAILABLE
+}
+
+enum class ConnectionState {
+    DISCONNECTED,
     CONNECTING_TO_ENDPOINT,
     CONNECTED
 }
 
-class ConfigurationClient(val context: Context): Observable() {
+class ProjectorClient(val context: Context): Observable() {
 
     private val connectionsClient = Nearby.getConnectionsClient(context)
     val endpoints: ArrayList<Endpoint> = arrayListOf()
     private var activeEndpointID: String? = null
     var activeConnection: ProjectorConnection? = null
-        set(value) {
-            field = value
-            setChanged()
-            notifyObservers()
-        }
-    var listener: ConfigurationClientUpdatedListener? = null
-    var endpointsUpdatedListener: EndpointsUpdatedListener? = null
-    var connectionState: ConnectionState = ConnectionState.UNINITIALISED
+
+    var discoveryState: DiscoveryState = DiscoveryState.UNINITIALISED
         set(value) {
             val oldValue = field
-            field = value
             if (oldValue != value) {
-                listener?.onConfigurationClientUpdated()
+                field = value
+                setChanged()
+                notifyObservers()
             }
         }
+    var connectionState: ConnectionState = ConnectionState.DISCONNECTED
+        set(value) {
+            val oldValue = field
+            if (oldValue != value) {
+                field = value
+                setChanged()
+                notifyObservers()
+            }
+        }
+    var failureListener: ProjectorClientFailureListener? = null
 
     companion object {
-        val TAG: String = ConfigurationClient::class.java.simpleName
+        private val TAG: String = ProjectorClient::class.java.simpleName
     }
 
-    interface EndpointsUpdatedListener {
-        fun onEndpointsUpdated()
-    }
-
-    interface ConfigurationClientUpdatedListener {
-        fun onConfigurationClientUpdated()
+    interface ProjectorClientFailureListener {
         fun onStartDiscoveryFailure()
         fun onRequestConnectionFailure()
     }
 
     fun startDiscovery() {
         Log.i(TAG, "START DISCOVERY")
-        connectionState = ConnectionState.LOOKING_FOR_ENDPOINTS
+        discoveryState = DiscoveryState.LOOKING_FOR_ENDPOINTS
         connectionsClient.startDiscovery(
                 "co.nordprojects.lantern.projector",
                 endpointDiscoveryCallback,
@@ -67,8 +72,8 @@ class ConfigurationClient(val context: Context): Observable() {
                 .addOnSuccessListener { Log.i(TAG, "Start Discovery success") }
                 .addOnFailureListener {
                     Log.i(TAG, "Start Discovery failure")
-                    connectionState = ConnectionState.UNINITIALISED
-                    listener?.onStartDiscoveryFailure()
+                    discoveryState = DiscoveryState.UNINITIALISED
+                    failureListener?.onStartDiscoveryFailure()
                 }
     }
 
@@ -77,14 +82,14 @@ class ConfigurationClient(val context: Context): Observable() {
         activeEndpointID = endpointId
         Log.i(TAG, "connect to $endpointId")
         connectionsClient.requestConnection(
-                "device name", //TODO
+                Settings.Secure.getString(context.contentResolver, "bluetooth_name"),
                 endpointId,
                 connectionLifecycleCallback)
                 .addOnSuccessListener { Log.i(TAG, "Start Request Connection success") }
                 .addOnFailureListener {
                     Log.i(TAG, "Start Request Connection failure")
-                    connectionState = ConnectionState.ENDPOINTS_AVAILABLE
-                    listener?.onRequestConnectionFailure()
+                    discoveryState = DiscoveryState.ENDPOINTS_AVAILABLE
+                    failureListener?.onRequestConnectionFailure()
                 }
     }
 
@@ -92,20 +97,12 @@ class ConfigurationClient(val context: Context): Observable() {
         val endpointID = activeEndpointID
         if (endpointID != null) {
             connectionsClient.disconnectFromEndpoint(endpointID)
-            resetConnectionState()
-        }
-    }
-
-    private fun resetConnectionState() {
-        connectionState = if (endpoints.size > 0) {
-            ConnectionState.ENDPOINTS_AVAILABLE
-        } else {
-            ConnectionState.LOOKING_FOR_ENDPOINTS
+            connectionState = ConnectionState.DISCONNECTED
         }
     }
 
     private fun connectionDidDisconnect() {
-        resetConnectionState()
+        connectionState = ConnectionState.DISCONNECTED
         activeConnection?.onDisconnected()
         activeConnection = null
         // TODO - restart nearby discovering? remove all existing endpoints
@@ -115,18 +112,20 @@ class ConfigurationClient(val context: Context): Observable() {
         override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
             Log.i(TAG, "Endpoint found $endpointId")
             endpoints.add(Endpoint(endpointId, info))
-            connectionState = ConnectionState.ENDPOINTS_AVAILABLE
-            endpointsUpdatedListener?.onEndpointsUpdated()
+            setChanged()
+            notifyObservers()
+            discoveryState = DiscoveryState.ENDPOINTS_AVAILABLE
         }
 
         override fun onEndpointLost(endpointId: String) {
             Log.i(TAG, "Endpoint lost $endpointId")
             val endpoint = endpoints.find { it.id == endpointId }
             endpoints.remove(endpoint)
+            setChanged()
+            notifyObservers()
             if (endpoints.size == 0) {
-                connectionState = ConnectionState.LOOKING_FOR_ENDPOINTS
+                discoveryState = DiscoveryState.LOOKING_FOR_ENDPOINTS
             }
-            endpointsUpdatedListener?.onEndpointsUpdated()
         }
     }
 

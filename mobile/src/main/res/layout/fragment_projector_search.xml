@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context="co.nordprojects.lantern.search.ProjectorSearchFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"

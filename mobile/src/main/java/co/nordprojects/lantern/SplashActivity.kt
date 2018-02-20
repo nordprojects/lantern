@@ -5,29 +5,24 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Handler
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import co.nordprojects.lantern.search.ProjectorSearchActivity
-import android.support.design.widget.Snackbar
-import android.content.DialogInterface
-import android.content.DialogInterface.BUTTON_NEUTRAL
 import android.support.v7.app.AlertDialog
 
 
 class SplashActivity : AppCompatActivity() {
 
     companion object {
-        val TAG: String = SplashActivity::class.java.simpleName
+        private val TAG: String = SplashActivity::class.java.simpleName
+        private val REQUIRED_PERMISSIONS = arrayOf(
+                Manifest.permission.BLUETOOTH,
+                Manifest.permission.BLUETOOTH_ADMIN,
+                Manifest.permission.ACCESS_WIFI_STATE,
+                Manifest.permission.CHANGE_WIFI_STATE,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+        private const val REQUEST_CODE_REQUIRED_PERMISSIONS = 1
     }
-
-    private val REQUIRED_PERMISSIONS = arrayOf(
-            Manifest.permission.BLUETOOTH,
-            Manifest.permission.BLUETOOTH_ADMIN,
-            Manifest.permission.ACCESS_WIFI_STATE,
-            Manifest.permission.CHANGE_WIFI_STATE,
-            Manifest.permission.ACCESS_COARSE_LOCATION)
-    private val REQUEST_CODE_REQUIRED_PERMISSIONS = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -6,10 +6,10 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import co.nordprojects.lantern.App
 import co.nordprojects.lantern.R
 import co.nordprojects.lantern.channels.ChannelsListActivity
+import co.nordprojects.lantern.configuration.ConnectionState
 import co.nordprojects.lantern.settings.SettingsActivity
 import co.nordprojects.lantern.shared.Direction
 import kotlinx.android.synthetic.main.activity_home.*
@@ -21,13 +21,12 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
     private val projectorConfigObserver = Observer { _, _ -> projectorConfigUpdated() }
 
     companion object {
-        val TAG: String = HomeActivity::class.java.simpleName
-        val RESULT_DISCONNECTED = 2
-        val DISCONNECT_ACTIVITY = "disconnect_from_projector"
+        private val TAG: String = HomeActivity::class.java.simpleName
+        const val RESULT_DISCONNECTED = 2
+        const val DISCONNECT_ACTIVITY = "disconnect_from_projector"
     }
 
-    val broadcastReceiver = object : BroadcastReceiver() {
-
+    private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val action = intent!!.action
             if (action == DISCONNECT_ACTIVITY) {
@@ -65,18 +64,23 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
     override fun onResume() {
         super.onResume()
         App.instance.projector?.addObserver(projectorConfigObserver)
-        App.instance.configClient.addObserver(connectionObserver)
+        App.instance.client.addObserver(connectionObserver)
         projectorConfigUpdated()
+        checkConnectionStatus()
     }
 
     override fun onPause() {
         super.onPause()
-        App.instance.configClient.deleteObserver(connectionObserver)
         App.instance.projector?.deleteObserver(projectorConfigObserver)
+        App.instance.client.deleteObserver(connectionObserver)
     }
 
     private fun onConnectionChanged() {
-        if (App.instance.projector == null) {
+        checkConnectionStatus()
+    }
+
+    private fun checkConnectionStatus() {
+        if (App.instance.client.connectionState == ConnectionState.DISCONNECTED) {
             showProjectorSearchOnDisconnect()
         }
     }

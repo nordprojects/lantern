@@ -67,7 +67,7 @@ class SettingsFragment : Fragment() {
         input.inputType = InputType.TYPE_CLASS_TEXT
         builder.setView(input)
         builder.setPositiveButton("Change Name",  { _, _ ->
-            App.instance.configClient.activeConnection?.sendSetName(input.text.toString())
+            App.instance.client.activeConnection?.sendSetName(input.text.toString())
         })
         builder.setNegativeButton("Cancel",  { dialog, _ ->
             dialog.cancel()
@@ -82,7 +82,7 @@ class SettingsFragment : Fragment() {
     }
 
     private fun onResetDeviceClicked() {
-        App.instance.configClient.activeConnection?.sendResetDevice()
+        App.instance.client.activeConnection?.sendResetDevice()
         activity?.finish()
     }
 
