@@ -15,19 +15,6 @@ import kotlin.concurrent.fixedRateTimer
  *
  * Created by joerick on 22/01/18.
  */
-
-val Direction.vector: Vector3D
-    get() {
-    return when (this) {
-        Direction.UP -> Vector3D(0.0, 0.0, -1.0)
-        Direction.FORWARD -> Vector3D(0.0, 1.0, 0.0)
-        Direction.DOWN -> Vector3D(0.0, 0.0, 1.0)
-    }
-}
-fun Direction.alignmentWithVector(vector: Vector3D): Double {
-    return this.vector.normalized().dot(vector.normalized())
-}
-
 class Accelerometer: Observable(), AutoCloseable {
     val TAG = this::class.java.simpleName
 
@@ -91,5 +78,18 @@ class Accelerometer: Observable(), AutoCloseable {
     override fun close() {
         stopUpdating()
         device.close()
+    }
+
+    private val Direction.vector: Vector3D
+        get() {
+            return when (this) {
+                Direction.UP -> Vector3D(0.0, 0.0, -1.0)
+                Direction.FORWARD -> Vector3D(0.0, 1.0, 0.0)
+                Direction.DOWN -> Vector3D(0.0, 0.0, 1.0)
+            }
+        }
+
+    private fun Direction.alignmentWithVector(vector: Vector3D): Double {
+        return this.vector.normalized().dot(vector.normalized())
     }
 }
