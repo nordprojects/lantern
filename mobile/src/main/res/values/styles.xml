@@ -26,7 +26,7 @@
     <style name="ToolBarTextAppearance">
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">22sp</item>
-        <item name="android:fontFamily">@font/google_sans</item>
+        <item name="android:fontFamily">@font/google_sans_regular</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
 
