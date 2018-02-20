@@ -45,9 +45,7 @@ class ProjectorListFragment : Fragment() {
     }
 
     private fun onClientUpdated() {
-        // TODO - Use LiveData or similar to observe changes
-        recyclerView.adapter = EndpointAdapter(App.instance.client.endpoints, onProjectorSelectedListener)
-        recyclerView.invalidate()
+        recyclerView.adapter.notifyDataSetChanged()
     }
 
     override fun onAttach(context: Context?) {

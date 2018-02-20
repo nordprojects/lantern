@@ -101,11 +101,7 @@ class ChannelListFragment : Fragment() {
     }
 
     private fun update() {
-        // TODO - replace this temp refresh method with correctly bound recycler view
-        recyclerView.adapter = ChannelListAdapter(App.instance.projector!!.availableChannels,
-                onChannelSelectedListener,
-                direction)
-        recyclerView.invalidate()
+        recyclerView.adapter.notifyDataSetChanged()
     }
 }
 
