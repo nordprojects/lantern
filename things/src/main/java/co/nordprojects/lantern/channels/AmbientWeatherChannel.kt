@@ -126,7 +126,17 @@ class AmbientWeatherChannel : Channel() {
                         .getJSONArray("weather")
                         .getJSONObject(0)
                         .getInt("id")
-                return WeatherConditions.valueWithOpenweathermapId(weatherConditionsId)
+                val sunriseUnixTime = weatherJson
+                        .getJSONObject("sys")
+                        .getInt("sunrise")
+                val sunsetUnixTime = weatherJson
+                        .getJSONObject("sys")
+                        .getInt("sunset")
+
+                val unixTime = System.currentTimeMillis() / 1000L
+                val isDaytime = (sunriseUnixTime < unixTime) && (unixTime < sunsetUnixTime)
+
+                return WeatherConditions.valueWithOpenweathermapId(weatherConditionsId, isDaytime)
             }
             catch (e: Exception) {
                 Log.e(TAG, "Failed to refresh weather $e", e)
@@ -170,12 +180,12 @@ class AmbientWeatherChannel : Channel() {
     }
 
     enum class WeatherConditions {
-        CALM, SUNNY, RAIN, HEAVY_RAIN, GENTLE_WIND, WINDY;
+        CALM, CALM_AND_SUNNY, RAIN, HEAVY_RAIN, GENTLE_WIND, WINDY;
 
         val videoUrl: Uri get() {
             return when(this) {
                 CALM -> Uri.parse("https://s3.amazonaws.com/lantern-resources/calm.mp4")
-                SUNNY -> Uri.parse("https://s3.amazonaws.com/lantern-resources/sunny.mp4")
+                CALM_AND_SUNNY -> Uri.parse("https://s3.amazonaws.com/lantern-resources/calm-and-sunny.mp4")
                 RAIN -> Uri.parse("https://s3.amazonaws.com/lantern-resources/rain.mp4")
                 HEAVY_RAIN -> Uri.parse("https://s3.amazonaws.com/lantern-resources/heavy-rain.mp4")
                 GENTLE_WIND -> Uri.parse("https://s3.amazonaws.com/lantern-resources/gentle-wind.mp4")
@@ -186,7 +196,7 @@ class AmbientWeatherChannel : Channel() {
         companion object {
             val TAG = WeatherConditions::class.java.simpleName
 
-            fun valueWithOpenweathermapId(id: Int): WeatherConditions {
+            fun valueWithOpenweathermapId(id: Int, isDaytime: Boolean): WeatherConditions {
                 return when (id) {
                     200 -> RAIN // thunderstorm with light rain
                     201 -> RAIN // thunderstorm with rain
@@ -242,8 +252,8 @@ class AmbientWeatherChannel : Channel() {
                     771 -> CALM // squalls
                     781 -> CALM // tornado
 
-                    800 -> SUNNY // clear sky
-                    801 -> SUNNY // few clouds
+                    800 -> if (isDaytime) CALM_AND_SUNNY else CALM // clear sky
+                    801 -> if (isDaytime) CALM_AND_SUNNY else CALM // few clouds
                     802 -> CALM // scattered clouds
                     803 -> CALM // broken clouds
                     804 -> CALM // overcast clouds
