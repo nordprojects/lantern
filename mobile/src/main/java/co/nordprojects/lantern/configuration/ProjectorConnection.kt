@@ -45,9 +45,6 @@ class ProjectorConnection(val transport: ConfigurationConnectionTransport) {
 
     fun onDisconnected() {
         Log.i(TAG, "Disconnected from ${transport.endpointId}")
-
-        // TODO - either reconnect or destroy projector config
-        // TODO - OR may not be needed as this object is destroyed on disconnect
     }
 
     fun sendSetPlane(direction: Direction, configuration: ChannelConfiguration) {

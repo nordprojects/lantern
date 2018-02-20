@@ -77,25 +77,24 @@ class ProjectorSearchActivity : AppCompatActivity(),
     }
 
     private fun update() {
-        Log.i(TAG, "UPDATE CONNECTION ${App.instance.client.connectionState}")
-
-        // TODO - this is a mess, lets rethink
+        when (App.instance.client.connectionState) {
+            ConnectionState.CONNECTING_TO_ENDPOINT -> {
+                showProjectorConnectingFragment()
+                return
+            }
+            ConnectionState.CONNECTED -> {
+                showHomeActivity()
+                return
+            }
+        }
         when (App.instance.client.discoveryState) {
             DiscoveryState.LOOKING_FOR_ENDPOINTS -> {
                 showProjectorSearchFragment()
+                return
             }
             DiscoveryState.ENDPOINTS_AVAILABLE -> {
-                when (App.instance.client.connectionState) {
-                    ConnectionState.DISCONNECTED -> {
-                        showProjectorListFragment()
-                    }
-                    ConnectionState.CONNECTING_TO_ENDPOINT -> {
-                        showProjectorConnectingFragment()
-                    }
-                    ConnectionState.CONNECTED -> {
-                        showHomeActivity()
-                    }
-                }
+                showProjectorListFragment()
+                return
             }
         }
     }
