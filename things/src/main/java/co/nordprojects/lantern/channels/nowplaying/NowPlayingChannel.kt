@@ -1,7 +1,5 @@
 package co.nordprojects.lantern.channels.nowplaying
 
-import android.net.nsd.NsdManager
-import android.net.nsd.NsdServiceInfo
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,17 +9,25 @@ import android.view.View
 import android.view.ViewGroup
 import co.nordprojects.lantern.Channel
 import co.nordprojects.lantern.R
-import java.io.IOException
 import kotlinx.android.synthetic.main.now_playing_channel.*
+import java.io.IOException
 import java.util.*
 import kotlin.concurrent.fixedRateTimer
 import kotlin.math.floor
 import kotlin.math.min
 import kotlin.math.round
 
-class NowPlayingChannel() : Channel() {
+/**
+ * Shows the currently playing song on a Cast device on the local network.
+ *
+ * Config parameters:
+ *   - "castId"
+ *         The ID of the cast device to observe. If null, the cast device will observe the
+ *         first device it finds on the network.
+ */
+class NowPlayingChannel : Channel() {
     val TAG = this::class.java.simpleName
-    val configDeviceId by lazy { config.settings.opt("castId") as? String }
+    private val configDeviceId by lazy { config.settings.opt("castId") as? String }
 
     var mediaStatus: CastConnection.MediaStatus? = null
     var mediaStatusUpdateDate: Date? = null

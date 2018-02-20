@@ -22,7 +22,14 @@ import kotlin.concurrent.fixedRateTimer
 
 
 /**
- * Created by joerick on 13/02/18.
+ * Shows an ambient video representing the weather at a location.
+ *
+ * Requires an OpenWeatherMap API key at R.string.openweathermap_api_key to work.
+ *
+ * Config parameters:
+ *   - "latitude"
+ *   - "longitude"
+ *         The location to get the weather for. If missing, uses the Googleplex.
  */
 class AmbientWeatherChannel : Channel() {
     val TAG = this::class.java.simpleName
@@ -95,10 +102,15 @@ class AmbientWeatherChannel : Channel() {
     }
 
     private fun refreshData() {
-        RefreshWeatherTask().execute(
-                config.settings.getDouble("latitude"),
-                config.settings.getDouble("longitude")
-        )
+        var latitude = config.settings.opt("latitude") as? Double
+        var longitude = config.settings.opt("longitude") as? Double
+
+        if (latitude == null || longitude == null) {
+            // use the Googleplex coordinates
+            latitude = 37.422
+            longitude = -122.086
+        }
+        RefreshWeatherTask().execute(latitude, longitude)
     }
 
     inner class RefreshWeatherTask : AsyncTask<Double, Void, WeatherConditions?>() {

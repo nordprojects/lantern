@@ -8,7 +8,10 @@ import android.widget.ImageView
 import co.nordprojects.lantern.Channel
 import co.nordprojects.lantern.R
 
-class BatSignalChannel() : Channel() {
+/**
+ * Shows the bat signal!
+ */
+class BatSignalChannel : Channel() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return ImageView(this.activity).apply {

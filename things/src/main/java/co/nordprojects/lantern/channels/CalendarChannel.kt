@@ -24,10 +24,21 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-class CalendarChannel() : Channel() {
-    val TAG = this::class.java.simpleName
-    var events = listOf<VEvent>()
-    var refreshEventsTimer: Timer? = null
+/**
+ * Shows a day's appointments around a real-world clock.
+ *
+ * Config parameters:
+ *   - "url"
+ *       The URL to a public calendar in the iCal format.
+ */
+class CalendarChannel : Channel() {
+    private val TAG = this::class.java.simpleName
+    private var events = listOf<VEvent>()
+    private var refreshEventsTimer: Timer? = null
+    private val iCalURL: URL? by lazy {
+        val urlString = config.settings.opt("url") as? String
+        urlString?.let { URL(it) }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -122,12 +133,12 @@ class CalendarChannel() : Channel() {
         super.onStop()
     }
 
-    fun refreshEvents() {
-        val url = URL(config.settings.getString("url"))
+    private fun refreshEvents() {
+        val url = iCalURL ?: return
         RefreshEventsTask().execute(url)
     }
 
-    fun update() {
+    private fun update() {
         Log.d(TAG, "Events are $events")
         view?.invalidate()
     }

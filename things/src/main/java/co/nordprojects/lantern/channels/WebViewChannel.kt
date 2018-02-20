@@ -18,6 +18,12 @@ import android.graphics.BitmapFactory
 
 
 /**
+ * Shows a web page using the Android WebView.
+ *
+ * Config parameters:
+ *   - "url"
+ *       The URL to be displayed.
+ *
  * Created by dingxu on 2/5/18.
  */
 class WebViewChannel: Channel() {
@@ -27,7 +33,7 @@ class WebViewChannel: Channel() {
                               savedInstanceState: Bundle?): View? {
         if (webView == null) {
             webView = ATWebView(activity)
-            loadURL(config.settings.getString("url"))
+            loadURL(config.settings.optString("url"))
         }
         return webView
     }

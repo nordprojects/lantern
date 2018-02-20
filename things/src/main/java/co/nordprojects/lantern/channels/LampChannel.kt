@@ -12,31 +12,33 @@ import co.nordprojects.lantern.Channel
 import kotlin.math.min
 
 
-class LampChannel() : Channel() {
-    class LampView(context: Context) : View(context) {
-        private val circlePaint = Paint().apply {
-            color = Color.WHITE
-        }
-
-        override fun onDraw(canvas: Canvas) {
-            super.onDraw(canvas)
-
-            val width: Float = canvas.width.toFloat()
-            val height: Float = canvas.height.toFloat()
-
-            canvas.drawColor(Color.BLACK)
-
-            canvas.drawCircle(
-                    width/2,
-                    height/2,
-                    min(width/2, height/2),
-                    circlePaint
-            )
-        }
-    }
-
+/**
+ * Projects a perfect spotlight circle.
+ */
+class LampChannel : Channel() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return LampView(this.activity)
+
+        return object : View(context) {
+            private val circlePaint = Paint().apply {
+                color = Color.WHITE
+            }
+
+            override fun onDraw(canvas: Canvas) {
+                super.onDraw(canvas)
+
+                val width: Float = canvas.width.toFloat()
+                val height: Float = canvas.height.toFloat()
+
+                canvas.drawColor(Color.BLACK)
+
+                canvas.drawCircle(
+                        width/2,
+                        height/2,
+                        min(width/2, height/2),
+                        circlePaint
+                )
+            }
+        }
     }
 }

@@ -15,7 +15,7 @@ import co.nordprojects.lantern.Channel
  *
  * Created by joerick on 23/01/18.
  */
-class ErrorChannel() : Channel() {
+class ErrorChannel : Channel() {
     val errorMessage: String
         get() = arguments.getString(ARG_MESSAGE)
 
