@@ -112,9 +112,9 @@ class MainActivity : Activity() {
             val errorMessage = "Failed to make channel $newVisibleChannel visible.\n\n$e"
             Log.e(TAG, errorMessage, e)
 
-            val presentErrorTransaction = fragmentManager.beginTransaction()
-            presentErrorTransaction.replace(R.id.viewGroup, ErrorChannel.newInstance(errorMessage))
-            presentErrorTransaction.commit()
+            fragmentManager.beginTransaction()
+                    .replace(R.id.viewGroup, ErrorChannel.newInstance(errorMessage))
+                    .commit()
         }
     }
 

@@ -56,10 +56,8 @@ class ChannelsListActivity : AppCompatActivity(),
     }
 
     override fun onChannelSelected(channel: ChannelInfo) {
-        val json = JSONObject().apply {
-            put("type", channel.id)
-        }
-        val config = ChannelConfiguration(json)
+        val config = ChannelConfiguration(channel.id)
+
         if (channel.customizable) {
             val activityClass = ChannelConfigActivities.channelTypeToActivity[channel.id]
             if (activityClass == null) {
