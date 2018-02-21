@@ -4,7 +4,7 @@
     android:id="@+id/frameLayout5"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="co.nordprojects.lantern.search.ProjectorConnectingFragment">
+    tools:context="com.example.androidthings.lantern.search.ProjectorConnectingFragment">
 
     <ImageView
         android:id="@+id/rainbow"

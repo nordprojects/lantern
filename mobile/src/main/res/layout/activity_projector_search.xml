@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="co.nordprojects.lantern.search.ProjectorSearchActivity">
+    tools:context="com.example.androidthings.lantern.search.ProjectorSearchActivity">
 
     <android.support.v7.widget.Toolbar
         style="@style/ToolBarStyle"

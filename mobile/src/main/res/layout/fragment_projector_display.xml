@@ -4,7 +4,7 @@
     android:id="@+id/frameLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="co.nordprojects.lantern.home.ProjectorDisplayFragment">
+    tools:context="com.example.androidthings.lantern.home.ProjectorDisplayFragment">
 
     <ImageButton
         android:id="@+id/up_button"

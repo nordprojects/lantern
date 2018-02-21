@@ -7,7 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "co.nordprojects.lantern"
+        applicationId "com.example.androidthings.lantern"
         minSdkVersion 23
         targetSdkVersion 27
         versionCode 1

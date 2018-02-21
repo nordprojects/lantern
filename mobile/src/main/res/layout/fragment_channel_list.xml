@@ -4,7 +4,7 @@
     android:id="@+id/frameLayout6"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="co.nordprojects.lantern.channels.ChannelListFragment">
+    tools:context="com.example.androidthings.lantern.channels.ChannelListFragment">
 
 
         <LinearLayout

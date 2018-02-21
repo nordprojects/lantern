@@ -4,7 +4,7 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="co.nordprojects.lantern.search.ProjectorSearchFragment">
+    tools:context="com.example.androidthings.lantern.search.ProjectorSearchFragment">
 
     <TextView
         android:id="@+id/textView"
