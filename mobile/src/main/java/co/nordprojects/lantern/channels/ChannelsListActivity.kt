@@ -26,6 +26,7 @@ class ChannelsListActivity : AppCompatActivity(),
     companion object {
         val TAG: String = ChannelsListActivity::class.java.simpleName
         val CONFIG_ACTIVITY_REQUEST = 1
+        const val ARG_DIRECTION = "direction"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,13 +37,13 @@ class ChannelsListActivity : AppCompatActivity(),
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationIcon(R.drawable.back_chevron)
 
-        val directionString = intent.getStringExtra(HomeActivity.ARG_DIRECTION)
+        val directionString = intent.getStringExtra(ARG_DIRECTION)
         direction = Direction.valueOf(directionString)
 
 
         val channelFragment = ChannelListFragment()
         val args = Bundle()
-        args.putString(HomeActivity.ARG_DIRECTION, directionString)
+        args.putString(ARG_DIRECTION, directionString)
         channelFragment.arguments = args
         supportFragmentManager.beginTransaction().apply {
             add(R.id.fragmentContainer, channelFragment)

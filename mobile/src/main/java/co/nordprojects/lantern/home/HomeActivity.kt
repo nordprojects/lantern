@@ -24,7 +24,6 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
         private val TAG: String = HomeActivity::class.java.simpleName
         const val RESULT_DISCONNECTED = 2
         const val DISCONNECT_ACTIVITY = "disconnect_from_projector"
-        const val ARG_DIRECTION = "direction"
     }
 
     private val broadcastReceiver = object : BroadcastReceiver() {
@@ -97,7 +96,7 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
 
     private fun showChannelList(direction: Direction) {
         val intent = Intent(this, ChannelsListActivity::class.java)
-        intent.putExtra(ARG_DIRECTION, direction.toString())
+        intent.putExtra(ChannelsListActivity.ARG_DIRECTION, direction.toString())
         startActivity(intent)
     }
 
