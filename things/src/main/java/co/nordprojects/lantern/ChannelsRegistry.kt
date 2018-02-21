@@ -1,15 +1,9 @@
 package co.nordprojects.lantern
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.Base64
-import android.util.Base64OutputStream
 import co.nordprojects.lantern.channels.*
 import co.nordprojects.lantern.channels.nowplaying.NowPlayingChannel
 import co.nordprojects.lantern.shared.ChannelInfo
-import java.io.ByteArrayOutputStream
-import java.io.IOException
 
 
 /**
