@@ -19,13 +19,13 @@ data class ConfigurationMessage(val type: Type,
                                 val arguments: JSONObject = JSONObject(),
                                 val body: JSONObject? = null) {
     enum class Type(val jsonName: String) {
-        Error("error"),
-        StateUpdate("state-update"),
-        AvailableChannels("available-channels"),
-        SetPlane("set-plane"),
-        ListAvailableChannels("list-available-channels"),
-        SetName("set-name"),
-        Reset("reset");
+        ERROR("error"),
+        STATE_UPDATE("state-update"),
+        AVAILABLE_CHANNELS("available-channels"),
+        SET_PLANE("set-plane"),
+        LIST_AVAILABLE_CHANNELS("list-available-channels"),
+        SET_NAME("set-name"),
+        RESET("reset");
 
         companion object {
             fun withJsonName(jsonName: String): Type {
@@ -69,15 +69,15 @@ class ConfigurationConnectionTransport(val client: ConnectionsClient,
     var onMessageReceived: ((ConfigurationMessage) -> Unit)? = null
 
     enum class ResponseErrorType {
-        BadPayloadType,
-        MessageDecodeError,
-        UnexpectedErrorWhileHandlingMessage
+        BAD_PAYLOAD_TYPE,
+        MESSAGE_DECODE_ERROR,
+        UNEXPECTED_ERROR_WHILE_HANDLING_MESSAGE
     }
     val payloadCallback = object : PayloadCallback() {
         override fun onPayloadReceived(endpointId: String, payload: Payload) {
             if (payload.type != Payload.Type.BYTES) {
                 Log.e(TAG, "Bad payload type. Payload discarded.")
-                sendErrorMessage(ResponseErrorType.BadPayloadType)
+                sendErrorMessage(ResponseErrorType.BAD_PAYLOAD_TYPE)
                 return
             }
 
@@ -87,7 +87,7 @@ class ConfigurationConnectionTransport(val client: ConnectionsClient,
             }
             catch (e: Exception) {
                 Log.e(TAG, "Failed to decode message", e)
-                sendErrorMessage(ResponseErrorType.MessageDecodeError)
+                sendErrorMessage(ResponseErrorType.MESSAGE_DECODE_ERROR)
                 return
             }
 
@@ -96,7 +96,7 @@ class ConfigurationConnectionTransport(val client: ConnectionsClient,
             }
             catch (e: Exception) {
                 Log.e(TAG, "Error while handling message $message", e)
-                sendErrorMessage(ResponseErrorType.UnexpectedErrorWhileHandlingMessage)
+                sendErrorMessage(ResponseErrorType.UNEXPECTED_ERROR_WHILE_HANDLING_MESSAGE)
                 return
             }
         }
@@ -111,7 +111,7 @@ class ConfigurationConnectionTransport(val client: ConnectionsClient,
     }
     fun sendErrorMessage(errorType: ResponseErrorType): Task<Void> {
         val errorMessage = ConfigurationMessage(
-                ConfigurationMessage.Type.Error,
+                ConfigurationMessage.Type.ERROR,
                 body = JSONObject(mapOf(
                         "type" to errorType.name
                 ))

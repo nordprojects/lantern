@@ -30,24 +30,24 @@ class ConfigurationConnection(val transport: ConfigurationConnectionTransport) {
         Log.d(TAG, "Received message from ${transport.endpointId}. $message")
 
         when (message.type) {
-            ConfigurationMessage.Type.SetPlane -> {
+            ConfigurationMessage.Type.SET_PLANE -> {
                 App.instance.config.updatePlane(
                         message.arguments.getString("plane"),
                         message.body!!
                 )
             }
-            ConfigurationMessage.Type.Reset -> {
+            ConfigurationMessage.Type.RESET -> {
                 App.instance.config.resetToDefaults()
             }
-            ConfigurationMessage.Type.ListAvailableChannels -> {
+            ConfigurationMessage.Type.LIST_AVAILABLE_CHANNELS -> {
                 sendAvailableChannels()
             }
-            ConfigurationMessage.Type.SetName -> {
+            ConfigurationMessage.Type.SET_NAME -> {
                 val newName = message.body!!.getString("name")
                 App.instance.config.updateName(newName)
             }
-            ConfigurationMessage.Type.Error -> {
-                Log.e(TAG, "Error message received via $this. $message")
+            ConfigurationMessage.Type.ERROR -> {
+                Log.e(TAG, "ERROR message received via $this. $message")
             }
             else -> { throw IllegalArgumentException("Can't handle message type ${message.type}") }
         }
@@ -61,14 +61,14 @@ class ConfigurationConnection(val transport: ConfigurationConnectionTransport) {
     private fun sendStateUpdate() {
         val body = App.instance.config.toJson(includingSecrets = false).clone()
         body.put("direction", App.instance.accelerometer.direction?.jsonName)
-        val message = ConfigurationMessage(ConfigurationMessage.Type.StateUpdate, body = body)
+        val message = ConfigurationMessage(ConfigurationMessage.Type.STATE_UPDATE, body = body)
         transport.sendMessage(message)
     }
 
     private fun sendAvailableChannels() {
         val body = JSONObject()
         body.put("channels", JSONArray(ChannelsRegistry.channelsInfo.map { it.toJson() }))
-        val message = ConfigurationMessage(ConfigurationMessage.Type.AvailableChannels, body = body)
+        val message = ConfigurationMessage(ConfigurationMessage.Type.AVAILABLE_CHANNELS, body = body)
         transport.sendMessage(message)
     }
 
