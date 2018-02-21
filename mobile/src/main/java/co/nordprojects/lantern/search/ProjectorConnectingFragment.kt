@@ -36,6 +36,7 @@ class ProjectorConnectingFragment : Fragment() {
         val halfDuration: Long = 500
 
         // TODO - this animation is dependent on screen density, redo in an independent way
+        // Use multiples of width of original view
 
         // GROW
         val grow = ObjectAnimator.ofFloat(rainbow, "scaleX", 4.0f).apply {

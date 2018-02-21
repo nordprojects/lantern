@@ -32,7 +32,7 @@ class ChannelListFragment : Fragment() {
     private val projectorObserver = Observer { _, _ -> update() }
     private val direction: Direction by lazy {
             val directionString = arguments?.getString(ChannelsListActivity.ARG_DIRECTION)
-            Direction.valueOf(directionString ?: "forward")
+            Direction.valueOf(directionString ?: "")
         }
 
     companion object {
