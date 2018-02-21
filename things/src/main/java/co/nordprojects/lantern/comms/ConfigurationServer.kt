@@ -21,9 +21,9 @@ class ConfigurationServer(val context: Context) {
     private val connectionsClient = Nearby.getConnectionsClient(context)
     private val activeConnections: MutableMap<String, ConfigurationConnection> = mutableMapOf()
 
-    fun startAdvertising() {
+    fun startAdvertising(name: String) {
         connectionsClient.startAdvertising(
-                App.instance.config.name,
+                name,
                 SERVICE_ID,
                 connectionLifecycleCallback,
                 AdvertisingOptions(Strategy.P2P_CLUSTER))

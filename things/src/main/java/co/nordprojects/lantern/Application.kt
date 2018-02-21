@@ -12,22 +12,21 @@ import java.io.FileNotFoundException
 import java.util.*
 import android.app.Application as AndroidApplication
 
-
 class App : AndroidApplication() {
-    private val TAG = this::class.java.simpleName
-    private val CONFIG_FILE_PATH = "config.json"
+    companion object {
+        lateinit var instance: App
+            private set
+
+        private val TAG = App::class.java.simpleName
+        private const val CONFIG_FILE_PATH = "config.json"
+    }
 
     val config: AppConfiguration by lazy { AppConfiguration(this) }
     val accelerometer: Accelerometer by lazy { Accelerometer() }
 
     private val configServer: ConfigurationServer by lazy { ConfigurationServer(this) }
     private val configObserver = Observer { _, _ -> configUpdated() }
-    private lateinit var previousName: String
-
-    companion object {
-        lateinit var instance: App
-            private set
-    }
+    private lateinit var advertisingName: String
 
     override fun onCreate() {
         super.onCreate()
@@ -36,9 +35,9 @@ class App : AndroidApplication() {
         setDisplayDPI()
 
         loadConfig()
-        previousName = config.name
+        advertisingName = config.name
 
-        configServer.startAdvertising()
+        configServer.startAdvertising(advertisingName)
         accelerometer.startUpdating()
 
         config.addObserver(configObserver)
@@ -47,13 +46,13 @@ class App : AndroidApplication() {
     private fun configUpdated() {
         saveConfig()
 
-        if (previousName != config.name) {
-            previousName = config.name
+        if (advertisingName != config.name) {
+            advertisingName = config.name
 
             // for the name change to be reflected in the nearby advertisement, we have to restart
             // advertising.
             configServer.stopAdvertising()
-            configServer.startAdvertising()
+            configServer.startAdvertising(advertisingName)
         }
     }
 
