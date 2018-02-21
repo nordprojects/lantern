@@ -135,6 +135,7 @@ class ProjectorSearchActivity : AppCompatActivity(),
                 HomeActivity.RESULT_DISCONNECTED -> {
                     val snackBar = Snackbar.make(fragment_container, "Lost connection to projector", LENGTH_LONG)
                     snackBar.show()
+                    // TODO - restart discovery?
                 }
                 Activity.RESULT_CANCELED -> {
                     App.instance.client.disconnect()

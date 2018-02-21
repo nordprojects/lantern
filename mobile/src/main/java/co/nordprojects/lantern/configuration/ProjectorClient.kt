@@ -30,7 +30,6 @@ class ProjectorClient(val context: Context): Observable() {
 
     private val connectionsClient = Nearby.getConnectionsClient(context)
     val endpoints: ArrayList<Endpoint> = arrayListOf()
-    private var activeEndpointID: String? = null
     var activeConnection: ProjectorConnection? = null
 
     var discoveryState: DiscoveryState = DiscoveryState.UNINITIALISED
@@ -79,7 +78,6 @@ class ProjectorClient(val context: Context): Observable() {
 
     fun connectTo(endpointId: String) {
         connectionState = ConnectionState.CONNECTING_TO_ENDPOINT
-        activeEndpointID = endpointId
         Log.i(TAG, "connect to $endpointId")
         connectionsClient.requestConnection(
                 Settings.Secure.getString(context.contentResolver, "bluetooth_name"),
@@ -94,18 +92,17 @@ class ProjectorClient(val context: Context): Observable() {
     }
 
     fun disconnect() {
-        val endpointID = activeEndpointID
+        val endpointID = activeConnection?.endpointId
         if (endpointID != null) {
             connectionsClient.disconnectFromEndpoint(endpointID)
+            activeConnection = null
             connectionState = ConnectionState.DISCONNECTED
         }
     }
 
     private fun connectionDidDisconnect() {
-        connectionState = ConnectionState.DISCONNECTED
-        activeConnection?.onDisconnected()
         activeConnection = null
-        // TODO - restart nearby discovering? remove all existing endpoints
+        connectionState = ConnectionState.DISCONNECTED
     }
 
     private val endpointDiscoveryCallback = object : EndpointDiscoveryCallback() {

@@ -10,7 +10,8 @@ import org.json.JSONObject
 class ProjectorConnection(val transport: ConfigurationConnectionTransport) {
 
     var projectorState: ProjectorState? = null
-
+    val endpointId: String
+        get() = transport.endpointId
     companion object {
         val TAG: String = ProjectorConnection::class.java.simpleName
     }
@@ -42,10 +43,6 @@ class ProjectorConnection(val transport: ConfigurationConnectionTransport) {
             }
             else -> { throw IllegalArgumentException("Can't handle message type ${message.type}") }
         }
-    }
-
-    fun onDisconnected() {
-        Log.i(TAG, "Disconnected from ${transport.endpointId}")
     }
 
     fun sendSetPlane(direction: Direction, configuration: ChannelConfiguration) {
