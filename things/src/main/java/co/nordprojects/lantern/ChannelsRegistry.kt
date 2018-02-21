@@ -80,29 +80,4 @@ object ChannelsRegistry {
     )
 
     val channelsInfo = channelsWithInfo.map { it.second }
-
-    fun dataUriForDrawableResource(resourceId: Int): Uri {
-        var bitmap = BitmapFactory.decodeResource(App.instance.resources, resourceId)
-        val outputStream = ByteArrayOutputStream()
-        val base64Stream = Base64OutputStream(outputStream, Base64.DEFAULT)
-
-        // resize the image to 256x256
-        bitmap = Bitmap.createScaledBitmap(bitmap, 256, 256, true)
-
-        // write data uri header
-        outputStream.write("data:image/webp;base64,".toByteArray())
-
-        // write base64-encoded webp data
-        val success = bitmap.compress(
-                Bitmap.CompressFormat.WEBP,
-                20,
-                base64Stream)
-        base64Stream.flush()
-
-        if (!success) {
-            throw IOException("image encoding failed")
-        }
-
-        return Uri.parse(outputStream.toString())
-    }
 }
