@@ -16,7 +16,7 @@ import org.json.JSONObject
  * for message format.
  */
 data class ConfigurationMessage(val type: Type,
-                                val arguments: JSONObject = JSONObject(),
+                                val arguments: JSONObject? = null,
                                 val body: JSONObject? = null) {
     enum class Type {
         ERROR,
@@ -37,31 +37,24 @@ data class ConfigurationMessage(val type: Type,
 
         companion object {
             fun withJsonName(jsonName: String): Type {
-                val result = Type.values().find { it.jsonName == jsonName }
-
-                if (result == null) {
-                    throw IllegalArgumentException("Unknown message type '$jsonName'")
-                }
-
-                return result
+                return values().find { it.jsonName == jsonName } ?:
+                        throw IllegalArgumentException("Unknown message type '$jsonName'")
             }
         }
     }
 
     constructor(json: JSONObject) : this(
             Type.withJsonName(json.getString("type")),
-            json.clone().also {
-                it.remove("type")
-                it.remove("body")
-            },
+            json.optJSONObject("arguments"),
             json.optJSONObject("body")
     )
 
     constructor(jsonBytes: ByteArray) : this(JSONObject(String(jsonBytes)))
 
     fun toJson(): JSONObject {
-        val json = arguments.clone()
+        val json = JSONObject()
         json.put("type", type.jsonName)
+        json.put("arguments", arguments)
         json.put("body", body)
         return json
     }

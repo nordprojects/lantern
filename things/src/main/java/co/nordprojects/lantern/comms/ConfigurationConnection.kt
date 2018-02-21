@@ -32,7 +32,7 @@ class ConfigurationConnection(val transport: ConfigurationConnectionTransport) {
         when (message.type) {
             ConfigurationMessage.Type.SET_PLANE -> {
                 App.instance.config.updatePlane(
-                        message.arguments.getString("plane"),
+                        message.arguments!!.getString("plane"),
                         message.body!!
                 )
             }
