@@ -4,14 +4,15 @@ import android.app.Fragment
 import co.nordprojects.lantern.shared.ChannelConfiguration
 
 /**
- * Created by joerick on 18/01/18.
+ * Channel base class. Subclass and override fragment lifecycle methods like onViewCreate to
+ * add content.
  */
-open class Channel(): Fragment() {
+open class Channel : Fragment() {
     val config: ChannelConfiguration by lazy {
         arguments.getParcelable<ChannelConfiguration>(ARG_CONFIG)
     }
 
     companion object {
-        val ARG_CONFIG = "config"
+        const val ARG_CONFIG = "config"
     }
 }
