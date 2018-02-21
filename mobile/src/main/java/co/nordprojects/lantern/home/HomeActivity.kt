@@ -17,7 +17,7 @@ import java.util.*
 
 class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSelectedListener {
 
-    private val connectionObserver: Observer = Observer { _, _ -> onConnectionChanged() }
+    private val connectionObserver = Observer { _, _ -> onConnectionChanged() }
     private val projectorConfigObserver = Observer { _, _ -> projectorConfigUpdated() }
 
     companion object {
@@ -43,9 +43,6 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationIcon(R.drawable.menu)
         toolbar.setNavigationOnClickListener { showSettings() }
-        App.instance.projector?.let {
-            title = it.name
-        }
 
         val projectorFragment = ProjectorDisplayFragment()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
@@ -53,12 +50,16 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
         fragmentTransaction.commit()
 
         registerReceiver(broadcastReceiver, IntentFilter(DISCONNECT_ACTIVITY))
+
+        update()
     }
 
     private fun projectorConfigUpdated() {
-        App.instance.projector?.let {
-            title = it.name
-        }
+        update()
+    }
+
+    private fun update() {
+        title = App.instance.projector?.name ?: "Lantern"
     }
 
     override fun onResume() {
