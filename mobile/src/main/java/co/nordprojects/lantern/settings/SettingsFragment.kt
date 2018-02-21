@@ -43,8 +43,9 @@ class SettingsFragment : Fragment() {
     }
 
     private fun updateDeviceDetails() {
+        val deviceID = "TODO" // get this from connection
         App.instance.projector?.let {
-            textViewDeviceDetailsDesc.text = "Device name: ${it.name}\nDevice ID: ${it.deviceID}"
+            textViewDeviceDetailsDesc.text = "Device name: ${it.name}\nDevice ID: ${deviceID}"
         }
     }
 

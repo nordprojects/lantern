@@ -2,15 +2,15 @@ package co.nordprojects.lantern
 
 import android.app.Application
 import co.nordprojects.lantern.configuration.ProjectorClient
-import co.nordprojects.lantern.configuration.ProjectorConfiguration
+import co.nordprojects.lantern.configuration.ProjectorState
 
 /**
  * Created by Michael Colville on 30/01/2018.
  */
 class App : Application() {
     val client: ProjectorClient by lazy { ProjectorClient(this) }
-    val projector: ProjectorConfiguration?
-        get() = client.activeConnection?.projectorConfig
+    val projector: ProjectorState?
+        get() = client.activeConnection?.projectorState
 
 
     companion object {

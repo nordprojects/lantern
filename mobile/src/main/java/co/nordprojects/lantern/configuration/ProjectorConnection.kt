@@ -1,7 +1,6 @@
 package co.nordprojects.lantern.configuration
 
 import android.util.Log
-import co.nordprojects.lantern.App
 import co.nordprojects.lantern.shared.*
 import org.json.JSONObject
 
@@ -10,7 +9,7 @@ import org.json.JSONObject
  */
 class ProjectorConnection(val transport: ConfigurationConnectionTransport) {
 
-    var projectorConfig: ProjectorConfiguration = ProjectorConfiguration()
+    var projectorState: ProjectorState? = null
 
     companion object {
         val TAG: String = ProjectorConnection::class.java.simpleName
@@ -22,8 +21,6 @@ class ProjectorConnection(val transport: ConfigurationConnectionTransport) {
 
     fun onConnectionAccepted() {
         Log.i(TAG, "Connected to ${transport.endpointId}")
-
-        projectorConfig.deviceID = transport.endpointId
     }
 
     private fun onMessageReceived(message: ConfigurationMessage) {
@@ -31,10 +28,14 @@ class ProjectorConnection(val transport: ConfigurationConnectionTransport) {
 
         when (message.type) {
             ConfigurationMessage.Type.StateUpdate -> {
-                projectorConfig.updateWithJSON(message.body!!)
+                if (projectorState == null) {
+                    projectorState = ProjectorState(message.body!!)
+                } else {
+                    projectorState?.updateWithJSON(message.body!!)
+                }
             }
             ConfigurationMessage.Type.AvailableChannels -> {
-                projectorConfig.updateAvailableChannelsWithJSON(message.body!!)
+                projectorState?.updateAvailableChannelsWithJSON(message.body!!)
             }
             ConfigurationMessage.Type.Error -> {
                 Log.e(TAG, "Error message received from $this. $message")
