@@ -16,44 +16,45 @@ import org.json.JSONObject
  * for message format.
  */
 data class ConfigurationMessage(val type: Type,
-                                val arguments: JSONObject = JSONObject(),
+                                val arguments: JSONObject? = null,
                                 val body: JSONObject? = null) {
-    enum class Type(val jsonName: String) {
-        Error("error"),
-        StateUpdate("state-update"),
-        AvailableChannels("available-channels"),
-        SetPlane("set-plane"),
-        ListAvailableChannels("list-available-channels"),
-        SetName("set-name"),
-        Reset("reset");
+    enum class Type {
+        ERROR,
+        STATE_UPDATE, AVAILABLE_CHANNELS,
+        SET_PLANE, LIST_AVAILABLE_CHANNELS, SET_NAME, RESET;
+
+        val jsonName: String get() {
+            return when (this) {
+                ERROR -> "error"
+                STATE_UPDATE -> "state-update"
+                AVAILABLE_CHANNELS -> "available-channels"
+                SET_PLANE -> "set-plane"
+                LIST_AVAILABLE_CHANNELS -> "list-available-channels"
+                SET_NAME -> "set-name"
+                RESET -> "reset"
+            }
+        }
 
         companion object {
             fun withJsonName(jsonName: String): Type {
-                val result = Type.values().find { it.jsonName == jsonName }
-
-                if (result == null) {
-                    throw IllegalArgumentException("Unknown message type '$jsonName'")
-                }
-
-                return result
+                return values().find { it.jsonName == jsonName } ?:
+                        throw IllegalArgumentException("Unknown message type '$jsonName'")
             }
         }
     }
 
     constructor(json: JSONObject) : this(
             Type.withJsonName(json.getString("type")),
-            json.clone().also {
-                it.remove("type")
-                it.remove("body")
-            },
+            json.optJSONObject("arguments"),
             json.optJSONObject("body")
     )
 
     constructor(jsonBytes: ByteArray) : this(JSONObject(String(jsonBytes)))
 
     fun toJson(): JSONObject {
-        val json = arguments.clone()
+        val json = JSONObject()
         json.put("type", type.jsonName)
+        json.put("arguments", arguments)
         json.put("body", body)
         return json
     }
@@ -69,15 +70,15 @@ class ConfigurationConnectionTransport(val client: ConnectionsClient,
     var onMessageReceived: ((ConfigurationMessage) -> Unit)? = null
 
     enum class ResponseErrorType {
-        BadPayloadType,
-        MessageDecodeError,
-        UnexpectedErrorWhileHandlingMessage
+        BAD_PAYLOAD_TYPE,
+        MESSAGE_DECODE_ERROR,
+        UNEXPECTED_ERROR_WHILE_HANDLING_MESSAGE
     }
     val payloadCallback = object : PayloadCallback() {
         override fun onPayloadReceived(endpointId: String, payload: Payload) {
             if (payload.type != Payload.Type.BYTES) {
                 Log.e(TAG, "Bad payload type. Payload discarded.")
-                sendErrorMessage(ResponseErrorType.BadPayloadType)
+                sendErrorMessage(ResponseErrorType.BAD_PAYLOAD_TYPE)
                 return
             }
 
@@ -87,7 +88,7 @@ class ConfigurationConnectionTransport(val client: ConnectionsClient,
             }
             catch (e: Exception) {
                 Log.e(TAG, "Failed to decode message", e)
-                sendErrorMessage(ResponseErrorType.MessageDecodeError)
+                sendErrorMessage(ResponseErrorType.MESSAGE_DECODE_ERROR)
                 return
             }
 
@@ -96,7 +97,7 @@ class ConfigurationConnectionTransport(val client: ConnectionsClient,
             }
             catch (e: Exception) {
                 Log.e(TAG, "Error while handling message $message", e)
-                sendErrorMessage(ResponseErrorType.UnexpectedErrorWhileHandlingMessage)
+                sendErrorMessage(ResponseErrorType.UNEXPECTED_ERROR_WHILE_HANDLING_MESSAGE)
                 return
             }
         }
@@ -111,7 +112,7 @@ class ConfigurationConnectionTransport(val client: ConnectionsClient,
     }
     fun sendErrorMessage(errorType: ResponseErrorType): Task<Void> {
         val errorMessage = ConfigurationMessage(
-                ConfigurationMessage.Type.Error,
+                ConfigurationMessage.Type.ERROR,
                 body = JSONObject(mapOf(
                         "type" to errorType.name
                 ))

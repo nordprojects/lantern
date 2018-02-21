@@ -21,21 +21,24 @@ class ConfigurationServer(val context: Context) {
     private val connectionsClient = Nearby.getConnectionsClient(context)
     private val activeConnections: MutableMap<String, ConfigurationConnection> = mutableMapOf()
 
-    fun startAdvertising() {
+    private val retryAdvertisingHandler = Handler()
+
+    fun startAdvertising(name: String) {
         connectionsClient.startAdvertising(
-                App.instance.config.name,
+                name,
                 SERVICE_ID,
                 connectionLifecycleCallback,
                 AdvertisingOptions(Strategy.P2P_CLUSTER))
                 .addOnSuccessListener { Log.d(TAG, "Began advertising") }
                 .addOnFailureListener { e ->
                     Log.e(TAG, "Failed to start advertising. Retrying in two seconds.", e)
-                    Handler().postDelayed({ startAdvertising() }, 2000)
+                    retryAdvertisingHandler.postDelayed({ startAdvertising(name) }, 2000)
                 }
     }
 
     fun stopAdvertising() {
         connectionsClient.stopAdvertising()
+        retryAdvertisingHandler.removeCallbacksAndMessages(null)
     }
 
     val connectionLifecycleCallback = object : ConnectionLifecycleCallback() {

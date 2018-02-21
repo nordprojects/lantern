@@ -36,7 +36,7 @@ class CalendarChannel : Channel() {
     private var events = listOf<VEvent>()
     private var refreshEventsTimer: Timer? = null
     private val iCalURL: URL? by lazy {
-        val urlString = config.settings.opt("url") as? String
+        val urlString = config.secrets?.opt("url") as? String
         urlString?.let { URL(it) }
     }
 

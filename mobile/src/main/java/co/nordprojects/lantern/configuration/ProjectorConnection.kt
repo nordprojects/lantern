@@ -28,17 +28,17 @@ class ProjectorConnection(val transport: ConfigurationConnectionTransport) {
         Log.d(TAG, "Received message from ${transport.endpointId}. $message")
 
         when (message.type) {
-            ConfigurationMessage.Type.StateUpdate -> {
+            ConfigurationMessage.Type.STATE_UPDATE -> {
                 if (projectorState == null) {
                     projectorState = ProjectorState(message.body!!)
                 } else {
                     projectorState?.updateWithJSON(message.body!!)
                 }
             }
-            ConfigurationMessage.Type.AvailableChannels -> {
+            ConfigurationMessage.Type.AVAILABLE_CHANNELS -> {
                 projectorState?.updateAvailableChannelsWithJSON(message.body!!)
             }
-            ConfigurationMessage.Type.Error -> {
+            ConfigurationMessage.Type.ERROR -> {
                 Log.e(TAG, "Error message received from $this. $message")
             }
             else -> { throw IllegalArgumentException("Can't handle message type ${message.type}") }
@@ -50,18 +50,18 @@ class ProjectorConnection(val transport: ConfigurationConnectionTransport) {
         val arguments = JSONObject().apply {
             put("plane", direction.jsonName)
         }
-        val message = ConfigurationMessage(ConfigurationMessage.Type.SetPlane, arguments, body)
+        val message = ConfigurationMessage(ConfigurationMessage.Type.SET_PLANE, arguments, body)
         transport.sendMessage(message)
     }
 
     fun sendResetDevice() {
-        val message = ConfigurationMessage(ConfigurationMessage.Type.Reset)
+        val message = ConfigurationMessage(ConfigurationMessage.Type.RESET)
         transport.sendMessage(message)
     }
 
     fun sendSetName(name: String) {
         val message = ConfigurationMessage(
-                ConfigurationMessage.Type.SetName,
+                ConfigurationMessage.Type.SET_NAME,
                 body = JSONObject(mapOf("name" to name))
         )
         transport.sendMessage(message)

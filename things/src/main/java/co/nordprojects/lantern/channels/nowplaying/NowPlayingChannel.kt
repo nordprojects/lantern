@@ -95,7 +95,7 @@ class NowPlayingChannel : Channel() {
         }
 
         titleTextView.text = mediaStatus?.title ?: ""
-        artistTextView.text = mediaStatus?.artist ?: ""
+        artistTextView.text = mediaStatus?.artist ?: mediaStatus?.subtitle ?: ""
         durationTextView.text = if (trackTimeEstimate != null) {
             // round to the nearest second (to match other players)
             trackTimeEstimate = round(trackTimeEstimate)
@@ -110,11 +110,8 @@ class NowPlayingChannel : Channel() {
 
     val castConnectionListener = object : CastConnection.Listener() {
         override fun onStatusUpdate(appName: String?, status: String?) {
-            Log.i(TAG, "Cast device updated status: $status")
         }
         override fun onMediaStatusUpdate(mediaStatus: CastConnection.MediaStatus) {
-            Log.i(TAG, "Cast device updated media: $mediaStatus")
-
             this@NowPlayingChannel.mediaStatus = mediaStatus
             mediaStatusUpdateDate = Date()
             update()
