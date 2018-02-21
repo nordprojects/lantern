@@ -18,14 +18,22 @@ import org.json.JSONObject
 data class ConfigurationMessage(val type: Type,
                                 val arguments: JSONObject = JSONObject(),
                                 val body: JSONObject? = null) {
-    enum class Type(val jsonName: String) {
-        ERROR("error"),
-        STATE_UPDATE("state-update"),
-        AVAILABLE_CHANNELS("available-channels"),
-        SET_PLANE("set-plane"),
-        LIST_AVAILABLE_CHANNELS("list-available-channels"),
-        SET_NAME("set-name"),
-        RESET("reset");
+    enum class Type {
+        ERROR,
+        STATE_UPDATE, AVAILABLE_CHANNELS,
+        SET_PLANE, LIST_AVAILABLE_CHANNELS, SET_NAME, RESET;
+
+        val jsonName: String get() {
+            return when (this) {
+                ERROR -> "error"
+                STATE_UPDATE -> "state-update"
+                AVAILABLE_CHANNELS -> "available-channels"
+                SET_PLANE -> "set-plane"
+                LIST_AVAILABLE_CHANNELS -> "list-available-channels"
+                SET_NAME -> "set-name"
+                RESET -> "reset"
+            }
+        }
 
         companion object {
             fun withJsonName(jsonName: String): Type {
