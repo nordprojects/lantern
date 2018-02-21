@@ -17,7 +17,7 @@ class CalendarConfigActivity : ChannelConfigActivity() {
     }
 
     private fun updateConfig() {
-        config.settings.put("url", editText.text)
+        config.secrets!!.put("url", editText.text)
         finishWithConfigUpdate()
     }
 }
