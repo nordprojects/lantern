@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="18dp"
         android:layout_marginLeft="28dp"
-        android:src="@drawable/made_with_google"
+        android:src="@drawable/powered_by_android"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
