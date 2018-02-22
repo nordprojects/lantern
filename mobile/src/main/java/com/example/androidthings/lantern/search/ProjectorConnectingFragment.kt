@@ -20,6 +20,9 @@ import kotlinx.android.synthetic.main.fragment_projector_connecting.*
  */
 class ProjectorConnectingFragment : Fragment() {
 
+    companion object {
+        val ARG_NAME = "name"
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -30,6 +33,8 @@ class ProjectorConnectingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         startConnectingAnimation()
+        val name = arguments?.getString(ARG_NAME) ?: "Lantern"
+        connectingTextView.text = "Connecting to ‘$name’"
     }
 
     private fun startConnectingAnimation() {

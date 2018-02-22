@@ -27,7 +27,7 @@ class ProjectorListFragment : Fragment() {
     }
 
     interface OnProjectorSelectedListener {
-        fun onProjectorSelected(endpointID: String)
+        fun onProjectorSelected(endpoint: Endpoint)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -88,7 +88,7 @@ class EndpointAdapter(private val endpoints: ArrayList<Endpoint>,
             this.endpoint = endpoint
             view.endpointNameTextView.text = "${endpoint.info.endpointName}"
             view.idTextView.text = "Lantern: ${endpoint.id}"
-            view.setOnClickListener { listener?.onProjectorSelected(endpoint.id) }
+            view.setOnClickListener { listener?.onProjectorSelected(endpoint) }
         }
     }
 }

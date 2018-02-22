@@ -14,6 +14,7 @@ import com.example.androidthings.lantern.R
 import com.example.androidthings.lantern.configuration.ProjectorClient
 import com.example.androidthings.lantern.configuration.ConnectionState
 import com.example.androidthings.lantern.configuration.DiscoveryState
+import com.example.androidthings.lantern.configuration.Endpoint
 import kotlinx.android.synthetic.main.activity_projector_search.*
 import java.util.*
 
@@ -72,16 +73,13 @@ class ProjectorSearchActivity : AppCompatActivity(),
         snackBar.show()
     }
 
-    override fun onProjectorSelected(endpointID: String) {
-        App.instance.client.connectTo(endpointID)
+    override fun onProjectorSelected(endpoint: Endpoint) {
+        App.instance.client.connectTo(endpoint.id)
+        showProjectorConnectingFragment(endpoint.info.endpointName)
     }
 
     private fun update() {
         when (App.instance.client.connectionState) {
-            ConnectionState.CONNECTING_TO_ENDPOINT -> {
-                showProjectorConnectingFragment()
-                return
-            }
             ConnectionState.CONNECTED -> {
                 showHomeActivity()
                 return
@@ -115,9 +113,10 @@ class ProjectorSearchActivity : AppCompatActivity(),
         fragmentTransaction.commit()
     }
 
-    private fun showProjectorConnectingFragment() {
+    private fun showProjectorConnectingFragment(name: String) {
         supportActionBar?.show()
         val connectingFragment = ProjectorConnectingFragment()
+        connectingFragment.arguments = Bundle().apply { putString(ProjectorConnectingFragment.ARG_NAME, name) }
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment_container, connectingFragment)
         fragmentTransaction.commit()
