@@ -142,6 +142,7 @@ class ProjectorClient(val context: Context): Observable() {
             } else {
                 Log.i(TAG, "On Connection Fail ${resolution.status}")
                 connectionDidDisconnect()
+                failureListener?.onRequestConnectionFailure()
             }
         }
 
