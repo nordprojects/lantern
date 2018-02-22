@@ -73,7 +73,6 @@ class ProjectorClient(val context: Context): Observable() {
                     Log.e(TAG, "Start Discovery failure", err)
                     discoveryState = DiscoveryState.UNINITIALISED
                     failureListener?.onStartDiscoveryFailure()
-                    Log.e(TAG, "Discovery failure ${it.message}")
                 }
     }
 
