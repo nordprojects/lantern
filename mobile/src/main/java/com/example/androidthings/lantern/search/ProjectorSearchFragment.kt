@@ -40,7 +40,9 @@ class ProjectorSearchFragment : Fragment() {
         }
         animatorSet.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
-                animation.start()
+                if (view != null) {
+                    animation.start()
+                }
             }
         })
         animatorSet.start()

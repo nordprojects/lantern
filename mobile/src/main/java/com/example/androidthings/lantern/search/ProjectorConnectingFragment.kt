@@ -71,7 +71,9 @@ class ProjectorConnectingFragment : Fragment() {
         fullSet.start()
         fullSet.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
-                animation.start()
+                if (view != null) {
+                    animation.start()
+                }
             }
         })
     }
