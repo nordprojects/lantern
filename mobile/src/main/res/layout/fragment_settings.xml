@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="63dp"
             android:fontFamily="@font/google_sans_bold"
-            android:text="Device details"
+            android:text="Change device name"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
