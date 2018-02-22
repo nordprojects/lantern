@@ -9,6 +9,7 @@ import com.example.androidthings.lantern.App
 import com.example.androidthings.lantern.R
 import com.example.androidthings.lantern.channels.config.ChannelConfigActivity
 import com.example.androidthings.lantern.channels.config.ChannelConfigActivities
+import com.example.androidthings.lantern.configuration.ConnectionState
 import com.example.androidthings.lantern.home.HomeActivity
 import com.example.androidthings.lantern.shared.ChannelConfiguration
 import com.example.androidthings.lantern.shared.ChannelInfo
@@ -22,6 +23,7 @@ class ChannelsListActivity : AppCompatActivity(),
 
     private var direction: Direction = Direction.FORWARD
     private var projectorObserver = Observer({_, _ -> projectorDidUpdate()})
+    private val connectionObserver = Observer { _, _ -> checkConnectionStatus() }
 
     companion object {
         val TAG: String = ChannelsListActivity::class.java.simpleName
@@ -51,9 +53,22 @@ class ChannelsListActivity : AppCompatActivity(),
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        App.instance.client.addObserver(connectionObserver)
+        checkConnectionStatus()
+    }
+
     override fun onPause() {
         super.onPause()
+        App.instance.client.deleteObserver(connectionObserver)
         App.instance.projector?.deleteObserver(projectorObserver)
+    }
+
+    private fun checkConnectionStatus() {
+        if (App.instance.client.connectionState == ConnectionState.DISCONNECTED) {
+            finish()
+        }
     }
 
     override fun onChannelSelected(channel: ChannelInfo) {
