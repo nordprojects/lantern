@@ -31,7 +31,8 @@ object ChannelsRegistry {
                     "ambient-weather",
                     "Weather caustics",
                     "Ambient water reflections react to Google weather data for a chosen location.",
-                    Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_weather")
+                    Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_weather"),
+                    customizable = true
                     )),
             Pair(::SpaceChannel, ChannelInfo(
                     "space",
