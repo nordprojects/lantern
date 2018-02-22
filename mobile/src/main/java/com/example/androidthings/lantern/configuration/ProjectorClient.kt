@@ -73,6 +73,7 @@ class ProjectorClient(val context: Context): Observable() {
                     Log.i(TAG, "Start Discovery failure")
                     discoveryState = DiscoveryState.UNINITIALISED
                     failureListener?.onStartDiscoveryFailure()
+                    Log.e(TAG, "Discovery failure ${it.message}")
                 }
     }
 
@@ -86,8 +87,9 @@ class ProjectorClient(val context: Context): Observable() {
                 .addOnSuccessListener { Log.i(TAG, "Start Request Connection success") }
                 .addOnFailureListener {
                     Log.i(TAG, "Start Request Connection failure")
-                    discoveryState = DiscoveryState.ENDPOINTS_AVAILABLE
+                    connectionState = ConnectionState.DISCONNECTED
                     failureListener?.onRequestConnectionFailure()
+                    Log.e(TAG, "Connection failure ${it.message}")
                 }
     }
 
@@ -140,7 +142,7 @@ class ProjectorClient(val context: Context): Observable() {
                 activeConnection?.onConnectionAccepted()
                 connectionState = ConnectionState.CONNECTED
             } else {
-                Log.i(TAG, "On Connection Fail")
+                Log.i(TAG, "On Connection Fail ${resolution.status}")
                 connectionDidDisconnect()
             }
         }
