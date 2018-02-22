@@ -19,7 +19,7 @@ open class ChannelConfigActivity : AppCompatActivity() {
         const val RESULT_CONFIG_SET = 2
     }
 
-    fun finishWithConfigUpdate() {
+    open fun finishWithConfigUpdate() {
         val data = Intent()
         data.putExtra(ChannelConfigActivity.ARG_CONFIG, config)
         setResult(RESULT_CONFIG_SET, data)

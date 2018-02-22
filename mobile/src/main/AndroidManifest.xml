@@ -9,6 +9,9 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+    <!-- Required for Cast device discovery -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -74,6 +77,7 @@
             android:label="Customize"
             android:parentActivityName=".channels.ChannelsListActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".channels.config.NowPlayingConfigActivity" />
     </application>
 
 </manifest>

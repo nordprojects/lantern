@@ -370,15 +370,15 @@ private class CastConnectionTransport(host: String,
 
         message.writeTo(outputStream)
     }
-}
 
-@SuppressLint("TrustAllX509TrustManager")
-class TrustAllX509TrustManager: X509TrustManager {
-    override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {
-    }
-    override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {
-    }
-    override fun getAcceptedIssuers(): Array<X509Certificate> {
-        return arrayOf()
+    @SuppressLint("TrustAllX509TrustManager")
+    class TrustAllX509TrustManager: X509TrustManager {
+        override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {
+        }
+        override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {
+        }
+        override fun getAcceptedIssuers(): Array<X509Certificate> {
+            return arrayOf()
+        }
     }
 }

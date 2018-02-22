@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.androidthings.lantern.Channel
 import com.example.androidthings.lantern.R
+import com.example.androidthings.lantern.shared.CastDiscoveryManager
 import kotlinx.android.synthetic.main.now_playing_channel.*
 import java.io.IOException
 import java.util.*

@@ -1,11 +1,13 @@
-package com.example.androidthings.lantern.channels.nowplaying
+package com.example.androidthings.lantern.shared
 
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.util.Log
 import android.content.Context
-import java.net.Inet4Address
+import android.os.Handler
+import android.os.Looper
 import java.net.InetAddress
+
 
 /**
  * Searches for a cast device on the local network using DNS-SD
@@ -13,17 +15,50 @@ import java.net.InetAddress
  * Created by joerick on 15/02/18.
  */
 class CastDiscoveryManager(private val context: Context) {
-    val TAG = this::class.java.simpleName
+    companion object {
+        val TAG: String = CastDiscoveryManager::class.java.simpleName
+    }
     val discoveryManager: NsdManager by lazy {
         context.getSystemService(NsdManager::class.java) as NsdManager
     }
     private val _devices = mutableListOf<CastDevice>()
+    val servicesToResolve = mutableListOf<NsdServiceInfo>()
+    var isResolving = false
     val devices: List<CastDevice> get() = _devices
 
     var listener: Listener? = null
 
     interface Listener {
         fun devicesUpdated()
+    }
+
+    private fun resolveServicesIfNeeded() {
+        // NsdManager can only resolve one device at once. So we resolve services by popping from
+        // a queue and resolving one-at-once.
+        if (isResolving) return
+        val service = servicesToResolve.firstOrNull() ?: return
+        servicesToResolve.removeAt(0)
+
+        isResolving = true
+        discoveryManager.resolveService(service, object : NsdManager.ResolveListener {
+            override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
+                Log.i(TAG, "service resolved $serviceInfo")
+                val device = CastDevice.withServiceInfo(serviceInfo)
+                        ?: return
+
+                _devices.add(device)
+                Handler(Looper.getMainLooper()).post {
+                    listener?.devicesUpdated()
+                }
+                isResolving = false
+                resolveServicesIfNeeded()
+            }
+            override fun onResolveFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {
+                Log.w(TAG, "Resolve error $errorCode for service $serviceInfo")
+                isResolving = false
+                resolveServicesIfNeeded()
+            }
+        })
     }
 
     data class CastDevice(val name: String,
@@ -50,27 +85,21 @@ class CastDiscoveryManager(private val context: Context) {
     }
 
     private val nsdDiscoveryListener = object : NsdManager.DiscoveryListener {
-        val TAG = this::class.java.simpleName
         override fun onServiceFound(serviceInfo: NsdServiceInfo) {
-            discoveryManager.resolveService(serviceInfo, object : NsdManager.ResolveListener {
-                override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
-                    val device = CastDevice.withServiceInfo(serviceInfo) ?: return
-
-                    _devices.add(device)
-                    listener?.devicesUpdated()
-                }
-                override fun onResolveFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {
-                    Log.w(TAG, "Resolve error $errorCode for service $serviceInfo")
-                }
-            })
+            Log.i(TAG, "service found $serviceInfo")
+            servicesToResolve.add(serviceInfo)
+            resolveServicesIfNeeded()
         }
         override fun onServiceLost(serviceInfo: NsdServiceInfo) {
+            Log.i(TAG, "service lost $serviceInfo")
             val changed = _devices.removeIf {
                 it.host == serviceInfo.host
             }
 
             if (changed) {
-                listener?.devicesUpdated()
+                Handler(Looper.getMainLooper()).post {
+                    listener?.devicesUpdated()
+                }
             }
         }
         override fun onStartDiscoveryFailed(serviceType: String?, errorCode: Int) {

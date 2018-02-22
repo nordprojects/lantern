@@ -69,8 +69,8 @@ class ProjectorClient(val context: Context): Observable() {
                 endpointDiscoveryCallback,
                 DiscoveryOptions(Strategy.P2P_CLUSTER))
                 .addOnSuccessListener { Log.i(TAG, "Start Discovery success") }
-                .addOnFailureListener {
-                    Log.i(TAG, "Start Discovery failure")
+                .addOnFailureListener { err ->
+                    Log.e(TAG, "Start Discovery failure", err)
                     discoveryState = DiscoveryState.UNINITIALISED
                     failureListener?.onStartDiscoveryFailure()
                     Log.e(TAG, "Discovery failure ${it.message}")
@@ -85,11 +85,10 @@ class ProjectorClient(val context: Context): Observable() {
                 endpointId,
                 connectionLifecycleCallback)
                 .addOnSuccessListener { Log.i(TAG, "Start Request Connection success") }
-                .addOnFailureListener {
-                    Log.i(TAG, "Start Request Connection failure")
+                .addOnFailureListener { err ->
+                    Log.e(TAG, "Start Request Connection failure", err)
                     connectionState = ConnectionState.DISCONNECTED
                     failureListener?.onRequestConnectionFailure()
-                    Log.e(TAG, "Connection failure ${it.message}")
                 }
     }
 

@@ -9,6 +9,7 @@ object ChannelConfigActivities {
             "message" to MessageConfigActivity::class.java,
             "calendar-clock" to CalendarConfigActivity::class.java,
             "webview" to WebConfigActivity::class.java,
-            "ambient-weather" to WeatherConfigActivity::class.java
+            "ambient-weather" to WeatherConfigActivity::class.java,
+            "now-playing" to NowPlayingConfigActivity::class.java
     )
 }
