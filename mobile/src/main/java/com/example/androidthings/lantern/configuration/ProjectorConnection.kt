@@ -9,7 +9,7 @@ import org.json.JSONObject
  */
 class ProjectorConnection(val transport: ConfigurationConnectionTransport) {
 
-    var projectorState: ProjectorState? = null
+    var projectorState: ProjectorState? = ProjectorState()
     val endpointId: String
         get() = transport.endpointId
     companion object {
@@ -29,11 +29,7 @@ class ProjectorConnection(val transport: ConfigurationConnectionTransport) {
 
         when (message.type) {
             ConfigurationMessage.Type.STATE_UPDATE -> {
-                if (projectorState == null) {
-                    projectorState = ProjectorState(message.body!!)
-                } else {
-                    projectorState?.updateWithJSON(message.body!!)
-                }
+                projectorState?.updateWithJSON(message.body!!)
             }
             ConfigurationMessage.Type.AVAILABLE_CHANNELS -> {
                 projectorState?.updateAvailableChannelsWithJSON(message.body!!)

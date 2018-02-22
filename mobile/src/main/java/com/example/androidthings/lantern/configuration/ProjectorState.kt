@@ -10,7 +10,7 @@ import java.util.*
  * Created by Michael Colville on 30/01/2018.
  */
 
-class ProjectorState(json: JSONObject) : Observable() {
+class ProjectorState() : Observable() {
     private val _planes = mutableMapOf<Direction, ChannelConfiguration>(
             Direction.UP to ChannelConfiguration.blank,
             Direction.FORWARD to ChannelConfiguration.blank,
@@ -21,10 +21,6 @@ class ProjectorState(json: JSONObject) : Observable() {
     var direction: Direction = Direction.FORWARD
     var availableChannels: List<ChannelInfo> = listOf()
     var name: String = ""
-
-    init {
-        updateWithJSON(json)
-    }
 
     fun updateWithJSON(json: JSONObject) {
         val planesJson = json.getJSONObject("planes")
