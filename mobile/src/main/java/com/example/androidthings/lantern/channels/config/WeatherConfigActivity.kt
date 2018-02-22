@@ -73,6 +73,8 @@ class WeatherConfigActivity : ChannelConfigActivity() {
                 config.settings.put("latitude", currentLatitude!!)
                 config.settings.put("longitude", currentLongitude!!)
             }
+        } else {
+            config.settings.put("weather-override", selectedItem.type.toString())
         }
 
         finishWithConfigUpdate()

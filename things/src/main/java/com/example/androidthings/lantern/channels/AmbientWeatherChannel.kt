@@ -113,6 +113,13 @@ class AmbientWeatherChannel : Channel() {
     }
 
     private fun refreshData() {
+        val weatherOverride = config.settings.optString("weather-override")
+        if (weatherOverride != "") {
+            weatherConditions = WeatherConditions.valueOf(weatherOverride)
+            update()
+            return
+        }
+
         var latitude = config.settings.opt("latitude") as? Double
         var longitude = config.settings.opt("longitude") as? Double
 
