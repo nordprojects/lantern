@@ -44,11 +44,43 @@
 
             </android.support.constraint.ConstraintLayout>
 
+            <TextView
+                android:id="@+id/currentHeader"
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_marginTop="13dp"
+                android:fontFamily="@font/roboto_mono_medium"
+                android:text="CURRENT"
+                android:letterSpacing="0.071"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="13sp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="9dp"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"/>
+
+            <TextView
+                android:id="@+id/otherHeader"
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_marginTop="0dp"
+                android:fontFamily="@font/roboto_mono_medium"
+                android:text="OTHER CHANNELS"
+                android:letterSpacing="0.071"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="13sp" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="30dp"
+                android:paddingTop="9dp"
                 android:clipToPadding="false"
                 android:nestedScrollingEnabled="false"/>
 

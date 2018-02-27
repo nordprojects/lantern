@@ -51,11 +51,29 @@ class ChannelListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        recyclerViewHeader.setHasFixedSize(true)
+        recyclerViewHeader.layoutManager = LinearLayoutManager(activity)
+
+
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(activity)
+
         val projector = App.instance.projector
         if (projector != null) {
-            recyclerView.adapter = ChannelListAdapter(projector.availableChannels,
+            val channel = projector.planes[direction]!!
+
+            val selected = projector.availableChannels.filter {
+                it.id == channel.type
+            }
+            recyclerViewHeader.adapter = ChannelListAdapter(selected,
+                    onChannelSelectedListener,
+                    direction)
+
+            val other = projector.availableChannels.filter {
+                it.id != channel.type
+            }
+            recyclerView.adapter = ChannelListAdapter(other,
                     onChannelSelectedListener,
                     direction)
         }
