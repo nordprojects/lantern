@@ -8,14 +8,12 @@ import android.support.design.widget.Snackbar.LENGTH_LONG
 import com.example.androidthings.lantern.App
 import com.example.androidthings.lantern.R
 import com.example.androidthings.lantern.channels.config.ChannelConfigActivity
-import com.example.androidthings.lantern.channels.config.ChannelConfigActivities
+import com.example.androidthings.lantern.channels.config.ChannelConfigOptions
 import com.example.androidthings.lantern.configuration.ConnectionState
-import com.example.androidthings.lantern.home.HomeActivity
 import com.example.androidthings.lantern.shared.ChannelConfiguration
 import com.example.androidthings.lantern.shared.ChannelInfo
 import com.example.androidthings.lantern.shared.Direction
 import kotlinx.android.synthetic.main.activity_channels_list.*
-import org.json.JSONObject
 import java.util.*
 
 class ChannelsListActivity : AppCompatActivity(),
@@ -73,9 +71,13 @@ class ChannelsListActivity : AppCompatActivity(),
 
     override fun onChannelSelected(channel: ChannelInfo) {
         val config = ChannelConfiguration(channel.id)
+        val subtitle = ChannelConfigOptions.channelTypeToSubtitle[channel.id]
+        if (subtitle != null) {
+            config.settings.put("subtitle", subtitle)
+        }
 
         if (channel.customizable) {
-            val activityClass = ChannelConfigActivities.channelTypeToActivity[channel.id]
+            val activityClass = ChannelConfigOptions.channelTypeToActivity[channel.id]
             if (activityClass == null) {
                 val snackBar = Snackbar.make(fragmentContainer, "Channel can be customized. Please update this app.", LENGTH_LONG)
                 snackBar.setAction("Set Anyway", { sendConfig(config) })

@@ -42,7 +42,7 @@ To add a channel config to the mobile app you must create an activity and add it
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
     toolbar.setNavigationIcon(R.drawable.back_chevron)
 ```
-- Add an entry to `ChannelConfigActivities` linking it to the channel id set in `ChannelsRegistry` in the things app
+- Add an entry to `ChannelConfigOptions` linking it to the channel id set in `ChannelsRegistry` in the things app
 ```
     "webview" to WebConfigActivity::class.java
 ```
