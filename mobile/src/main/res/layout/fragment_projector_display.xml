@@ -106,7 +106,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
         android:src="@drawable/projector_head_forward"
         app:layout_constraintBottom_toBottomOf="@+id/forward_button"
         app:layout_constraintEnd_toEndOf="parent"
@@ -157,5 +156,32 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/lampGlowUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/lamp_glow_up"
+        app:layout_constraintEnd_toEndOf="@+id/up_button"
+        app:layout_constraintStart_toStartOf="@+id/up_button"
+        app:layout_constraintTop_toBottomOf="@+id/up_button" />
+
+    <ImageView
+        android:id="@+id/lampGlowDown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/lamp_glow_down"
+        app:layout_constraintBottom_toTopOf="@+id/down_button"
+        app:layout_constraintEnd_toEndOf="@+id/down_button"
+        app:layout_constraintStart_toStartOf="@+id/down_button" />
+
+    <ImageView
+        android:id="@+id/lampGlowForward"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/lamp_glow_forward"
+        app:layout_constraintBottom_toBottomOf="@+id/forward_button"
+        app:layout_constraintEnd_toStartOf="@+id/forward_button"
+        app:layout_constraintTop_toTopOf="@+id/forward_button" />
 
 </android.support.constraint.ConstraintLayout>

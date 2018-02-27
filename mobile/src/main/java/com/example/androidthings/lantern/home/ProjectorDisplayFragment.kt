@@ -8,12 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.ImageView
 import android.widget.TextView
 import com.example.androidthings.lantern.App
 
 import com.example.androidthings.lantern.R
 import com.example.androidthings.lantern.channels.color
 import com.example.androidthings.lantern.shared.Direction
+import kotlinx.android.synthetic.main.fragment_channel_list.*
 import kotlinx.android.synthetic.main.fragment_projector_display.*
 import java.util.Observer
 
@@ -23,6 +25,7 @@ class ProjectorDisplayFragment : Fragment() {
     private var directionSelectedListener: OnDirectionSelectedListener? = null
     private val projectorConfigObserver = Observer { _, _ -> projectorConfigUpdated() }
     private var planeViews: Map<Direction, TextView> = mapOf()
+    private var lampGlowViews: Map<Direction, ImageView> = mapOf()
 
     interface OnDirectionSelectedListener {
         fun onDirectionSelected(direction: Direction)
@@ -46,6 +49,12 @@ class ProjectorDisplayFragment : Fragment() {
                 Direction.UP to upTextView,
                 Direction.FORWARD to forwardTextView,
                 Direction.DOWN to downTextView
+        )
+
+        lampGlowViews = mapOf(
+                Direction.UP to lampGlowUp,
+                Direction.FORWARD to lampGlowForward,
+                Direction.DOWN to lampGlowDown
         )
 
         up_button.setOnClickListener {
@@ -79,39 +88,44 @@ class ProjectorDisplayFragment : Fragment() {
 
     private fun update() {
         val projector = App.instance.projector ?: return
-        for (direction in Direction.values()) {
 
+        // Channel Labels
+        for (direction in Direction.values()) {
             val channel = projector.planes[direction]!!
             val view = planeViews[direction]!!
-
             val channelInfo = projector.channelInfoForChannelType(channel.type)
-
-            if (channelInfo == null) {
-                view.text = channel.type
-            } else {
-                view.text = "‘${channelInfo.name}’"
-            }
+            val name = channelInfo?.name ?: channel.type
+            view.text = "‘$name’"
         }
 
+        // Projector head
         val projectorHeadAngle: Float = when(projector.direction) {
             Direction.UP -> -90F
             Direction.FORWARD -> 0F
             Direction.DOWN -> 90F
         }
-
         val projectorHeadImage: Int = when(projector.direction) {
             Direction.UP -> R.drawable.projector_head_up
             Direction.FORWARD -> R.drawable.projector_head_forward
             Direction.DOWN -> R.drawable.projector_head_down
         }
-
         projectorHeadImageView.animate().apply {
             interpolator = AccelerateDecelerateInterpolator()
             duration = 300
         }.rotation(projectorHeadAngle)
-
         projectorHeadImageView.setImageResource(projectorHeadImage)
 
+        // Lamp glow
+        for (each in lampGlowViews) {
+            val glowDirection = each.key
+            val glowView = each.value
+            val alpha = if (glowDirection == projector.direction) 1.0F else 0.0F
+            glowView.animate().apply {
+                duration = 300
+            }.alpha(alpha)
+        }
+
+        // Current channel title & subtitle
         val channel = projector.planes[projector.direction]
         if (channel != null) {
             val channelInfo = projector.channelInfoForChannelType(channel.type)
