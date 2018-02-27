@@ -67,6 +67,7 @@ class NowPlayingConfigActivity: ChannelConfigActivity() {
         val device = selectedDevice ?: return
         config.settings.put("castId", device.id)
         config.settings.put("subtitle", "‘${device.name}’")
+        config.settings.put("subtitleVia", "via Chromecast Audio")
         super.finishWithConfigUpdate()
     }
 

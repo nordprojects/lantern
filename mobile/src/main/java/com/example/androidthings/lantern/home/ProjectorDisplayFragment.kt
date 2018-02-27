@@ -4,6 +4,8 @@ package com.example.androidthings.lantern.home
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.text.SpannableString
+import android.text.style.AbsoluteSizeSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,13 +13,11 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.androidthings.lantern.App
-
 import com.example.androidthings.lantern.R
 import com.example.androidthings.lantern.channels.color
 import com.example.androidthings.lantern.shared.Direction
-import kotlinx.android.synthetic.main.fragment_channel_list.*
 import kotlinx.android.synthetic.main.fragment_projector_display.*
-import java.util.Observer
+import java.util.*
 
 
 class ProjectorDisplayFragment : Fragment() {
@@ -134,7 +134,19 @@ class ProjectorDisplayFragment : Fragment() {
             currentChannelNameTextView.setTextColor(color)
 
             val subtitle = channel.settings.optString("subtitle", "")
-            currentChannelSubtitleTextView.text = subtitle
+            val via = channel.settings.optString("subtitleVia", "")
+
+            val text = if (via == "") subtitle else "$subtitle ${via.toUpperCase()}"
+            val spannable = SpannableString(text)
+            spannable.setSpan(AbsoluteSizeSpan(13, true), 0, subtitle.length, 0)
+            if (via != "") {
+                spannable.setSpan(AbsoluteSizeSpan(12, true),
+                        subtitle.length + 1,
+                        text.length,
+                        0)
+            }
+
+            currentChannelSubtitleTextView.text = spannable
             currentChannelSubtitleTextView.setTextColor(color)
         }
     }
