@@ -1,20 +1,19 @@
-package com.example.androidthings.lantern
+package com.example.androidthings.lantern.startup
 
 import android.Manifest
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.support.v7.app.AppCompatActivity
+import android.os.Bundle
 import android.support.v4.content.ContextCompat
-import android.util.Log
-import com.example.androidthings.lantern.search.ProjectorSearchActivity
 import android.support.v7.app.AlertDialog
+import com.example.androidthings.lantern.R
+import com.example.androidthings.lantern.search.ProjectorSearchActivity
+import kotlinx.android.synthetic.main.activity_begin.*
 
-
-class SplashActivity : AppCompatActivity() {
+class BeginActivity : AppCompatActivity() {
 
     companion object {
-        private val TAG: String = SplashActivity::class.java.simpleName
         private val REQUIRED_PERMISSIONS = arrayOf(
                 Manifest.permission.BLUETOOTH,
                 Manifest.permission.BLUETOOTH_ADMIN,
@@ -26,9 +25,27 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_begin)
 
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION)
+        if (savedInstanceState == null) { // only run fade in on first create
+            textView.alpha = 0.0F
+            textView.animate().apply {
+                duration = 500
+                startDelay = 500
+            }.alpha(1.0F)
+
+            beginButton.alpha = 0.0F
+            beginButton.animate().apply {
+                duration = 500
+                startDelay = 1000
+            }.alpha(1.0F)
+        }
+
+        beginButton.setOnClickListener { onBeginClicked() }
+    }
+
+    private fun onBeginClicked() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             requestPermissions()
         } else {
@@ -56,7 +73,6 @@ class SplashActivity : AppCompatActivity() {
         alertDialog.setMessage("Lantern requires location permissions to find nearby projectors")
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", { dialog, _ ->
             dialog.dismiss()
-            requestPermissions()
         })
         alertDialog.show()
     }

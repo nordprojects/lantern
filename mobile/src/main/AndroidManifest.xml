@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SplashActivity"
+            android:name=".startup.SplashActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
@@ -31,6 +31,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".startup.BeginActivity"
+            android:theme="@style/BeginTheme"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".search.ProjectorSearchActivity"
             android:configChanges="orientation"
@@ -72,12 +77,18 @@
             android:label="Customize"
             android:parentActivityName=".channels.ChannelsListActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".channels.config.WeatherConfigActivity"
+        <activity
+            android:name=".channels.config.WeatherConfigActivity"
             android:configChanges="orientation"
             android:label="Customize"
             android:parentActivityName=".channels.ChannelsListActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".channels.config.NowPlayingConfigActivity" />
+        <activity
+            android:name=".channels.config.NowPlayingConfigActivity"
+            android:configChanges="orientation"
+            android:label="Customize"
+            android:parentActivityName=".channels.ChannelsListActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
