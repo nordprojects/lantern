@@ -2,6 +2,7 @@ package com.example.androidthings.lantern.home
 
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.text.SpannableString
@@ -26,6 +27,7 @@ class ProjectorDisplayFragment : Fragment() {
     private val projectorConfigObserver = Observer { _, _ -> projectorConfigUpdated() }
     private var planeViews: Map<Direction, TextView> = mapOf()
     private var lampGlowViews: Map<Direction, ImageView> = mapOf()
+    private var marqueeHandler = Handler()
 
     interface OnDirectionSelectedListener {
         fun onDirectionSelected(direction: Direction)
@@ -148,6 +150,12 @@ class ProjectorDisplayFragment : Fragment() {
 
             currentChannelSubtitleTextView.text = spannable
             currentChannelSubtitleTextView.setTextColor(color)
+            currentChannelSubtitleTextView.isSelected = false
+            marqueeHandler.removeCallbacksAndMessages(null)
+            marqueeHandler.postDelayed( {
+                currentChannelSubtitleTextView.isSelected = true
+            }, 1000)
+
         }
     }
 }
