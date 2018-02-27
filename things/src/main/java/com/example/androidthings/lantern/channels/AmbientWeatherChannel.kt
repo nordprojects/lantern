@@ -113,7 +113,7 @@ class AmbientWeatherChannel : Channel() {
     }
 
     private fun refreshData() {
-        val weatherOverride = config.settings.optString("weather-override")
+        val weatherOverride = config.settings.optString("weatherOverride")
         if (weatherOverride != "") {
             weatherConditions = WeatherConditions.valueOf(weatherOverride)
             update()

@@ -76,7 +76,7 @@ class WeatherConfigActivity : ChannelConfigActivity() {
                 config.settings.put("subtitleVia", "via Open Weather Map")
             }
         } else {
-            config.settings.put("weather-override", selectedItem.type.toString())
+            config.settings.put("weatherOverride", selectedItem.type.toString())
             config.settings.put("subtitle", "‘${selectedItem.title}’")
             config.settings.put("subtitleVia", null)
         }
