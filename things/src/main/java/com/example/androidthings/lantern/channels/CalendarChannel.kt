@@ -6,6 +6,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Rect
 import android.os.AsyncTask
 import android.os.Bundle
@@ -45,7 +46,7 @@ class CalendarChannel : Channel() {
     private var events by Delegates.observable(listOf<Event>()) {
         _, old, new ->
         if (old != new) {
-            update()
+            recreateEventViews()
         }
     }
     private val textViews = mutableListOf<TextView>()
@@ -67,13 +68,14 @@ class CalendarChannel : Channel() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        update()
+        recreateEventViews()
     }
 
     override fun onStart() {
         super.onStart()
         refreshEventsTimer = fixedRateTimer("$this refresh", false, Date(), 10000) {
             Handler(Looper.getMainLooper()).post({
+                update()
                 refreshEvents()
             })
         }
@@ -90,7 +92,7 @@ class CalendarChannel : Channel() {
         RefreshEventsTask().execute(url)
     }
 
-    private fun update() {
+    private fun recreateEventViews() {
         Log.d(Companion.TAG, "Events: $events")
         val viewGroup = view as? RelativeLayout ?: return
 
@@ -169,6 +171,24 @@ class CalendarChannel : Channel() {
         visibilityAnimations.forEach { it.stop() }
         visibilityAnimations = overlappingGroups.map { OverlappingVisibilityAnimation(it) }
         visibilityAnimations.forEach { it.start() }
+
+        update()
+    }
+
+    fun update() {
+        // add strikethough to textviews whose events are in the past
+        val now = Date()
+        for ((index, event) in events.withIndex()) {
+            val textView = textViews[index]
+
+            if (event.startDate < now) {
+                // add strikethrough flag
+                textView.paintFlags = textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            } else {
+                // remove strikethrough flag
+                textView.paintFlags = textView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+            }
+        }
     }
 
     private fun gravityForAngle(deg: Float): Int {
@@ -341,25 +361,25 @@ class CalendarChannel : Channel() {
         return notchViews.getOrNull(index)
     }
 
-    inner class RefreshEventsTask : AsyncTask<URL, Void, List<VEvent>?>() {
-            override fun doInBackground(vararg params: URL?): List<VEvent>? {
+    inner class RefreshEventsTask : AsyncTask<URL, Void, List<Event>?>() {
+        override fun doInBackground(vararg params: URL?): List<Event>? {
             val url = params.first()!!
 
             val events = downloadEventsFromURL(url) ?: return null
             return filteredEventsWithinA12HourPeriod(events, Date())
         }
 
-        override fun onPostExecute(result: List<VEvent>?) {
+        override fun onPostExecute(result: List<Event>?) {
             if (result == null) {
                 Log.e(TAG, "null result from RefreshEventsTask")
                 return
             }
-            events = result.map { Event(it.summary.value, it.dateStart.value) }
+            events = result
         }
 
-        private fun filteredEventsWithinA12HourPeriod(events: List<VEvent>, date: Date): List<VEvent> {
-            val result = mutableListOf<VEvent>()
-            // start the 12 hour period at 8am or 8pm whichever is preceding `date`
+        private fun filteredEventsWithinA12HourPeriod(events: List<VEvent>, date: Date): List<Event> {
+            val result = mutableListOf<Event>()
+            // start the 12 hour period at 8am or 8pm, whichever is preceding `date`
             val calendar = Calendar.getInstance()
             calendar.time = date
             when (calendar.get(Calendar.HOUR_OF_DAY)) {
@@ -389,7 +409,7 @@ class CalendarChannel : Channel() {
                 if (dateIterator.hasNext()) {
                     val nextOccurrence = dateIterator.next()
                     if (nextOccurrence.before(endDate)) {
-                        result.add(event)
+                        result.add(Event(event.summary.value, nextOccurrence))
                     }
                 }
             }
