@@ -115,7 +115,7 @@ class CalendarChannel : Channel() {
             val notchView = View(context).apply {
                 setBackgroundColor(Color.WHITE)
             }
-            viewGroup.addView(textView, RelativeLayout.LayoutParams(Companion.TEXT_VIEW_WIDTH, Companion.TEXT_VIEW_HEIGHT).apply {
+            viewGroup.addView(textView, RelativeLayout.LayoutParams(TEXT_VIEW_WIDTH, TEXT_VIEW_HEIGHT).apply {
                 addRule(RelativeLayout.CENTER_IN_PARENT)
             })
             viewGroup.addView(notchView, RelativeLayout.LayoutParams(2, 22).apply {
