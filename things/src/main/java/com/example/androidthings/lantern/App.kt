@@ -1,8 +1,10 @@
 package com.example.androidthings.lantern
 
 import android.content.Context
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Display
+import android.view.WindowManager
 import com.example.androidthings.lantern.comms.ConfigurationServer
 import com.example.androidthings.lantern.hardware.Accelerometer
 import com.google.android.things.device.ScreenManager
@@ -86,7 +88,19 @@ class App : AndroidApplication() {
     }
 
     private fun setDisplayDPI() {
+        val windowManager = getSystemService(WindowManager::class.java)
+        val screenMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(screenMetrics)
+        val screenHeight = screenMetrics.heightPixels
+
         val screenManager = ScreenManager(Display.DEFAULT_DISPLAY)
-        screenManager.setDisplayDensity(213) // 720p TV density
+
+        val density = when (screenHeight) {
+            1080 -> 320 // xhdpi
+            720 -> 213 // tvdpi
+            else -> screenHeight * 160 / 540 // a linear scaling according to height
+        }
+        Log.i(TAG, "Screen height is ${screenHeight}px, setting density to $density")
+        screenManager.setDisplayDensity(density)
     }
 }
