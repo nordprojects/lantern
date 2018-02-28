@@ -103,9 +103,7 @@ class CalendarChannel : Channel() {
         textViews.clear()
         notchViews.clear()
 
-        // 1: create and position the text views
         for (event in events) {
-
             val textView = TextView(context).apply {
                 typeface = resources.getFont(R.font.pt_sans)
                 textSize = 16f
@@ -145,37 +143,14 @@ class CalendarChannel : Channel() {
             notchViews.add(notchView)
         }
 
-        // 2: in the case where events overlap each other, separate them into overlapping groups
-        val ungroupedTextViews = textViews.toMutableList()
-        val overlappingGroups = mutableListOf<Set<TextView>>()
-
-        // make sure the views know their sizes
-        textViews.forEach { it.measure(TEXT_VIEW_WIDTH, TEXT_VIEW_HEIGHT) }
-
-        while (ungroupedTextViews.count() > 0) {
-            val group = mutableSetOf(ungroupedTextViews.first())
-            for (textView in ungroupedTextViews) {
-                if (group.any { viewsIntersect(it, textView) }) {
-                    // this text view intersects with one of the views in this group, so make it
-                    // part of the group.
-                    group.add(textView)
-                }
-            }
-            ungroupedTextViews.removeAll(group)
-            overlappingGroups.add(group)
-        }
-
-        // groups with just one view can be ignored, no animations necessary
-        overlappingGroups.removeAll { it.count() < 2 }
-
         visibilityAnimations.forEach { it.stop() }
-        visibilityAnimations = overlappingGroups.map { OverlappingVisibilityAnimation(it) }
+        visibilityAnimations = animationsForOverlappingGroupsOfViews(textViews)
         visibilityAnimations.forEach { it.start() }
 
         update()
     }
 
-    fun update() {
+    private fun update() {
         // add strikethough to textviews whose events are in the past
         val now = Date()
         for ((index, event) in events.withIndex()) {
@@ -218,7 +193,43 @@ class CalendarChannel : Channel() {
         }
     }
 
-    inner class OverlappingVisibilityAnimation(private val views: Collection<View>) {
+    private fun animationsForOverlappingGroupsOfViews(views: Collection<View>): List<OverlappingVisibilityAnimation> {
+        // Split the views into groups that are 'touching' - that overlap. For example:
+        // ┌---------┐                                          ┌---------┐
+        // │    A ┌--┼------┐                       ┌---------┐ │    G    │
+        // └------┼--┘ B ┌--┼------┐        ┌-------┼-┐  F    │ └---------┘
+        //        └------┼--┘ C ┌--┼------┐ │    E  └-┼-------┘
+        //               └------┼--┘ D    │ └---------┘
+        //                      └---------┘
+        // In this example, the groups are [A,B,C,D] and [E,F]. 'G' is ignored
+        // because it doesn't overlap anything, so doesn't need animating.
+
+        val ungroupedTextViews = views.toMutableList()
+        val overlappingGroups = mutableListOf<Set<View>>()
+
+        // make sure the views know their sizes
+        textViews.forEach { it.measure(TEXT_VIEW_WIDTH, TEXT_VIEW_HEIGHT) }
+
+        while (ungroupedTextViews.count() > 0) {
+            val group = mutableSetOf(ungroupedTextViews.first())
+            for (textView in ungroupedTextViews) {
+                if (group.any { viewsIntersect(it, textView) }) {
+                    // this view intersects with one of the views in this group, so make it
+                    // part of the group.
+                    group.add(textView)
+                }
+            }
+            ungroupedTextViews.removeAll(group)
+            overlappingGroups.add(group)
+        }
+
+        // groups with just one view can be ignored, no animations necessary
+        overlappingGroups.removeAll { it.count() < 2 }
+
+        return overlappingGroups.map { OverlappingVisibilityAnimation(it) }
+    }
+
+    private inner class OverlappingVisibilityAnimation(private val views: Collection<View>) {
         private val visibleSets: List<Set<View>>
 
         init {
@@ -320,7 +331,7 @@ class CalendarChannel : Channel() {
         }
     }
 
-    data class Event(val name: String, val startDate: Date) {
+    private data class Event(val name: String, val startDate: Date) {
         companion object {
             val calendar: Calendar = Calendar.getInstance()
         }
@@ -361,7 +372,7 @@ class CalendarChannel : Channel() {
         return notchViews.getOrNull(index)
     }
 
-    inner class RefreshEventsTask : AsyncTask<URL, Void, List<Event>?>() {
+    private inner class RefreshEventsTask : AsyncTask<URL, Void, List<Event>?>() {
         override fun doInBackground(vararg params: URL?): List<Event>? {
             val url = params.first()!!
 
