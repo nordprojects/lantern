@@ -13,19 +13,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.androidthings.lantern.App
-
 import com.example.androidthings.lantern.R
-import com.example.androidthings.lantern.home.HomeActivity
-import com.example.androidthings.lantern.search.ProjectorListFragment
+import com.example.androidthings.lantern.color
 import com.example.androidthings.lantern.shared.ChannelInfo
 import com.example.androidthings.lantern.shared.Direction
 import kotlinx.android.synthetic.main.fragment_channel_list.*
-import java.util.Observer
+import java.util.*
 
 
-/**
- * A simple [Fragment] subclass.
- */
 class ChannelListFragment : Fragment() {
 
     private var onChannelSelectedListener: OnChannelSelectedListener? = null
@@ -35,9 +30,6 @@ class ChannelListFragment : Fragment() {
             Direction.valueOf(directionString ?: "")
         }
 
-    companion object {
-        var TAG: String = ProjectorListFragment::class.java.simpleName
-    }
 
     interface OnChannelSelectedListener {
         fun onChannelSelected(channel: ChannelInfo)
@@ -52,8 +44,8 @@ class ChannelListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerViewHeader.setHasFixedSize(true)
-        recyclerViewHeader.layoutManager = LinearLayoutManager(activity)
+        recyclerViewCurrent.setHasFixedSize(true)
+        recyclerViewCurrent.layoutManager = LinearLayoutManager(activity)
 
 
         recyclerView.setHasFixedSize(true)
@@ -66,7 +58,7 @@ class ChannelListFragment : Fragment() {
             val selected = projector.availableChannels.filter {
                 it.id == channel.type
             }
-            recyclerViewHeader.adapter = ChannelListAdapter(selected,
+            recyclerViewCurrent.adapter = ChannelListAdapter(selected,
                     onChannelSelectedListener,
                     direction)
 
@@ -121,13 +113,5 @@ class ChannelListFragment : Fragment() {
 
     private fun update() {
         recyclerView.adapter.notifyDataSetChanged()
-    }
-}
-
-val Direction.color: Int get() {
-    return when(this) {
-        Direction.UP -> R.color.upPlane
-        Direction.FORWARD -> R.color.forwardPlane
-        Direction.DOWN -> R.color.downPlane
     }
 }

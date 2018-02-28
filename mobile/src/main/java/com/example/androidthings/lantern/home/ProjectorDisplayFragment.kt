@@ -15,7 +15,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.example.androidthings.lantern.App
 import com.example.androidthings.lantern.R
-import com.example.androidthings.lantern.channels.color
+import com.example.androidthings.lantern.color
 import com.example.androidthings.lantern.shared.Direction
 import kotlinx.android.synthetic.main.fragment_projector_display.*
 import java.util.*

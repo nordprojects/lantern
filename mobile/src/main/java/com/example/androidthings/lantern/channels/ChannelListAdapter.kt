@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.androidthings.lantern.R
+import com.example.androidthings.lantern.color
 import com.example.androidthings.lantern.shared.ChannelInfo
 import com.example.androidthings.lantern.shared.Direction
 import kotlinx.android.synthetic.main.item_row_channel.view.*

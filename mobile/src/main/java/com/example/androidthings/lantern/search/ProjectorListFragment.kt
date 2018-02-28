@@ -22,10 +22,6 @@ class ProjectorListFragment : Fragment() {
     private var onProjectorSelectedListener: OnProjectorSelectedListener? = null
     private val clientObserver: Observer = Observer { _, _ -> onClientUpdated() }
 
-    companion object {
-        var TAG: String = ProjectorListFragment::class.java.simpleName
-    }
-
     interface OnProjectorSelectedListener {
         fun onProjectorSelected(endpoint: Endpoint)
     }
@@ -58,37 +54,37 @@ class ProjectorListFragment : Fragment() {
         super.onDestroy()
         App.instance.client.deleteObserver(clientObserver)
     }
-}
 
-class EndpointAdapter(private val endpoints: ArrayList<Endpoint>,
-                      private val listener: ProjectorListFragment.OnProjectorSelectedListener?):
-        RecyclerView.Adapter<EndpointAdapter.ViewHolder>() {
+    class EndpointAdapter(private val endpoints: ArrayList<Endpoint>,
+                          private val listener: ProjectorListFragment.OnProjectorSelectedListener?):
+            RecyclerView.Adapter<EndpointAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent?.context)
-                .inflate(R.layout.item_row_projector, parent, false)
-        return ViewHolder(view, listener)
-    }
+        override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
+            val view = LayoutInflater.from(parent?.context)
+                    .inflate(R.layout.item_row_projector, parent, false)
+            return ViewHolder(view, listener)
+        }
 
-    override fun getItemCount(): Int {
-        return endpoints.size
-    }
+        override fun getItemCount(): Int {
+            return endpoints.size
+        }
 
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-        holder?.bindEndpoint(endpoints[position])
-    }
+        override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
+            holder?.bindEndpoint(endpoints[position])
+        }
 
-    class ViewHolder(var view: View,
-                     private val listener: ProjectorListFragment.OnProjectorSelectedListener?):
-            RecyclerView.ViewHolder(view) {
+        class ViewHolder(var view: View,
+                         private val listener: ProjectorListFragment.OnProjectorSelectedListener?):
+                RecyclerView.ViewHolder(view) {
 
-        var endpoint: Endpoint? = null
+            var endpoint: Endpoint? = null
 
-        fun bindEndpoint(endpoint: Endpoint) {
-            this.endpoint = endpoint
-            view.endpointNameTextView.text = "${endpoint.info.endpointName}"
-            view.idTextView.text = "Lantern: ${endpoint.id}"
-            view.setOnClickListener { listener?.onProjectorSelected(endpoint) }
+            fun bindEndpoint(endpoint: Endpoint) {
+                this.endpoint = endpoint
+                view.endpointNameTextView.text = "${endpoint.info.endpointName}"
+                view.idTextView.text = "Lantern: ${endpoint.id}"
+                view.setOnClickListener { listener?.onProjectorSelected(endpoint) }
+            }
         }
     }
 }
