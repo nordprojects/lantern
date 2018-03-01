@@ -2,9 +2,88 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frameLayout"
+    android:clipChildren="false"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.androidthings.lantern.search.ProjectorSearchFragment">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/lampContainer"
+        android:clipChildren="false"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="H,3:4"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineLampBase"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineLampRight"
+        app:layout_constraintStart_toStartOf="@+id/guidelineLampLeft" >
+
+        <ImageView
+            android:id="@+id/lampBody"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/search_projector_body"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ImageView
+            android:id="@+id/lampHead"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/search_projector_head"
+            app:layout_constraintBottom_toTopOf="@+id/guidelineLampHeadBase"
+            app:layout_constraintDimensionRatio="H,1:1"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineLampHeadRight"
+            app:layout_constraintStart_toStartOf="@+id/guidelineLampHeadLeft" />
+
+        <!-- Lamp Head Guides -->
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guidelineLampHeadBase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5125" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guidelineLampHeadLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".1833" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guidelineLampHeadRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".9333" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <!-- Lamp Body Guides -->
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guidelineLampBase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".5" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guidelineLampLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".333" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guidelineLampRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".666" />
 
     <TextView
         android:id="@+id/textView"
@@ -18,26 +97,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        app:layout_constraintTop_toBottomOf="@+id/lampContainer" />
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
-        android:src="@drawable/search_projector_body"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/lampHead"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="78dp"
-        android:layout_marginStart="20dp"
-        android:src="@drawable/search_projector_head"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView3"
-        app:layout_constraintStart_toStartOf="@+id/imageView3" />
 </android.support.constraint.ConstraintLayout>
