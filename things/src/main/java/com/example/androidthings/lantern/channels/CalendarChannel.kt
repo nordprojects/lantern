@@ -89,7 +89,14 @@ class CalendarChannel : Channel() {
     }
 
     private fun refreshEvents() {
-        val url = iCalURL ?: return
+        val iCalURL = iCalURL
+
+        if (iCalURL == null) {
+            refreshError = IllegalArgumentException("Calendar URL required")
+            update()
+            return
+        }
+
         RefreshEventsTask().also {
             it.onComplete = { events, error ->
                 refreshError = error
@@ -99,8 +106,10 @@ class CalendarChannel : Channel() {
                 } else {
                     this.events = events
                 }
+
+                update()
             }
-        }.execute(url)
+        }.execute(iCalURL)
     }
 
     private fun recreateEventViews() {
