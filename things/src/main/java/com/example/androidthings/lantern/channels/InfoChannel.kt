@@ -26,7 +26,7 @@ class InfoChannel: Channel() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        nameTextView.text = "’${App.instance.advertisingName}‘"
+        nameTextView.text = "‘${App.instance.advertisingName}’"
         ipAddressTextView.text = getIpAddresses().joinToString(separator = "\n")
         androidThingsVersionTextView.text = "Android Things ${AndroidThings.getVersionString()}"
         val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
