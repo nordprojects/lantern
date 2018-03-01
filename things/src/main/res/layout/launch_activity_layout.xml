@@ -1,93 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:src="@drawable/launch_bg"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/resolutionErrorViewGroup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="5dp"
+            android:src="@drawable/powered_by_android_things"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <LinearLayout
+            android:layout_width="440dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="25dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.32">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/lantern_logo"
+                tools:layout_editor_absoluteX="357dp"
+                tools:layout_editor_absoluteY="147dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/google_sans_bold"
+                android:gravity="center"
+                android:text="Lantern"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="52sp"
+                app:layout_constraintStart_toStartOf="@+id/guideline"
+                tools:layout_editor_absoluteY="130dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/google_sans_regular"
+                android:gravity="center"
+                android:text="Lantern booted in the wrong screen resolution. Make sure projector is connected. &#10;&#10;Rebooting in:"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="21sp" />
+
+            <TextView
+                android:id="@+id/timeRemainingTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/google_sans_regular"
+                android:gravity="center"
+                android:text="5"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="21sp" />
+        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/infoChannelViewGroup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="615:540"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="5dp"
-        android:src="@drawable/powered_by_android_things"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/google_sans_bold"
-            android:text="Lantern"
-            android:textColor="@android:color/white"
-            android:textSize="60sp"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            tools:layout_editor_absoluteY="130dp" />
-
-        <TextView
-            android:id="@+id/nameTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:fontFamily="@font/google_sans_regular"
-            android:textColor="@android:color/white"
-            android:textSize="22sp"
-            tools:text="‘Timmy’" />
-
-        <TextView
-            android:id="@+id/ipAddressTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/google_sans_regular"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            tools:text="192.168.50.20" />
-
-        <TextView
-            android:id="@+id/androidThingsVersionTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/google_sans_regular"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            tools:text="Android Things DP7" />
-
-        <TextView
-            android:id="@+id/lanternVersionTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/google_sans_regular"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            tools:text="Lantern v1.0.1" />
-    </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+    </FrameLayout>
+</FrameLayout>
