@@ -80,7 +80,7 @@ class App : AndroidApplication() {
     private fun saveConfig() {
         val file = openFileOutput(CONFIG_FILE_PATH, Context.MODE_PRIVATE)
         val fileWriter = file.writer()
-        fileWriter.write(config.toJson().toString(2))
+        fileWriter.write(config.toJson(includingSecrets = true).toString(2))
         fileWriter.close()
         file.close()
 
