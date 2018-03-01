@@ -88,15 +88,16 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
-        android:layout_height="27dp"
-        android:layout_marginTop="70dp"
+        android:layout_height="wrap_content"
         android:fontFamily="@font/roboto_mono_regular"
         android:text="Searching for nearby Lanterns…"
         android:textColor="@android:color/black"
         android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lampContainer" />
+        app:layout_constraintTop_toBottomOf="@+id/lampContainer"
+        app:layout_constraintVertical_bias="0.29000002" />
 
 </android.support.constraint.ConstraintLayout>
