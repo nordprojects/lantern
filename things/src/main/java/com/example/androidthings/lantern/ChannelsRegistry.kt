@@ -71,6 +71,12 @@ object ChannelsRegistry {
                     "Display a short message",
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_blank"),
                     customizable = true
+            )),
+            Pair(::InfoChannel, ChannelInfo(
+                    "info",
+                    "Lantern Info",
+                    "Projects some useful information about the projector",
+                    Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_info")
             ))
     )
 
