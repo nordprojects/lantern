@@ -108,7 +108,7 @@ class CalendarChannel : Channel() {
 
         if (eventsView == null) return
 
-        val notchRadius = eventsView.height/2.0f * 0.75f
+        val notchRadius = eventsView.height/2.0f * 0.73f
         val textRadius = eventsView.height/2.0f * 0.78f
 
         eventsView.removeAllViews()
@@ -121,7 +121,7 @@ class CalendarChannel : Channel() {
         for (event in events) {
             val textView = TextView(context).apply {
                 typeface = resources.getFont(R.font.pt_sans)
-                textSize = 16f
+                textSize = 24f
                 setTextColor(Color.WHITE)
                 maxLines = 2
                 text = event.name
@@ -133,7 +133,7 @@ class CalendarChannel : Channel() {
             eventsView.addView(textView, RelativeLayout.LayoutParams(TEXT_VIEW_WIDTH, TEXT_VIEW_HEIGHT).apply {
                 addRule(RelativeLayout.CENTER_IN_PARENT)
             })
-            eventsView.addView(notchView, RelativeLayout.LayoutParams(2, 22).apply {
+            eventsView.addView(notchView, RelativeLayout.LayoutParams(3, 22).apply {
                 addRule(RelativeLayout.CENTER_IN_PARENT)
             })
 
@@ -488,8 +488,8 @@ class CalendarChannel : Channel() {
     }
 
     companion object {
-        private const val TEXT_VIEW_HEIGHT = 53
-        private const val TEXT_VIEW_WIDTH = 150
+        private const val TEXT_VIEW_HEIGHT = 70
+        private const val TEXT_VIEW_WIDTH = 200
         private val TAG = this::class.java.simpleName
     }
 }
