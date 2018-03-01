@@ -28,7 +28,7 @@ class App : AndroidApplication() {
 
     private val configServer: ConfigurationServer by lazy { ConfigurationServer(this) }
     private val configObserver = Observer { _, _ -> configUpdated() }
-    private lateinit var advertisingName: String
+    lateinit var advertisingName: String
 
     override fun onCreate() {
         super.onCreate()

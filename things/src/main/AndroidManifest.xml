@@ -14,11 +14,13 @@
     <!-- Required to set screen DPI -->
     <uses-permission android:name="com.google.android.things.permission.MODIFY_SCREEN_SETTINGS" />
 
+    <application
+        android:name=".App"
+        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
 
-    <application android:name=".App">
         <uses-library android:name="com.google.android.things" />
 
-        <activity android:name=".MainActivity" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+        <activity android:name=".LaunchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,6 +33,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>
