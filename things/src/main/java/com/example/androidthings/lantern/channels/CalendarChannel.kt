@@ -33,6 +33,7 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.properties.Delegates
+import kotlinx.android.synthetic.main.calendar_clock_channel.*
 
 /**
  * Shows a day's appointments around a real-world clock.
@@ -43,12 +44,13 @@ import kotlin.properties.Delegates
  */
 @SuppressLint("RtlHardcoded")
 class CalendarChannel : Channel() {
-    private var events by Delegates.observable(listOf<Event>()) {
+    private var events by Delegates.observable<List<Event>?>(null) {
         _, old, new ->
         if (old != new) {
             recreateEventViews()
         }
     }
+    private var refreshError: Exception? = null
     private val textViews = mutableListOf<TextView>()
     private val notchViews = mutableListOf<View>()
     private var visibilityAnimations = listOf<OverlappingVisibilityAnimation>()
@@ -59,11 +61,10 @@ class CalendarChannel : Channel() {
         urlString?.let { URL(it) }
     }
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return RelativeLayout(context).apply {
-            setBackgroundColor(Color.BLACK)
-        }
+        return inflater.inflate(R.layout.calendar_clock_channel, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -89,19 +90,33 @@ class CalendarChannel : Channel() {
 
     private fun refreshEvents() {
         val url = iCalURL ?: return
-        RefreshEventsTask().execute(url)
+        RefreshEventsTask().also {
+            it.onComplete = { events, error ->
+                refreshError = error
+
+                if (events == null) {
+                    Log.e(TAG, "null result from RefreshEventsTask. $error")
+                } else {
+                    this.events = events
+                }
+            }
+        }.execute(url)
     }
 
     private fun recreateEventViews() {
-        Log.d(Companion.TAG, "Events: $events")
-        val viewGroup = view as? RelativeLayout ?: return
+        Log.d(TAG, "Events: $events")
 
-        val notchRadius = viewGroup.height/2.0f * 0.75f
-        val textRadius = viewGroup.height/2.0f * 0.78f
+        if (eventsView == null) return
 
-        viewGroup.removeAllViews()
+        val notchRadius = eventsView.height/2.0f * 0.75f
+        val textRadius = eventsView.height/2.0f * 0.78f
+
+        eventsView.removeAllViews()
         textViews.clear()
         notchViews.clear()
+        visibilityAnimations.forEach { it.stop() }
+
+        val events = events ?: return
 
         for (event in events) {
             val textView = TextView(context).apply {
@@ -115,10 +130,10 @@ class CalendarChannel : Channel() {
             val notchView = View(context).apply {
                 setBackgroundColor(Color.WHITE)
             }
-            viewGroup.addView(textView, RelativeLayout.LayoutParams(TEXT_VIEW_WIDTH, TEXT_VIEW_HEIGHT).apply {
+            eventsView.addView(textView, RelativeLayout.LayoutParams(TEXT_VIEW_WIDTH, TEXT_VIEW_HEIGHT).apply {
                 addRule(RelativeLayout.CENTER_IN_PARENT)
             })
-            viewGroup.addView(notchView, RelativeLayout.LayoutParams(2, 22).apply {
+            eventsView.addView(notchView, RelativeLayout.LayoutParams(2, 22).apply {
                 addRule(RelativeLayout.CENTER_IN_PARENT)
             })
 
@@ -143,7 +158,6 @@ class CalendarChannel : Channel() {
             notchViews.add(notchView)
         }
 
-        visibilityAnimations.forEach { it.stop() }
         visibilityAnimations = animationsForOverlappingGroupsOfViews(textViews)
         visibilityAnimations.forEach { it.start() }
 
@@ -151,18 +165,35 @@ class CalendarChannel : Channel() {
     }
 
     private fun update() {
-        // add strikethough to textviews whose events are in the past
-        val now = Date()
-        for ((index, event) in events.withIndex()) {
-            val textView = textViews[index]
+        if (view == null) return
 
-            if (event.startDate < now) {
-                // add strikethrough flag
-                textView.paintFlags = textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-            } else {
-                // remove strikethrough flag
-                textView.paintFlags = textView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+        val events = events
+
+        if (events != null) {
+            // add strikethough to textviews whose events are in the past
+            val now = Date()
+            for ((index, event) in events.withIndex()) {
+                val textView = textViews[index]
+
+                if (event.startDate < now) {
+                    // add strikethrough flag
+                    textView.paintFlags = textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                } else {
+                    // remove strikethrough flag
+                    textView.paintFlags = textView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                }
             }
+        }
+
+        // update status text
+        statusTextView.text = if (events == null && refreshError != null) {
+            "An error occurred while getting calendar events.\n\n$refreshError"
+        } else if (events == null) {
+            "Loading..."
+        } else if (events.isEmpty()) {
+            "No events."
+        } else {
+            ""
         }
     }
 
@@ -372,20 +403,25 @@ class CalendarChannel : Channel() {
         return notchViews.getOrNull(index)
     }
 
-    private inner class RefreshEventsTask : AsyncTask<URL, Void, List<Event>?>() {
-        override fun doInBackground(vararg params: URL?): List<Event>? {
-            val url = params.first()!!
+    private class RefreshEventsTask : AsyncTask<URL, Void, List<Event>?>() {
+        var error: Exception? = null
+        var onComplete: ((List<Event>?, Exception?) -> Unit)? = null
 
-            val events = downloadEventsFromURL(url) ?: return null
-            return filteredEventsWithinA12HourPeriod(events, Date())
+        override fun doInBackground(vararg params: URL?): List<Event>? {
+            try {
+                val url = params.first()!!
+
+                val events = downloadEventsFromURL(url) ?: return null
+                return filteredEventsWithinA12HourPeriod(events, Date())
+            }
+            catch (e: Exception) {
+                error = e
+                return null
+            }
         }
 
         override fun onPostExecute(result: List<Event>?) {
-            if (result == null) {
-                Log.e(TAG, "null result from RefreshEventsTask")
-                return
-            }
-            events = result
+            onComplete?.invoke(result, error)
         }
 
         private fun filteredEventsWithinA12HourPeriod(events: List<VEvent>, date: Date): List<Event> {
