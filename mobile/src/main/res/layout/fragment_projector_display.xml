@@ -10,12 +10,12 @@
         android:id="@+id/up_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="38dp"
+        android:layout_marginBottom="13dp"
         android:background="@android:color/transparent"
         android:src="@drawable/up_plane"
+        app:layout_constraintBottom_toTopOf="@+id/forward_button"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
         android:id="@+id/upTextView"
@@ -36,12 +36,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="65dp"
-        android:layout_marginTop="13dp"
         android:background="@android:color/transparent"
         android:contentDescription="Set forward"
         android:src="@drawable/forward_plane"
+        app:layout_constraintBottom_toBottomOf="@+id/projectorHeadImageView"
         app:layout_constraintStart_toEndOf="@+id/projectorHeadImageView"
-        app:layout_constraintTop_toBottomOf="@+id/up_button" />
+        app:layout_constraintTop_toTopOf="@+id/projectorHeadImageView" />
 
     <TextView
         android:id="@+id/forwardTextView"
@@ -105,12 +105,12 @@
         android:id="@+id/projectorHeadImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:src="@drawable/projector_head_forward"
-        app:layout_constraintBottom_toBottomOf="@+id/forward_button"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/forward_button" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.48000002" />
 
     <TextView
         android:id="@+id/currentChannelNameTextView"
@@ -153,14 +153,15 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
         android:fontFamily="@font/google_sans_regular"
         android:text="Tap a surface to change the channel"
         android:textColor="@color/text_dark"
         android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/up_button"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.29000002" />
 
     <ImageView
         android:id="@+id/lampGlowUp"
