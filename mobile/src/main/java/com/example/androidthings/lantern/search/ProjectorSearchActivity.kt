@@ -11,16 +11,14 @@ import android.util.Log
 import com.example.androidthings.lantern.App
 import com.example.androidthings.lantern.home.HomeActivity
 import com.example.androidthings.lantern.R
-import com.example.androidthings.lantern.configuration.ProjectorClient
-import com.example.androidthings.lantern.configuration.ConnectionState
-import com.example.androidthings.lantern.configuration.DiscoveryState
-import com.example.androidthings.lantern.configuration.Endpoint
+import com.example.androidthings.lantern.configuration.*
 import kotlinx.android.synthetic.main.activity_projector_search.*
 import java.util.*
 
 class ProjectorSearchActivity : AppCompatActivity(),
         ProjectorListFragment.OnProjectorSelectedListener,
-        ProjectorClient.ProjectorClientFailureListener {
+        ProjectorClient.ProjectorClientFailureListener,
+        Discovery.DiscoveryFailureListener {
 
     companion object {
         private val TAG: String = ProjectorSearchActivity::class.java.simpleName
@@ -28,6 +26,7 @@ class ProjectorSearchActivity : AppCompatActivity(),
     }
 
     private val clientObserver: Observer = Observer { _, _ -> onClientUpdated() }
+    private val discoveryObserver: Observer = Observer { _, _ -> onDiscoveryUpdated() }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,9 +44,11 @@ class ProjectorSearchActivity : AppCompatActivity(),
     override fun onResume() {
         super.onResume()
         App.instance.client.addObserver(clientObserver)
+        App.instance.discovery.addObserver(discoveryObserver)
         App.instance.client.failureListener = this
-        if (App.instance.client.discoveryState == DiscoveryState.UNINITIALISED) {
-            App.instance.client.startDiscovery()
+        App.instance.discovery.failureListener = this
+        if (App.instance.discovery.discoveryState == DiscoveryState.UNINITIALISED) {
+            App.instance.discovery.startDiscovery()
         }
         update()
     }
@@ -55,6 +56,7 @@ class ProjectorSearchActivity : AppCompatActivity(),
     override fun onPause() {
         super.onPause()
         App.instance.client.deleteObserver(clientObserver)
+        App.instance.discovery.deleteObserver(discoveryObserver)
         App.instance.client.failureListener = null
     }
 
@@ -62,9 +64,13 @@ class ProjectorSearchActivity : AppCompatActivity(),
         update()
     }
 
+    private fun onDiscoveryUpdated() {
+        update()
+    }
+
     override fun onStartDiscoveryFailure() {
         val snackBar = Snackbar.make(fragment_container, "Failed to start Nearby Connections", LENGTH_INDEFINITE)
-        snackBar.setAction("Try again", { App.instance.client.startDiscovery() })
+        snackBar.setAction("Try again", { App.instance.discovery.startDiscovery() })
         snackBar.show()
     }
 
@@ -85,7 +91,7 @@ class ProjectorSearchActivity : AppCompatActivity(),
                 return
             }
         }
-        when (App.instance.client.discoveryState) {
+        when (App.instance.discovery.discoveryState) {
             DiscoveryState.LOOKING_FOR_ENDPOINTS -> {
                 showProjectorSearchFragment()
                 return

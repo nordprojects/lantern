@@ -35,7 +35,7 @@ class ProjectorListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = EndpointAdapter(App.instance.client.endpoints, onProjectorSelectedListener)
+        recyclerView.adapter = EndpointAdapter(App.instance.discovery.endpoints, onProjectorSelectedListener)
 
         App.instance.client.addObserver(clientObserver)
     }

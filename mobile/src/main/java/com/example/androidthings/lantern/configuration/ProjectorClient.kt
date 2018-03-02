@@ -12,14 +12,6 @@ import java.util.*
  * Created by Michael Colville on 29/01/2018.
  */
 
-data class Endpoint(val id: String, val info: DiscoveredEndpointInfo)
-
-enum class DiscoveryState {
-    UNINITIALISED,
-    LOOKING_FOR_ENDPOINTS,
-    ENDPOINTS_AVAILABLE
-}
-
 enum class ConnectionState {
     DISCONNECTED,
     CONNECTING_TO_ENDPOINT,
@@ -29,18 +21,8 @@ enum class ConnectionState {
 class ProjectorClient(val context: Context): Observable() {
 
     private val connectionsClient = Nearby.getConnectionsClient(context)
-    val endpoints: ArrayList<Endpoint> = arrayListOf()
     var activeConnection: ProjectorConnection? = null
 
-    var discoveryState: DiscoveryState = DiscoveryState.UNINITIALISED
-        set(value) {
-            val oldValue = field
-            if (oldValue != value) {
-                field = value
-                setChanged()
-                notifyObservers()
-            }
-        }
     var connectionState: ConnectionState = ConnectionState.DISCONNECTED
         set(value) {
             val oldValue = field
@@ -57,24 +39,9 @@ class ProjectorClient(val context: Context): Observable() {
     }
 
     interface ProjectorClientFailureListener {
-        fun onStartDiscoveryFailure()
         fun onRequestConnectionFailure()
     }
 
-    fun startDiscovery() {
-        Log.i(TAG, "START DISCOVERY")
-        discoveryState = DiscoveryState.LOOKING_FOR_ENDPOINTS
-        connectionsClient.startDiscovery(
-                "com.example.androidthings.lantern.projector",
-                endpointDiscoveryCallback,
-                DiscoveryOptions(Strategy.P2P_CLUSTER))
-                .addOnSuccessListener { Log.i(TAG, "Start Discovery success") }
-                .addOnFailureListener { err ->
-                    Log.e(TAG, "Start Discovery failure", err)
-                    discoveryState = DiscoveryState.UNINITIALISED
-                    failureListener?.onStartDiscoveryFailure()
-                }
-    }
 
     fun connectTo(endpointId: String) {
         connectionState = ConnectionState.CONNECTING_TO_ENDPOINT
@@ -103,27 +70,6 @@ class ProjectorClient(val context: Context): Observable() {
     private fun connectionDidDisconnect() {
         activeConnection = null
         connectionState = ConnectionState.DISCONNECTED
-    }
-
-    private val endpointDiscoveryCallback = object : EndpointDiscoveryCallback() {
-        override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
-            Log.i(TAG, "Endpoint found $endpointId")
-            endpoints.add(Endpoint(endpointId, info))
-            setChanged()
-            notifyObservers()
-            discoveryState = DiscoveryState.ENDPOINTS_AVAILABLE
-        }
-
-        override fun onEndpointLost(endpointId: String) {
-            Log.i(TAG, "Endpoint lost $endpointId")
-            val endpoint = endpoints.find { it.id == endpointId }
-            endpoints.remove(endpoint)
-            setChanged()
-            notifyObservers()
-            if (endpoints.size == 0) {
-                discoveryState = DiscoveryState.LOOKING_FOR_ENDPOINTS
-            }
-        }
     }
 
     private val connectionLifecycleCallback = object: ConnectionLifecycleCallback() {
