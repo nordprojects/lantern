@@ -47,9 +47,9 @@ class ProjectorSearchActivity : AppCompatActivity(),
         App.instance.discovery.addObserver(discoveryObserver)
         App.instance.client.failureListener = this
         App.instance.discovery.failureListener = this
-        if (App.instance.discovery.discoveryState == DiscoveryState.UNINITIALISED) {
-            App.instance.discovery.startDiscovery()
-        }
+
+        App.instance.discovery.startDiscovery()
+
         update()
     }
 
@@ -58,6 +58,8 @@ class ProjectorSearchActivity : AppCompatActivity(),
         App.instance.client.deleteObserver(clientObserver)
         App.instance.discovery.deleteObserver(discoveryObserver)
         App.instance.client.failureListener = null
+
+        App.instance.discovery.stopDiscovery()
     }
 
     private fun onClientUpdated() {
@@ -91,15 +93,11 @@ class ProjectorSearchActivity : AppCompatActivity(),
                 return
             }
         }
-        when (App.instance.discovery.discoveryState) {
-            DiscoveryState.LOOKING_FOR_ENDPOINTS -> {
-                showProjectorSearchFragment()
-                return
-            }
-            DiscoveryState.ENDPOINTS_AVAILABLE -> {
-                showProjectorListFragment()
-                return
-            }
+
+        if (App.instance.discovery.endpoints.isEmpty()) {
+            showProjectorSearchFragment()
+        } else {
+            showProjectorListFragment()
         }
     }
 

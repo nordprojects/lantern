@@ -16,13 +16,6 @@ import java.util.*
 
 data class Endpoint(val id: String, val info: DiscoveredEndpointInfo)
 
-enum class DiscoveryState {
-    UNINITIALISED,
-    LOOKING_FOR_ENDPOINTS,
-    ENDPOINTS_AVAILABLE
-}
-
-
 class Discovery(val context: Context): Observable() {
 
     companion object {
@@ -35,23 +28,12 @@ class Discovery(val context: Context): Observable() {
     var failureListener: DiscoveryFailureListener? = null
 
 
-    var discoveryState: DiscoveryState = DiscoveryState.UNINITIALISED
-        set(value) {
-            val oldValue = field
-            if (oldValue != value) {
-                field = value
-                setChanged()
-                notifyObservers()
-            }
-        }
-
     interface DiscoveryFailureListener {
         fun onStartDiscoveryFailure()
     }
 
     fun startDiscovery() {
         Log.i(TAG, "START DISCOVERY")
-        discoveryState = DiscoveryState.LOOKING_FOR_ENDPOINTS
         connectionsClient.startDiscovery(
                 "com.example.androidthings.lantern.projector",
                 endpointDiscoveryCallback,
@@ -59,9 +41,13 @@ class Discovery(val context: Context): Observable() {
                 .addOnSuccessListener { Log.i(TAG, "Start Discovery success") }
                 .addOnFailureListener { err ->
                     Log.e(TAG, "Start Discovery failure", err)
-                    discoveryState = DiscoveryState.UNINITIALISED
                     failureListener?.onStartDiscoveryFailure()
                 }
+    }
+
+    fun stopDiscovery() {
+        connectionsClient.stopDiscovery()
+        endpoints.clear()
     }
 
     private val endpointDiscoveryCallback = object : EndpointDiscoveryCallback() {
@@ -70,7 +56,6 @@ class Discovery(val context: Context): Observable() {
             endpoints.add(Endpoint(endpointId, info))
             setChanged()
             notifyObservers()
-            discoveryState = DiscoveryState.ENDPOINTS_AVAILABLE
         }
 
         override fun onEndpointLost(endpointId: String) {
@@ -79,9 +64,6 @@ class Discovery(val context: Context): Observable() {
             endpoints.remove(endpoint)
             setChanged()
             notifyObservers()
-            if (endpoints.size == 0) {
-                discoveryState = DiscoveryState.LOOKING_FOR_ENDPOINTS
-            }
         }
     }
 }
