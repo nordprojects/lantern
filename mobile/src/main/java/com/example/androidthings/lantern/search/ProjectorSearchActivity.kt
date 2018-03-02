@@ -28,7 +28,6 @@ class ProjectorSearchActivity : AppCompatActivity(),
     private val clientObserver: Observer = Observer { _, _ -> onClientUpdated() }
     private val discoveryObserver: Observer = Observer { _, _ -> onDiscoveryUpdated() }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_projector_search)
@@ -36,9 +35,6 @@ class ProjectorSearchActivity : AppCompatActivity(),
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationIcon(R.drawable.back_chevron)
-        toolbar.setNavigationOnClickListener {
-            //TODO - restart nearby discovery and clear endpoints?
-        }
     }
 
     override fun onResume() {
@@ -138,7 +134,6 @@ class ProjectorSearchActivity : AppCompatActivity(),
                 HomeActivity.RESULT_DISCONNECTED -> {
                     val snackBar = Snackbar.make(fragment_container, "Lost connection to projector", LENGTH_LONG)
                     snackBar.show()
-                    // TODO - restart discovery?
                 }
                 Activity.RESULT_CANCELED -> {
                     App.instance.client.disconnect()

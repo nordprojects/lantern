@@ -81,6 +81,5 @@ class BeginActivity : AppCompatActivity() {
         val intent = Intent(this, ProjectorSearchActivity::class.java)
         startActivity(intent)
         overridePendingTransition(android.R.anim.fade_in, R.anim.hold)
-        finish()
     }
 }

@@ -34,10 +34,12 @@
         <activity
             android:name=".startup.BeginActivity"
             android:theme="@style/BeginTheme"
+            android:launchMode="singleTop"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
             android:name=".search.ProjectorSearchActivity"
+            android:parentActivityName=".startup.BeginActivity"
             android:configChanges="orientation"
             android:label="Connect to device"
             android:screenOrientation="portrait" />
