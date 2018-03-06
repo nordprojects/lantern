@@ -90,12 +90,13 @@ class ProjectorDisplayFragment : Fragment() {
 
     private fun update() {
         val projector = App.instance.projector ?: return
+        val connection = App.instance.client.activeConnection
 
         // Channel Labels
         for (direction in Direction.values()) {
             val channel = projector.planes[direction]!!
             val view = planeViews[direction]!!
-            val channelInfo = projector.channelInfoForChannelType(channel.type)
+            val channelInfo = connection?.channelInfoForChannelType(channel.type)
             val name = channelInfo?.name ?: channel.type
             view.text = "‘$name’"
         }
@@ -130,7 +131,7 @@ class ProjectorDisplayFragment : Fragment() {
         // Current channel title & subtitle
         val channel = projector.planes[projector.direction]
         if (channel != null) {
-            val channelInfo = projector.channelInfoForChannelType(channel.type)
+            val channelInfo = App.instance.client.activeConnection?.channelInfoForChannelType(channel.type)
             val color = ContextCompat.getColor(context!!, projector.direction.color)
             currentChannelNameTextView.text = channelInfo?.name ?: ""
             currentChannelNameTextView.setTextColor(color)

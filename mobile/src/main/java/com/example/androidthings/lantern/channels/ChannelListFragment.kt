@@ -52,17 +52,18 @@ class ChannelListFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(activity)
 
         val projector = App.instance.projector
-        if (projector != null) {
+        val availableChannels = App.instance.client.activeConnection?.availableChannels
+        if (projector != null && availableChannels != null) {
             val channel = projector.planes[direction]!!
 
-            val selected = projector.availableChannels.filter {
+            val selected = availableChannels.filter {
                 it.id == channel.type
             }
             recyclerViewCurrent.adapter = ChannelListAdapter(selected,
                     onChannelSelectedListener,
                     direction)
 
-            val other = projector.availableChannels.filter {
+            val other = availableChannels.filter {
                 it.id != channel.type
             }
             recyclerView.adapter = ChannelListAdapter(other,

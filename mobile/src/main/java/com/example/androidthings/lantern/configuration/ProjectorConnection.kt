@@ -7,9 +7,11 @@ import org.json.JSONObject
 /**
  * Created by Michael Colville on 30/01/2018.
  */
+
 class ProjectorConnection(private val transport: ConfigurationConnectionTransport) {
 
     var projectorState: ProjectorState? = ProjectorState()
+    var availableChannels: List<ChannelInfo> = listOf()
     val endpointId: String
         get() = transport.endpointId
     companion object {
@@ -28,13 +30,28 @@ class ProjectorConnection(private val transport: ConfigurationConnectionTranspor
                 projectorState?.updateWithJSON(message.body!!)
             }
             ConfigurationMessage.Type.AVAILABLE_CHANNELS -> {
-                projectorState?.updateAvailableChannelsWithJSON(message.body!!)
+                updateAvailableChannelsWithJSON(message.body!!)
             }
             ConfigurationMessage.Type.ERROR -> {
                 Log.e(TAG, "Error message received from $this. $message")
             }
             else -> { throw IllegalArgumentException("Can't handle message type ${message.type}") }
         }
+    }
+
+    private fun updateAvailableChannelsWithJSON(messageBody: JSONObject) {
+        val channelsInfoJson = messageBody.getJSONArray("channels")
+        val channelsInfo = arrayListOf<ChannelInfo>()
+        for (i in 0 until channelsInfoJson.length()) {
+            val channelInfoJson = channelsInfoJson.getJSONObject(i)
+            val channelInfo = ChannelInfo(channelInfoJson)
+            channelsInfo.add(channelInfo)
+        }
+        availableChannels = channelsInfo
+    }
+
+    fun channelInfoForChannelType(type: String): ChannelInfo? {
+        return availableChannels.find { it.id == type }
     }
 
     fun sendSetPlane(direction: Direction, configuration: ChannelConfiguration) {

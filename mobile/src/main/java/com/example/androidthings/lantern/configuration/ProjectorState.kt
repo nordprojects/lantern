@@ -19,7 +19,6 @@ class ProjectorState() : Observable() {
     val planes: Map<Direction, ChannelConfiguration>
         get() = _planes
     var direction: Direction = Direction.FORWARD
-    var availableChannels: List<ChannelInfo> = listOf()
     var name: String = ""
 
     fun updateWithJSON(json: JSONObject) {
@@ -40,26 +39,4 @@ class ProjectorState() : Observable() {
         val direction = Direction.withJsonName(jsonDirection)
         _planes[direction] = ChannelConfiguration(jsonConfig)
     }
-
-    fun updateAvailableChannelsWithJSON(messageBody: JSONObject) {
-        val channelsInfoJson = messageBody.getJSONArray("channels")
-        val channelsInfo = arrayListOf<ChannelInfo>()
-
-        for (i in 0 until channelsInfoJson.length()) {
-            val channelInfoJson = channelsInfoJson.getJSONObject(i)
-            val channelInfo = ChannelInfo(channelInfoJson)
-            channelsInfo.add(channelInfo)
-        }
-
-        availableChannels = channelsInfo
-
-        setChanged()
-        notifyObservers()
-    }
-
-    fun channelInfoForChannelType(type: String): ChannelInfo? {
-        return availableChannels.find { it.id == type }
-    }
-
-
 }
