@@ -33,15 +33,15 @@
         </activity>
         <activity
             android:name=".startup.BeginActivity"
-            android:theme="@style/BeginTheme"
-            android:launchMode="singleTop"
             android:configChanges="orientation"
-            android:screenOrientation="portrait" />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/BeginTheme" />
         <activity
             android:name=".search.ProjectorSearchActivity"
-            android:parentActivityName=".startup.BeginActivity"
             android:configChanges="orientation"
             android:label="Connect to device"
+            android:parentActivityName=".startup.BeginActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".home.HomeActivity"
@@ -91,6 +91,7 @@
             android:label="Customize"
             android:parentActivityName=".channels.ChannelsListActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".connect.ConnectActivity"></activity>
     </application>
 
 </manifest>

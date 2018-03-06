@@ -21,8 +21,6 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
     private val projectorConfigObserver = Observer { _, _ -> projectorConfigUpdated() }
 
     companion object {
-        private val TAG: String = HomeActivity::class.java.simpleName
-        const val RESULT_DISCONNECTED = 2
         const val DISCONNECT_ACTIVITY = "disconnect_from_projector"
     }
 
@@ -102,7 +100,6 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
     }
 
     private fun showProjectorSearchOnDisconnect() {
-        setResult(RESULT_DISCONNECTED)
         finish()
     }
 

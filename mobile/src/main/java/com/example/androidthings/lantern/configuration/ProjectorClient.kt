@@ -42,8 +42,11 @@ class ProjectorClient(val context: Context): Observable() {
         fun onRequestConnectionFailure()
     }
 
-
     fun connectTo(endpointId: String) {
+        if (activeConnection != null) {
+            disconnect()
+        }
+
         connectionState = ConnectionState.CONNECTING_TO_ENDPOINT
         Log.i(TAG, "connect to $endpointId")
         connectionsClient.requestConnection(
