@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity
 import com.example.androidthings.lantern.App
 import com.example.androidthings.lantern.R
 import com.example.androidthings.lantern.configuration.Discovery
-import com.example.androidthings.lantern.configuration.Endpoint
 import com.example.androidthings.lantern.connect.ConnectActivity
 import kotlinx.android.synthetic.main.activity_projector_search.*
 import java.util.*
@@ -52,7 +51,7 @@ class ProjectorSearchActivity : AppCompatActivity(),
         snackBar.show()
     }
 
-    override fun onProjectorSelected(endpoint: Endpoint) {
+    override fun onProjectorSelected(endpoint: Discovery.Endpoint) {
         val intent = Intent(this, ConnectActivity::class.java).apply {
             putExtra(ConnectActivity.ARG_ENDPOINT_ID, endpoint.id)
             putExtra(ConnectActivity.ARG_NAME, endpoint.info.endpointName)

@@ -12,7 +12,7 @@ import com.example.androidthings.lantern.R
 import kotlinx.android.synthetic.main.fragment_projector_select.*
 import android.support.v7.widget.RecyclerView
 import com.example.androidthings.lantern.App
-import com.example.androidthings.lantern.configuration.Endpoint
+import com.example.androidthings.lantern.configuration.Discovery
 import kotlinx.android.synthetic.main.item_row_projector.view.*
 import java.util.*
 
@@ -23,7 +23,7 @@ class ProjectorListFragment : Fragment() {
     private val clientObserver: Observer = Observer { _, _ -> onClientUpdated() }
 
     interface OnProjectorSelectedListener {
-        fun onProjectorSelected(endpoint: Endpoint)
+        fun onProjectorSelected(endpoint: Discovery.Endpoint)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -55,7 +55,7 @@ class ProjectorListFragment : Fragment() {
         App.instance.client.deleteObserver(clientObserver)
     }
 
-    class EndpointAdapter(private val endpoints: ArrayList<Endpoint>,
+    class EndpointAdapter(private val endpoints: ArrayList<Discovery.Endpoint>,
                           private val listener: ProjectorListFragment.OnProjectorSelectedListener?):
             RecyclerView.Adapter<EndpointAdapter.ViewHolder>() {
 
@@ -77,9 +77,9 @@ class ProjectorListFragment : Fragment() {
                          private val listener: ProjectorListFragment.OnProjectorSelectedListener?):
                 RecyclerView.ViewHolder(view) {
 
-            var endpoint: Endpoint? = null
+            var endpoint: Discovery.Endpoint? = null
 
-            fun bindEndpoint(endpoint: Endpoint) {
+            fun bindEndpoint(endpoint: Discovery.Endpoint) {
                 this.endpoint = endpoint
                 view.endpointNameTextView.text = "${endpoint.info.endpointName}"
                 view.idTextView.text = "Lantern: ${endpoint.id}"

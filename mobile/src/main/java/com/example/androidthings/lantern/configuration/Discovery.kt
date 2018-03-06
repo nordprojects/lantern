@@ -14,9 +14,9 @@ import java.util.*
  */
 
 
-data class Endpoint(val id: String, val info: DiscoveredEndpointInfo)
-
 class Discovery(val context: Context): Observable() {
+
+    data class Endpoint(val id: String, val info: DiscoveredEndpointInfo)
 
     companion object {
         private val TAG: String = Discovery::class.java.simpleName
