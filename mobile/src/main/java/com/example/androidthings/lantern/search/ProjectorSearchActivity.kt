@@ -17,6 +17,7 @@ class ProjectorSearchActivity : AppCompatActivity(),
         Discovery.DiscoveryFailureListener {
 
     private val discoveryObserver: Observer = Observer { _, _ -> onDiscoveryUpdated() }
+    private var currentFragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +61,6 @@ class ProjectorSearchActivity : AppCompatActivity(),
     }
 
     private fun update() {
-        //TODO - only show fragment if not already showing
         if (App.instance.discovery.endpoints.isEmpty()) {
             showProjectorSearchFragment()
         } else {
@@ -69,18 +69,20 @@ class ProjectorSearchActivity : AppCompatActivity(),
     }
 
     private fun showProjectorSearchFragment() {
+        if (currentFragment is ProjectorSearchFragment) return
         supportActionBar?.hide()
-        val searchFragment = ProjectorSearchFragment()
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fragment_container, searchFragment)
-        fragmentTransaction.commit()
+        currentFragment = ProjectorSearchFragment()
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.fragment_container, currentFragment)
+        }.commit()
     }
 
     private fun showProjectorListFragment() {
+        if (currentFragment is ProjectorListFragment) return
         supportActionBar?.show()
-        val listFragment = ProjectorListFragment()
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fragment_container, listFragment)
-        fragmentTransaction.commit()
+        currentFragment = ProjectorListFragment()
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.fragment_container, currentFragment)
+        }.commit()
     }
 }
