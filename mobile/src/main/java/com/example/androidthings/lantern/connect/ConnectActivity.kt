@@ -6,54 +6,30 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import com.example.androidthings.lantern.App
 import com.example.androidthings.lantern.R
-import com.example.androidthings.lantern.configuration.ConnectionState
-import com.example.androidthings.lantern.configuration.ProjectorClient
 import com.example.androidthings.lantern.home.HomeActivity
 import kotlinx.android.synthetic.main.activity_projector_search.*
-import java.util.*
 
-class ConnectActivity : AppCompatActivity(),
-        ProjectorClient.ProjectorClientFailureListener {
+class ConnectActivity : AppCompatActivity() {
 
     companion object {
         const val ARG_ENDPOINT_ID = "ARG_ENDPOINT_ID"
         const val ARG_NAME = "ARG_NAME"
     }
 
-    private val clientObserver: Observer = Observer { _, _ -> onClientUpdated() }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_connect)
 
-        val endpointId = intent.getStringExtra(ARG_ENDPOINT_ID)
-        if (endpointId != null) {
-            App.instance.client.connectTo(endpointId)
-        }
-
         val name = savedInstanceState?.getString(ARG_NAME)
         showProjectorConnectingFragment(name ?: "Lantern")
-    }
 
-    override fun onResume() {
-        super.onResume()
-        App.instance.client.addObserver(clientObserver)
-        App.instance.client.failureListener = this
-    }
-
-    override fun onPause() {
-        super.onPause()
-        App.instance.client.deleteObserver(clientObserver)
-        App.instance.client.failureListener = null
-    }
-
-    private fun onClientUpdated() {
-        if (App.instance.client.connectionState == ConnectionState.CONNECTED) {
-            showHomeActivity()
+        val endpointId = intent.getStringExtra(ARG_ENDPOINT_ID)
+        if (endpointId != null) {
+            App.instance.client.connectTo(endpointId, { showHomeActivity() }, { onRequestConnectionFailure() })
         }
     }
 
-    override fun onRequestConnectionFailure() {
+    private fun onRequestConnectionFailure() {
         val snackBar = Snackbar.make(fragment_container, "Failed to connect to projector", Snackbar.LENGTH_LONG)
         snackBar.show()
         finish()

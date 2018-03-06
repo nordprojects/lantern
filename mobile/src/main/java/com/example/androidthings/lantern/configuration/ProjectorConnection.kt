@@ -7,7 +7,7 @@ import org.json.JSONObject
 /**
  * Created by Michael Colville on 30/01/2018.
  */
-class ProjectorConnection(val transport: ConfigurationConnectionTransport) {
+class ProjectorConnection(private val transport: ConfigurationConnectionTransport) {
 
     var projectorState: ProjectorState? = ProjectorState()
     val endpointId: String
@@ -18,10 +18,6 @@ class ProjectorConnection(val transport: ConfigurationConnectionTransport) {
 
     init {
         transport.onMessageReceived = { m -> onMessageReceived(m) }
-    }
-
-    fun onConnectionAccepted() {
-        Log.i(TAG, "Connected to ${transport.endpointId}")
     }
 
     private fun onMessageReceived(message: ConfigurationMessage) {

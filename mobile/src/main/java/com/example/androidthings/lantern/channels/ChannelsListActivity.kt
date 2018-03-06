@@ -9,7 +9,6 @@ import com.example.androidthings.lantern.App
 import com.example.androidthings.lantern.R
 import com.example.androidthings.lantern.channels.config.ChannelConfigActivity
 import com.example.androidthings.lantern.channels.config.ChannelConfigOptions
-import com.example.androidthings.lantern.configuration.ConnectionState
 import com.example.androidthings.lantern.shared.ChannelConfiguration
 import com.example.androidthings.lantern.shared.ChannelInfo
 import com.example.androidthings.lantern.shared.Direction
@@ -64,7 +63,7 @@ class ChannelsListActivity : AppCompatActivity(),
     }
 
     private fun checkConnectionStatus() {
-        if (App.instance.client.connectionState == ConnectionState.DISCONNECTED) {
+        if (App.instance.client.activeConnection == null) {
             finish()
         }
     }

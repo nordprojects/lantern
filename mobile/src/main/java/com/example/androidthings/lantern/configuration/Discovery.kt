@@ -22,7 +22,6 @@ class Discovery(val context: Context): Observable() {
         private val TAG: String = Discovery::class.java.simpleName
     }
 
-    // TODO - this needs to be shared with ProjectorClient
     private val connectionsClient = Nearby.getConnectionsClient(context)
     val endpoints: ArrayList<Endpoint> = arrayListOf()
     var failureListener: DiscoveryFailureListener? = null
@@ -33,7 +32,6 @@ class Discovery(val context: Context): Observable() {
     }
 
     fun startDiscovery() {
-        Log.i(TAG, "START DISCOVERY")
         connectionsClient.startDiscovery(
                 "com.example.androidthings.lantern.projector",
                 endpointDiscoveryCallback,

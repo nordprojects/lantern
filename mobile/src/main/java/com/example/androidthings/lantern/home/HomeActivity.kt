@@ -9,7 +9,6 @@ import android.os.Bundle
 import com.example.androidthings.lantern.App
 import com.example.androidthings.lantern.R
 import com.example.androidthings.lantern.channels.ChannelsListActivity
-import com.example.androidthings.lantern.configuration.ConnectionState
 import com.example.androidthings.lantern.settings.SettingsActivity
 import com.example.androidthings.lantern.shared.Direction
 import kotlinx.android.synthetic.main.activity_home.*
@@ -79,7 +78,7 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
     }
 
     private fun checkConnectionStatus() {
-        if (App.instance.client.connectionState == ConnectionState.DISCONNECTED) {
+        if (App.instance.client.activeConnection == null) {
             showProjectorSearchOnDisconnect()
         }
     }

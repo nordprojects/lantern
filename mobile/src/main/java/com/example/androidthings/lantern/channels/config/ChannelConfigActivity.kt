@@ -1,10 +1,8 @@
 package com.example.androidthings.lantern.channels.config
 
-import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import com.example.androidthings.lantern.App
-import com.example.androidthings.lantern.configuration.ConnectionState
 import com.example.androidthings.lantern.shared.ChannelConfiguration
 import java.util.Observer
 
@@ -44,7 +42,7 @@ open class ChannelConfigActivity : AppCompatActivity() {
     }
 
     private fun checkConnectionStatus() {
-        if (App.instance.client.connectionState == ConnectionState.DISCONNECTED) {
+        if (App.instance.client.activeConnection == null) {
             finish()
         }
     }

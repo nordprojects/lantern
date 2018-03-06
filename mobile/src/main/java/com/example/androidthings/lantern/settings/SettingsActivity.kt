@@ -4,7 +4,6 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.example.androidthings.lantern.App
 import com.example.androidthings.lantern.R
-import com.example.androidthings.lantern.configuration.ConnectionState
 import kotlinx.android.synthetic.main.activity_settings.*
 import java.util.Observer
 
@@ -38,7 +37,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun checkConnectionStatus() {
-        if (App.instance.client.connectionState == ConnectionState.DISCONNECTED) {
+        if (App.instance.client.activeConnection == null) {
             finish()
         }
     }
