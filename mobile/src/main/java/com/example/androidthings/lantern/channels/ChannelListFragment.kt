@@ -24,7 +24,6 @@ import java.util.*
 class ChannelListFragment : Fragment() {
 
     private var onChannelSelectedListener: OnChannelSelectedListener? = null
-    private val projectorObserver = Observer { _, _ -> update() }
     private val direction: Direction by lazy {
             val directionString = arguments?.getString(ChannelsListActivity.ARG_DIRECTION)
             Direction.valueOf(directionString ?: "")
@@ -80,16 +79,6 @@ class ChannelListFragment : Fragment() {
         if (activity is OnChannelSelectedListener) onChannelSelectedListener = activity
     }
 
-    override fun onResume() {
-        super.onResume()
-        App.instance.projector?.addObserver(projectorObserver)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        App.instance.projector?.deleteObserver(projectorObserver)
-    }
-
     private fun updateHeader() {
         val projectorDirectionAngle: Float = when(direction) {
             Direction.UP -> -90F
@@ -110,9 +99,5 @@ class ChannelListFragment : Fragment() {
                 text.length + 1, text.length + 1 + directionText.length, 0)
         direction_text.text = spannable
         projectorDirection.rotation = projectorDirectionAngle
-    }
-
-    private fun update() {
-        recyclerView.adapter.notifyDataSetChanged()
     }
 }

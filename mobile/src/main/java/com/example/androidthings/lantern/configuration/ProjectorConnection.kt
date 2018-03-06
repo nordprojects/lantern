@@ -3,14 +3,15 @@ package com.example.androidthings.lantern.configuration
 import android.util.Log
 import com.example.androidthings.lantern.shared.*
 import org.json.JSONObject
+import java.util.*
 
 /**
  * Created by Michael Colville on 30/01/2018.
  */
 
-class ProjectorConnection(private val transport: ConfigurationConnectionTransport) {
+class ProjectorConnection(private val transport: ConfigurationConnectionTransport): Observable() {
 
-    var projectorState: ProjectorState? = ProjectorState()
+    var projectorState: ProjectorState? = null
     var availableChannels: List<ChannelInfo> = listOf()
     val endpointId: String
         get() = transport.endpointId
@@ -27,7 +28,9 @@ class ProjectorConnection(private val transport: ConfigurationConnectionTranspor
 
         when (message.type) {
             ConfigurationMessage.Type.STATE_UPDATE -> {
-                projectorState?.updateWithJSON(message.body!!)
+                projectorState = ProjectorState(message.body!!)
+                setChanged()
+                notifyObservers()
             }
             ConfigurationMessage.Type.AVAILABLE_CHANNELS -> {
                 updateAvailableChannelsWithJSON(message.body!!)

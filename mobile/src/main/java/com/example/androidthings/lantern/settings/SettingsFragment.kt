@@ -51,12 +51,12 @@ class SettingsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        App.instance.projector?.addObserver(projectorConfigObserver)
+        App.instance.client.activeConnection?.addObserver(projectorConfigObserver)
     }
 
     override fun onPause() {
         super.onPause()
-        App.instance.projector?.deleteObserver(projectorConfigObserver)
+        App.instance.client.activeConnection?.deleteObserver(projectorConfigObserver)
     }
 
     private fun onDeviceDetailsClicked() {

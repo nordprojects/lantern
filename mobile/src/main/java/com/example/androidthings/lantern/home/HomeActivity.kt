@@ -61,7 +61,7 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
 
     override fun onResume() {
         super.onResume()
-        App.instance.projector?.addObserver(projectorConfigObserver)
+        App.instance.client.activeConnection?.addObserver(projectorConfigObserver)
         App.instance.client.addObserver(connectionObserver)
         projectorConfigUpdated()
         checkConnectionStatus()
@@ -69,7 +69,7 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
 
     override fun onPause() {
         super.onPause()
-        App.instance.projector?.deleteObserver(projectorConfigObserver)
+        App.instance.client.activeConnection?.deleteObserver(projectorConfigObserver)
         App.instance.client.deleteObserver(connectionObserver)
     }
 

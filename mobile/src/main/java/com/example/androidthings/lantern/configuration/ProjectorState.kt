@@ -10,33 +10,19 @@ import java.util.*
  * Created by Michael Colville on 30/01/2018.
  */
 
-class ProjectorState() : Observable() {
-    private val _planes = mutableMapOf<Direction, ChannelConfiguration>(
-            Direction.UP to ChannelConfiguration.blank,
-            Direction.FORWARD to ChannelConfiguration.blank,
-            Direction.DOWN to ChannelConfiguration.blank
-    )
+class ProjectorState(json: JSONObject) {
     val planes: Map<Direction, ChannelConfiguration>
-        get() = _planes
-    var direction: Direction = Direction.FORWARD
-    var name: String = ""
+    val direction: Direction
+    val name: String
 
-    fun updateWithJSON(json: JSONObject) {
+    init {
         val planesJson = json.getJSONObject("planes")
-
-        updatePlane("up", planesJson.getJSONObject("up"))
-        updatePlane("forward", planesJson.getJSONObject("forward"))
-        updatePlane("down", planesJson.getJSONObject("down"))
-
+        planes = mapOf(
+                Direction.UP to ChannelConfiguration(planesJson.getJSONObject("up")),
+                Direction.FORWARD to ChannelConfiguration(planesJson.getJSONObject("forward")),
+                Direction.DOWN to ChannelConfiguration(planesJson.getJSONObject("down"))
+        )
         direction = Direction.withJsonName(json.getString("direction"))
         name = json.getString("name")
-
-        setChanged()
-        notifyObservers()
-    }
-
-    private fun updatePlane(jsonDirection: String, jsonConfig: JSONObject) {
-        val direction = Direction.withJsonName(jsonDirection)
-        _planes[direction] = ChannelConfiguration(jsonConfig)
     }
 }

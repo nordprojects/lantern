@@ -23,8 +23,7 @@ class ChannelsListActivity : AppCompatActivity(),
     private val connectionObserver = Observer { _, _ -> checkConnectionStatus() }
 
     companion object {
-        val TAG: String = ChannelsListActivity::class.java.simpleName
-        val CONFIG_ACTIVITY_REQUEST = 1
+        const val CONFIG_ACTIVITY_REQUEST = 1
         const val ARG_DIRECTION = "direction"
     }
 
@@ -59,7 +58,7 @@ class ChannelsListActivity : AppCompatActivity(),
     override fun onPause() {
         super.onPause()
         App.instance.client.deleteObserver(connectionObserver)
-        App.instance.projector?.deleteObserver(projectorObserver)
+        App.instance.client.activeConnection?.deleteObserver(projectorObserver)
     }
 
     private fun checkConnectionStatus() {
@@ -110,7 +109,7 @@ class ChannelsListActivity : AppCompatActivity(),
         val connection = App.instance.client.activeConnection!!
         connection.sendSetPlane(direction, config)
 
-        App.instance.projector?.addObserver(projectorObserver)
+        App.instance.client.activeConnection?.addObserver(projectorObserver)
     }
 
     private fun projectorDidUpdate() {

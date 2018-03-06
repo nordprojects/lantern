@@ -75,13 +75,13 @@ class ProjectorDisplayFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        App.instance.projector?.addObserver(projectorConfigObserver)
+        App.instance.client.activeConnection?.addObserver(projectorConfigObserver)
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        App.instance.projector?.deleteObserver(projectorConfigObserver)
+        App.instance.client.activeConnection?.deleteObserver(projectorConfigObserver)
     }
 
     private fun projectorConfigUpdated() {
