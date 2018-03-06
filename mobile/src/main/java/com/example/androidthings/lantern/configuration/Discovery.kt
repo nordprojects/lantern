@@ -24,14 +24,8 @@ class Discovery(val context: Context): Observable() {
 
     private val connectionsClient = Nearby.getConnectionsClient(context)
     val endpoints: ArrayList<Endpoint> = arrayListOf()
-    var failureListener: DiscoveryFailureListener? = null
 
-
-    interface DiscoveryFailureListener {
-        fun onStartDiscoveryFailure()
-    }
-
-    fun startDiscovery() {
+    fun startDiscovery(failure: () -> Unit) {
         connectionsClient.startDiscovery(
                 "com.example.androidthings.lantern.projector",
                 endpointDiscoveryCallback,
@@ -39,7 +33,7 @@ class Discovery(val context: Context): Observable() {
                 .addOnSuccessListener { Log.i(TAG, "Start Discovery success") }
                 .addOnFailureListener { err ->
                     Log.e(TAG, "Start Discovery failure", err)
-                    failureListener?.onStartDiscoveryFailure()
+                    failure()
                 }
     }
 

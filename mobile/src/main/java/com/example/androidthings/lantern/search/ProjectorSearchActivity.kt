@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.Snackbar.LENGTH_INDEFINITE
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import com.example.androidthings.lantern.App
 import com.example.androidthings.lantern.R
@@ -13,10 +14,9 @@ import kotlinx.android.synthetic.main.activity_projector_search.*
 import java.util.*
 
 class ProjectorSearchActivity : AppCompatActivity(),
-        ProjectorListFragment.OnProjectorSelectedListener,
-        Discovery.DiscoveryFailureListener {
+        ProjectorListFragment.OnProjectorSelectedListener  {
 
-    private val discoveryObserver: Observer = Observer { _, _ -> onDiscoveryUpdated() }
+    private val discoveryObserver: Observer = Observer { _, _ -> update() }
     private var currentFragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,8 +31,7 @@ class ProjectorSearchActivity : AppCompatActivity(),
     override fun onResume() {
         super.onResume()
         App.instance.discovery.addObserver(discoveryObserver)
-        App.instance.discovery.failureListener = this
-        App.instance.discovery.startDiscovery()
+        startDiscovery()
         update()
     }
 
@@ -42,13 +41,13 @@ class ProjectorSearchActivity : AppCompatActivity(),
         App.instance.discovery.stopDiscovery()
     }
 
-    private fun onDiscoveryUpdated() {
-        update()
+    private fun startDiscovery() {
+        App.instance.discovery.startDiscovery { onStartDiscoveryFailure() }
     }
 
-    override fun onStartDiscoveryFailure() {
+    private fun onStartDiscoveryFailure() {
         val snackBar = Snackbar.make(fragment_container, "Failed to start Nearby Connections", LENGTH_INDEFINITE)
-        snackBar.setAction("Try again", { App.instance.discovery.startDiscovery() })
+        snackBar.setAction("Try again", { startDiscovery() })
         snackBar.show()
     }
 

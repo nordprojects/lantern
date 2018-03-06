@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import com.example.androidthings.lantern.R
 import kotlinx.android.synthetic.main.fragment_projector_select.*
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import com.example.androidthings.lantern.App
 import com.example.androidthings.lantern.configuration.Discovery
 import kotlinx.android.synthetic.main.item_row_projector.view.*
@@ -20,7 +21,7 @@ import java.util.*
 class ProjectorListFragment : Fragment() {
 
     private var onProjectorSelectedListener: OnProjectorSelectedListener? = null
-    private val clientObserver: Observer = Observer { _, _ -> onClientUpdated() }
+    private val endpointObserver: Observer = Observer { _, _ -> onEndpointsUpdated() }
 
     interface OnProjectorSelectedListener {
         fun onProjectorSelected(endpoint: Discovery.Endpoint)
@@ -37,10 +38,10 @@ class ProjectorListFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = EndpointAdapter(App.instance.discovery.endpoints, onProjectorSelectedListener)
 
-        App.instance.client.addObserver(clientObserver)
+        App.instance.discovery.addObserver(endpointObserver)
     }
 
-    private fun onClientUpdated() {
+    private fun onEndpointsUpdated() {
         recyclerView.adapter.notifyDataSetChanged()
     }
 
@@ -52,7 +53,7 @@ class ProjectorListFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        App.instance.client.deleteObserver(clientObserver)
+        App.instance.discovery.deleteObserver(endpointObserver)
     }
 
     class EndpointAdapter(private val endpoints: ArrayList<Discovery.Endpoint>,
