@@ -2,6 +2,7 @@ package com.example.androidthings.lantern.search
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.design.widget.Snackbar.LENGTH_INDEFINITE
 import android.support.v4.app.Fragment
@@ -18,6 +19,7 @@ class ProjectorSearchActivity : AppCompatActivity(),
 
     private val discoveryObserver: Observer = Observer { _, _ -> update() }
     private var currentFragment: Fragment? = null
+    private val startTime = System.currentTimeMillis()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +44,7 @@ class ProjectorSearchActivity : AppCompatActivity(),
     }
 
     private fun startDiscovery() {
+        showProjectorSearchFragment()
         App.instance.discovery.startDiscovery { onStartDiscoveryFailure() }
     }
 
@@ -60,9 +63,13 @@ class ProjectorSearchActivity : AppCompatActivity(),
     }
 
     private fun update() {
-        if (App.instance.discovery.endpoints.isEmpty()) {
-            showProjectorSearchFragment()
-        } else {
+        // Delay showing list to allow search animation to play out
+        if (System.currentTimeMillis() - startTime < 3000) {
+            Handler().postDelayed({ update() }, 1000)
+            return
+        }
+
+        if (App.instance.discovery.endpoints.size > 0) {
             showProjectorListFragment()
         }
     }
