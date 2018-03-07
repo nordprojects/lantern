@@ -16,18 +16,23 @@ import android.widget.TextView
 import com.example.androidthings.lantern.App
 import com.example.androidthings.lantern.R
 import com.example.androidthings.lantern.color
+import com.example.androidthings.lantern.configuration.ProjectorState
 import com.example.androidthings.lantern.shared.Direction
 import kotlinx.android.synthetic.main.fragment_projector_display.*
-import java.util.*
 
 
 class ProjectorDisplayFragment : Fragment() {
 
     private var directionSelectedListener: OnDirectionSelectedListener? = null
-    private val projectorConfigObserver = Observer { _, _ -> projectorConfigUpdated() }
     private var planeViews: Map<Direction, TextView> = mapOf()
     private var lampGlowViews: Map<Direction, ImageView> = mapOf()
     private var marqueeHandler = Handler()
+
+    var projector: ProjectorState? = null
+        set(value) {
+            field = value
+            update()
+        }
 
     interface OnDirectionSelectedListener {
         fun onDirectionSelected(direction: Direction)
@@ -72,24 +77,9 @@ class ProjectorDisplayFragment : Fragment() {
         update()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        App.instance.client.activeConnection?.addObserver(projectorConfigObserver)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        App.instance.client.activeConnection?.deleteObserver(projectorConfigObserver)
-    }
-
-    private fun projectorConfigUpdated() {
-        update()
-    }
-
     private fun update() {
-        val projector = App.instance.projector ?: return
+        if (view == null) return
+        val projector = projector ?: return
         val connection = App.instance.client.activeConnection
 
         // Channel Labels

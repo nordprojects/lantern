@@ -16,6 +16,7 @@ class ProjectorClient(val context: Context): Observable() {
 
     private val connectionsClient = Nearby.getConnectionsClient(context)
     var activeConnection: ProjectorConnection? = null
+    var lastEndpoint: String? = null
 
     companion object {
         private val TAG: String = ProjectorClient::class.java.simpleName
@@ -25,7 +26,7 @@ class ProjectorClient(val context: Context): Observable() {
         if (activeConnection != null) {
             disconnect()
         }
-
+        lastEndpoint = endpointId
         connectionsClient.requestConnection(
             Settings.Secure.getString(context.contentResolver, "bluetooth_name"),
             endpointId,
@@ -39,6 +40,8 @@ class ProjectorClient(val context: Context): Observable() {
                 override fun onConnectionResult(endpointId: String, resolution: ConnectionResolution) {
                     if (resolution.status.isSuccess) {
                         success()
+                        setChanged()
+                        notifyObservers()
                     } else {
                         Log.i(TAG, "On Connection Fail ${resolution.status}")
                         connectionDidDisconnect()

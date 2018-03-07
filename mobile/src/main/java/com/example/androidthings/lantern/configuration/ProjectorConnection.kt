@@ -34,6 +34,8 @@ class ProjectorConnection(private val transport: ConfigurationConnectionTranspor
             }
             ConfigurationMessage.Type.AVAILABLE_CHANNELS -> {
                 updateAvailableChannelsWithJSON(message.body!!)
+                setChanged()
+                notifyObservers()
             }
             ConfigurationMessage.Type.ERROR -> {
                 Log.e(TAG, "Error message received from $this. $message")

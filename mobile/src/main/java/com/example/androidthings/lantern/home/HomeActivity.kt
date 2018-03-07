@@ -9,6 +9,7 @@ import android.os.Bundle
 import com.example.androidthings.lantern.App
 import com.example.androidthings.lantern.R
 import com.example.androidthings.lantern.channels.ChannelsListActivity
+import com.example.androidthings.lantern.configuration.ProjectorConnection
 import com.example.androidthings.lantern.settings.SettingsActivity
 import com.example.androidthings.lantern.shared.Direction
 import kotlinx.android.synthetic.main.activity_home.*
@@ -16,8 +17,11 @@ import java.util.*
 
 class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSelectedListener {
 
-    private val connectionObserver = Observer { _, _ -> onConnectionChanged() }
-    private val projectorConfigObserver = Observer { _, _ -> projectorConfigUpdated() }
+    private val clientObserver = Observer { _, _ -> checkConnectionStatus() }
+    private val connectionObserver = Observer { _, _ -> update() }
+    private val projectorDisplayFragment = ProjectorDisplayFragment()
+    private val lostConnectionFragment = LostConnectionFragment()
+    private var connection: ProjectorConnection? = null
 
     companion object {
         const val DISCONNECT_ACTIVITY = "disconnect_from_projector"
@@ -41,50 +45,71 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
         toolbar.setNavigationIcon(R.drawable.menu)
         toolbar.setNavigationOnClickListener { showSettings() }
 
-        val projectorFragment = ProjectorDisplayFragment()
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.add(R.id.fragment_container, projectorFragment)
-        fragmentTransaction.commit()
+        supportFragmentManager.beginTransaction().apply {
+            add(R.id.fragment_full_container, lostConnectionFragment)
+            add(R.id.fragment_container, projectorDisplayFragment)
+            hide(lostConnectionFragment)
+        }.commit()
 
         registerReceiver(broadcastReceiver, IntentFilter(DISCONNECT_ACTIVITY))
 
         update()
     }
 
-    private fun projectorConfigUpdated() {
-        update()
-    }
-
     private fun update() {
         title = App.instance.projector?.name ?: "Lantern"
+        projectorDisplayFragment.projector = connection?.projectorState
     }
 
     override fun onResume() {
         super.onResume()
-        App.instance.client.activeConnection?.addObserver(projectorConfigObserver)
-        App.instance.client.addObserver(connectionObserver)
-        projectorConfigUpdated()
+        connection = App.instance.client.activeConnection
+        connection?.addObserver(connectionObserver)
+        App.instance.client.addObserver(clientObserver)
+        update()
         checkConnectionStatus()
     }
 
     override fun onPause() {
         super.onPause()
-        App.instance.client.activeConnection?.deleteObserver(projectorConfigObserver)
-        App.instance.client.deleteObserver(connectionObserver)
-    }
-
-    private fun onConnectionChanged() {
-        checkConnectionStatus()
+        connection?.deleteObserver(connectionObserver)
+        App.instance.client.deleteObserver(clientObserver)
     }
 
     private fun checkConnectionStatus() {
+        // Lost connection
         if (App.instance.client.activeConnection == null) {
-            showProjectorSearchOnDisconnect()
+            connection?.deleteObserver(connectionObserver)
+            connection = null
+            showLostConnection()
+        } else {
+            // New connection
+            if (connection == null) {
+                connection = App.instance.client.activeConnection
+                connection?.addObserver(connectionObserver)
+                showProjectorDisplay()
+            }
+
+            update()
         }
     }
 
     override fun onDirectionSelected(direction: Direction) {
         showChannelList(direction)
+    }
+
+    private fun showProjectorDisplay() {
+        supportFragmentManager.beginTransaction().apply {
+            show(projectorDisplayFragment)
+            hide(lostConnectionFragment)
+        }.commit()
+    }
+
+    private fun showLostConnection() {
+        supportFragmentManager.beginTransaction().apply {
+            hide(projectorDisplayFragment)
+            show(lostConnectionFragment)
+        }.commit()
     }
 
     private fun showSettings() {
@@ -96,10 +121,6 @@ class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSe
         val intent = Intent(this, ChannelsListActivity::class.java)
         intent.putExtra(ChannelsListActivity.ARG_DIRECTION, direction.toString())
         startActivity(intent)
-    }
-
-    private fun showProjectorSearchOnDisconnect() {
-        finish()
     }
 
     override fun onDestroy() {
