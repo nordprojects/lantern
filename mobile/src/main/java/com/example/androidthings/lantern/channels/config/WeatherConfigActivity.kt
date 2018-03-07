@@ -86,8 +86,8 @@ class WeatherConfigActivity : ChannelConfigActivity() {
 
     inner class WeatherListAdapter: RecyclerView.Adapter<WeatherListAdapter.ViewHolder>() {
 
-        override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
-            val view = LayoutInflater.from(parent?.context)
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_row_weather, parent, false)
             return ViewHolder(view)
         }
@@ -96,8 +96,8 @@ class WeatherConfigActivity : ChannelConfigActivity() {
             return items.size
         }
 
-        override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-            holder?.bindItem(items[position])
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            holder.bindItem(items[position])
         }
 
         inner class ViewHolder(var view: View):  RecyclerView.ViewHolder(view) {

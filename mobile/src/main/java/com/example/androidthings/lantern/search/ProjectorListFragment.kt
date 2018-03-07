@@ -60,8 +60,8 @@ class ProjectorListFragment : Fragment() {
                           private val listener: ProjectorListFragment.OnProjectorSelectedListener?):
             RecyclerView.Adapter<EndpointAdapter.ViewHolder>() {
 
-        override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
-            val view = LayoutInflater.from(parent?.context)
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_row_projector, parent, false)
             return ViewHolder(view, listener)
         }
@@ -70,8 +70,8 @@ class ProjectorListFragment : Fragment() {
             return endpoints.size
         }
 
-        override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-            holder?.bindEndpoint(endpoints[position])
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            holder.bindEndpoint(endpoints[position])
         }
 
         class ViewHolder(var view: View,

@@ -20,8 +20,8 @@ class ChannelListAdapter(private val channels: List<ChannelInfo>,
                          private val direction: Direction):
         RecyclerView.Adapter<ChannelListAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent?.context)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_row_channel, parent, false)
         return ViewHolder(view, listener, direction)
     }
@@ -30,8 +30,8 @@ class ChannelListAdapter(private val channels: List<ChannelInfo>,
         return channels.size
     }
 
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-        holder?.bindChannel(channels[position])
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bindChannel(channels[position])
     }
 
     class ViewHolder(var view: View,
