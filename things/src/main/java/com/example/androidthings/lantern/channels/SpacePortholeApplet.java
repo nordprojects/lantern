@@ -88,7 +88,7 @@ public class SpacePortholeApplet extends PApplet {
         endShape();
 
         // draw lines for the constellations
-        stroke(255, 120);
+        stroke(255, 80);
         strokeWeight(1);
         beginShape(LINES);
         for (int[] line : constellationLines) {
