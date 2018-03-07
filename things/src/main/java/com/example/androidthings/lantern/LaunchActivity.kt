@@ -46,7 +46,7 @@ class LaunchActivity: Activity() {
                 }
                 override fun onFinish() {
                     timeRemainingTextView.text = "0"
-                    DeviceManager().reboot()
+                    DeviceManager.getInstance().reboot()
                 }
             }
             countDownTimer.start()

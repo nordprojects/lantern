@@ -93,7 +93,7 @@ class App : AndroidApplication() {
         windowManager.defaultDisplay.getMetrics(screenMetrics)
         val screenHeight = screenMetrics.heightPixels
 
-        val screenManager = ScreenManager(Display.DEFAULT_DISPLAY)
+        val screenManager = ScreenManager.getInstance(Display.DEFAULT_DISPLAY)
 
         val density = when (screenHeight) {
             1080 -> 320 // xhdpi

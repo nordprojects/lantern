@@ -28,7 +28,7 @@ class InfoChannel: Channel() {
 
         nameTextView.text = "‘${App.instance.advertisingName}’"
         ipAddressTextView.text = getIpAddresses().joinToString(separator = "\n")
-        androidThingsVersionTextView.text = "Android Things ${AndroidThings.getVersionString()}"
+        androidThingsVersionTextView.text = "Android Things ${AndroidThings.RELEASE}"
         val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
         lanternVersionTextView.text = with(packageInfo) {
             "Lantern v$versionName ($versionCode)"
