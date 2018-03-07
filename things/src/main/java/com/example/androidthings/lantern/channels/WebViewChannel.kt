@@ -32,7 +32,7 @@ class WebViewChannel: Channel() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         if (webView == null) {
-            webView = ATWebView(activity)
+            webView = ATWebView(activity!!)
             loadURL(config.settings.optString("url"))
         }
         return webView

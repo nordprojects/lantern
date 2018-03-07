@@ -39,4 +39,6 @@
         <item name="android:textColor">@android:color/black</item>
     </style>
 
+    <style name="Theme.AppTheme.NoActionBar" parent="Theme.AppCompat.NoActionBar" />
+
 </resources>

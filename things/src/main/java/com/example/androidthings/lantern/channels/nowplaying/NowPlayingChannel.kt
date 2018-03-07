@@ -33,7 +33,7 @@ class NowPlayingChannel : Channel() {
     var mediaStatus: CastConnection.MediaStatus? = null
     var mediaStatusUpdateDate: Date? = null
 
-    val discoveryManager by lazy { CastDiscoveryManager(this.context) }
+    val discoveryManager by lazy { CastDiscoveryManager(context!!) }
     var updateTimer: Timer? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -41,7 +41,7 @@ class NowPlayingChannel : Channel() {
         return inflater.inflate(R.layout.now_playing_channel, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         update()
     }

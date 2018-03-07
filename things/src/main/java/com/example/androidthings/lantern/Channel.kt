@@ -1,6 +1,6 @@
 package com.example.androidthings.lantern
 
-import android.app.Fragment
+import android.support.v4.app.Fragment
 import com.example.androidthings.lantern.shared.ChannelConfiguration
 
 /**
@@ -9,7 +9,7 @@ import com.example.androidthings.lantern.shared.ChannelConfiguration
  */
 open class Channel : Fragment() {
     val config: ChannelConfiguration by lazy {
-        arguments.getParcelable<ChannelConfiguration>(ARG_CONFIG)
+        arguments!!.getParcelable<ChannelConfiguration>(ARG_CONFIG)
     }
 
     companion object {

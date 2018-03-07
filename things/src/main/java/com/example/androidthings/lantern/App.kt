@@ -102,5 +102,6 @@ class App : AndroidApplication() {
         }
         Log.i(TAG, "Screen height is ${screenHeight}px, setting density to $density")
         screenManager.setDisplayDensity(density)
+        screenManager.setBrightness(255)
     }
 }

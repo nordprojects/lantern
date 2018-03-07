@@ -17,7 +17,7 @@ import com.example.androidthings.lantern.Channel
  */
 class ErrorChannel : Channel() {
     val errorMessage: String
-        get() = arguments.getString(ARG_MESSAGE)
+        get() = arguments!!.getString(ARG_MESSAGE)
 
     companion object {
         val ARG_MESSAGE = "message"

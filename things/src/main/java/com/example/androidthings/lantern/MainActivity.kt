@@ -2,6 +2,7 @@ package com.example.androidthings.lantern
 
 import android.app.Activity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.example.androidthings.lantern.channels.BlankChannel
 import com.example.androidthings.lantern.channels.CalendarChannel
@@ -15,7 +16,7 @@ import java.util.*
  * The main activity coordinates the display of channels, depending on the current orientation
  * and the config.
  */
-class MainActivity : Activity() {
+class MainActivity : AppCompatActivity() {
     private val TAG = MainActivity::class.java.simpleName
 
     private val accelerometerObserver = Observer { _, _ -> accelerometerUpdated() }
@@ -92,13 +93,13 @@ class MainActivity : Activity() {
 
         visibleChannel = newVisibleChannel
 
-        val transaction = fragmentManager.beginTransaction()
+        val transaction = supportFragmentManager.beginTransaction()
 
         if (oldVisibleChannel != null) {
             transaction.hide(oldVisibleChannel)
         }
         if (newVisibleChannel != null) {
-            if (fragmentManager.fragments.contains(newVisibleChannel)) {
+            if (supportFragmentManager.fragments.contains(newVisibleChannel)) {
                 transaction.show(newVisibleChannel)
             } else {
                 transaction.add(R.id.viewGroup, newVisibleChannel)
@@ -112,7 +113,7 @@ class MainActivity : Activity() {
             val errorMessage = "Failed to make channel $newVisibleChannel visible.\n\n$e"
             Log.e(TAG, errorMessage, e)
 
-            fragmentManager.beginTransaction()
+            supportFragmentManager.beginTransaction()
                     .replace(R.id.viewGroup, ErrorChannel.newInstance(errorMessage))
                     .commitAllowingStateLoss()
         }
@@ -120,8 +121,8 @@ class MainActivity : Activity() {
 
     private fun cleanupRemovedChannels() {
         // removes previously hidden channels from the fragment manager
-        val fragmentsToRemove = fragmentManager.fragments.subtract(channels.values)
-        val transaction = fragmentManager.beginTransaction()
+        val fragmentsToRemove = supportFragmentManager.fragments.subtract(channels.values)
+        val transaction = supportFragmentManager.beginTransaction()
 
         for (fragment in fragmentsToRemove) {
             transaction.remove(fragment)

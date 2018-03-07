@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
+import android.support.v7.app.AppCompatActivity
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
@@ -18,7 +19,7 @@ import kotlin.concurrent.fixedRateTimer
 /**
  * Created by joerick on 01/03/18.
  */
-class LaunchActivity: Activity() {
+class LaunchActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.launch_activity_layout)
@@ -29,7 +30,7 @@ class LaunchActivity: Activity() {
 
         if (isInTheCorrectResolution()) {
             // load the info channel and hold for 10 seconds
-            fragmentManager.beginTransaction()
+            supportFragmentManager.beginTransaction()
                     .add(R.id.infoChannelViewGroup, InfoChannel())
                     .commit()
 

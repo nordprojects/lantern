@@ -17,7 +17,8 @@
 
     <application
         android:name=".App"
-        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+        android:theme="@style/Theme.Lantern.Black">
+
         <uses-library android:name="com.google.android.things" />
         <activity android:name=".LaunchActivity">
             <intent-filter>

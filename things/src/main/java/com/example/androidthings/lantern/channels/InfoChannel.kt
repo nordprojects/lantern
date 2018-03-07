@@ -23,13 +23,13 @@ class InfoChannel: Channel() {
         return inflater.inflate(R.layout.info_channel, viewGroup, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         nameTextView.text = "‘${App.instance.advertisingName}’"
         ipAddressTextView.text = getIpAddresses().joinToString(separator = "\n")
         androidThingsVersionTextView.text = "Android Things ${AndroidThings.RELEASE}"
-        val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+        val packageInfo = context!!.packageManager.getPackageInfo(context!!.packageName, 0)
         lanternVersionTextView.text = with(packageInfo) {
             "Lantern v$versionName ($versionCode)"
         }

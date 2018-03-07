@@ -44,7 +44,9 @@ dependencies {
     implementation project(":shared")
     implementation 'com.google.protobuf:protobuf-lite:3.0.1'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support:appcompat-v7:27.1.0'
     implementation 'net.sf.biweekly:biweekly:0.6.1'
+    implementation files('libs/processing-core.jar')
 }
 
 protobuf {

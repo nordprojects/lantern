@@ -39,11 +39,11 @@ class AmbientWeatherChannel : Channel() {
     var refreshTimer: Timer? = null
     var refreshError: Exception? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.ambient_weather_channel, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         videoView.setOnPreparedListener({
@@ -176,7 +176,7 @@ class AmbientWeatherChannel : Channel() {
         private fun fetchWeatherData(latitude: Double, longitude: Double): JSONObject {
             var connection: HttpsURLConnection? = null
             var inputStream: InputStream? = null
-            val apiKey = context.resources.getString(R.string.openweathermap_api_key)
+            val apiKey = context!!.resources.getString(R.string.openweathermap_api_key)
             val url = URL("https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$apiKey")
 
             try {
