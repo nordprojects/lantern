@@ -38,7 +38,8 @@ object ChannelsRegistry {
                     "space",
                     "Space porthole",
                     "Explore the galaxy with this virtual telescope. Look out for the ISS!",
-                    Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_space")
+                    Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_space"),
+                    customizable = true
             )),
             Pair(::LampChannel, ChannelInfo(
                     "lamp",

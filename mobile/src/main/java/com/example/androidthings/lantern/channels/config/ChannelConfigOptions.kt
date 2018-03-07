@@ -10,7 +10,8 @@ object ChannelConfigOptions {
             "calendar-clock" to CalendarConfigActivity::class.java,
             "webview" to WebConfigActivity::class.java,
             "ambient-weather" to WeatherConfigActivity::class.java,
-            "now-playing" to NowPlayingConfigActivity::class.java
+            "now-playing" to NowPlayingConfigActivity::class.java,
+            "space" to SpaceConfigActivity::class.java
     )
 
     val channelTypeToSubtitle = mapOf(
