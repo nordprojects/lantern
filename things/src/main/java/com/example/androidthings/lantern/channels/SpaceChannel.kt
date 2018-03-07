@@ -12,8 +12,8 @@ import processing.android.PFragment
 class SpaceChannel: Channel() {
     private val sketch by lazy {
         SpacePortholeApplet().apply {
-            latitude = config.settings.getDouble("latitude").toFloat()
-            longitude = config.settings.getDouble("longitude").toFloat()
+            latitude = config.settings.optDouble("latitude", 0.0).toFloat()
+            longitude = config.settings.optDouble("longitude", 0.0).toFloat()
         }
     }
 
