@@ -30,12 +30,12 @@ class SpaceChannel: Channel() {
                 .commit()
     }
 
-//    override fun onHiddenChanged(hidden: Boolean) {
-//        super.onHiddenChanged(hidden)
-//        if (hidden) {
-//            sketch.surface.pauseThread()
-//        } else {
-//            sketch.surface.resumeThread()
-//        }
-//    }
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (hidden) {
+            sketch.surface.pauseThread()
+        } else {
+            sketch.surface.resumeThread()
+        }
+    }
 }
