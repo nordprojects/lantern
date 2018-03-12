@@ -64,7 +64,7 @@ class ProjectorSearchActivity : AppCompatActivity(),
 
     private fun update() {
         // Delay showing list to allow search animation to play out
-        if (System.currentTimeMillis() - startTime < 3000) {
+        if (System.currentTimeMillis() - startTime < 4250) {
             Handler().postDelayed({ update() }, 1000)
             return
         }
