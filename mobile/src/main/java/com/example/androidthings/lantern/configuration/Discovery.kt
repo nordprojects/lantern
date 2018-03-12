@@ -1,6 +1,7 @@
 package com.example.androidthings.lantern.configuration
 
 import android.content.Context
+import android.os.Handler
 import android.util.Log
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.DiscoveredEndpointInfo
@@ -24,8 +25,10 @@ class Discovery(val context: Context): Observable() {
 
     private val connectionsClient = Nearby.getConnectionsClient(context)
     val endpoints: ArrayList<Endpoint> = arrayListOf()
+    private val timeoutHandler = Handler()
 
     fun startDiscovery(failure: () -> Unit) {
+        timeoutHandler.removeCallbacksAndMessages(null)
         connectionsClient.startDiscovery(
                 "com.example.androidthings.lantern.projector",
                 endpointDiscoveryCallback,
@@ -35,6 +38,13 @@ class Discovery(val context: Context): Observable() {
                     Log.e(TAG, "Start Discovery failure", err)
                     failure()
                 }
+
+        timeoutHandler.postDelayed({
+            if (endpoints.size == 0) {
+                failure()
+                stopDiscovery()
+            }
+        }, 30 * 1000)
     }
 
     fun stopDiscovery() {

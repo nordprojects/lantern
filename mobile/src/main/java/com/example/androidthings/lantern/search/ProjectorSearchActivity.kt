@@ -19,6 +19,7 @@ class ProjectorSearchActivity : AppCompatActivity(),
 
     private val discoveryObserver: Observer = Observer { _, _ -> update() }
     private var currentFragment: Fragment? = null
+    private var searchFragment: ProjectorSearchFragment? = null
     private val startTime = System.currentTimeMillis()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,9 +50,9 @@ class ProjectorSearchActivity : AppCompatActivity(),
     }
 
     private fun onStartDiscoveryFailure() {
-        val snackBar = Snackbar.make(fragment_container, "Failed to start Nearby Connections", LENGTH_INDEFINITE)
-        snackBar.setAction("Try again", { startDiscovery() })
-        snackBar.show()
+
+        showProjectorSearchFragment()
+        searchFragment?.showError()
     }
 
     override fun onProjectorSelected(endpoint: Discovery.Endpoint) {
@@ -77,7 +78,8 @@ class ProjectorSearchActivity : AppCompatActivity(),
     private fun showProjectorSearchFragment() {
         if (currentFragment is ProjectorSearchFragment) return
         supportActionBar?.hide()
-        currentFragment = ProjectorSearchFragment()
+        searchFragment = ProjectorSearchFragment()
+        currentFragment = searchFragment
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.fragment_container, currentFragment)
         }.commit()
