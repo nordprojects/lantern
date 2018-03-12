@@ -9,6 +9,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -90,13 +91,14 @@ class ProjectorSearchFragment : Fragment() {
 
     private fun startErrorAnimation() {
         stopAnimations()
+        val fallDistance: Float = lampBody.height.toFloat() * 0.69F
 
         val returnAnim = ObjectAnimator.ofFloat(lampHead, "rotation", -280F).apply {
             duration = 500
             interpolator = LinearInterpolator()
         }
 
-        val fallAnim = ObjectAnimator.ofFloat(teardrop, "translationY", 330F).apply {
+        val fallAnim = ObjectAnimator.ofFloat(teardrop, "translationY", fallDistance).apply {
             duration = 1100
             interpolator = AccelerateInterpolator()
         }
@@ -106,8 +108,18 @@ class ProjectorSearchFragment : Fragment() {
             duration = 200
         }
 
+        val resetAnim = ObjectAnimator.ofFloat(teardrop, "translationY", 0F).apply {
+            startDelay = 1300
+            duration = 0
+        }
+
+        val resetScaleAnim = ObjectAnimator.ofFloat(teardrop, "scaleY", 1F).apply {
+            startDelay = 1300
+            duration = 0
+        }
+
         val animatorSet = AnimatorSet().apply {
-            playTogether(fallAnim, squashAnim)
+            playTogether(fallAnim, squashAnim, resetAnim, resetScaleAnim)
         }
 
         // Start teardrop anim after returning lamp head to position
