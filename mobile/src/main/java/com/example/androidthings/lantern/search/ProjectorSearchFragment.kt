@@ -5,6 +5,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
@@ -22,6 +23,13 @@ class ProjectorSearchFragment : Fragment() {
     private var searchAnimatorSet: AnimatorSet? = null
     private var errorAnimatorSet: AnimatorSet? = null
 
+    var listener: SearchFragmentListener? = null
+
+    interface SearchFragmentListener {
+        fun onTryAgainClicked()
+    }
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -31,17 +39,30 @@ class ProjectorSearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         showSearch()
+        tryAgainButton.setOnClickListener { listener?.onTryAgainClicked() }
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        val activity = activity
+        if (activity is SearchFragmentListener) listener = activity
+
     }
 
     fun showSearch() {
+        if (view == null) return
+
         startSearchAnimation()
         textView.text = "Searching for nearby Lanterns…"
+        tryAgainButton.visibility = View.INVISIBLE
     }
 
     fun showError() {
+        if (view == null) return
+
         startErrorAnimation()
-        textView.text = "Oh no!\n" +
-                "We couldn’t find any nearby Lanterns. Check the one you’re trying to connect to has power and is on the WiFi."
+        textView.text = "Oh no!\nWe couldn’t find any nearby Lanterns. Check the one you’re trying to connect to has power and is on the WiFi."
+        tryAgainButton.visibility = View.VISIBLE
     }
 
     private fun startSearchAnimation() {
@@ -117,5 +138,8 @@ class ProjectorSearchFragment : Fragment() {
 
         errorAnimatorSet?.removeAllListeners()
         errorAnimatorSet?.cancel()
+
+        teardrop.scaleY = 1F
+        teardrop.translationY = 0F
     }
 }

@@ -15,7 +15,8 @@ import kotlinx.android.synthetic.main.activity_projector_search.*
 import java.util.*
 
 class ProjectorSearchActivity : AppCompatActivity(),
-        ProjectorListFragment.OnProjectorSelectedListener  {
+        ProjectorListFragment.OnProjectorSelectedListener,
+         ProjectorSearchFragment.SearchFragmentListener {
 
     private val discoveryObserver: Observer = Observer { _, _ -> update() }
     private var currentFragment: Fragment? = null
@@ -46,13 +47,17 @@ class ProjectorSearchActivity : AppCompatActivity(),
 
     private fun startDiscovery() {
         showProjectorSearchFragment()
+        searchFragment?.showSearch()
         App.instance.discovery.startDiscovery { onStartDiscoveryFailure() }
     }
 
     private fun onStartDiscoveryFailure() {
-
         showProjectorSearchFragment()
         searchFragment?.showError()
+    }
+
+    override fun onTryAgainClicked() {
+        startDiscovery()
     }
 
     override fun onProjectorSelected(endpoint: Discovery.Endpoint) {
