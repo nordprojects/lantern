@@ -31,7 +31,7 @@ class WeatherConfigActivity : ChannelConfigActivity() {
             WeatherOption("Sunny", R.drawable.ic_sunny, WeatherType.CALM_AND_SUNNY),
             WeatherOption("Windy", R.drawable.ic_windy, WeatherType.WINDY),
             WeatherOption("Calm", R.drawable.ic_calm, WeatherType.CALM),
-            WeatherOption("Gentle Breeze", R.drawable.ic_gentle_breeze, WeatherType.GENTLE_WIND)
+            WeatherOption("Breeze", R.drawable.ic_gentle_breeze, WeatherType.GENTLE_WIND)
             )
 
     var selectedItem: WeatherOption = items[0]
