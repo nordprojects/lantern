@@ -10,15 +10,15 @@
         android:id="@+id/rainbow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:scaleX="0"
         android:src="@drawable/rainbow"
-        app:layout_constraintStart_toStartOf="@+id/imageView4"
-        app:layout_constraintTop_toTopOf="@+id/imageView4" />
+        app:layout_constraintStart_toStartOf="@+id/phone_lamp"
+        app:layout_constraintTop_toTopOf="@+id/phone_lamp" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/phone_lamp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/phone_to_projector"
@@ -37,7 +37,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4"
+        app:layout_constraintTop_toBottomOf="@+id/phone_lamp"
         app:layout_constraintVertical_bias="0.36" />
 
     <android.support.constraint.Guideline
@@ -57,10 +57,10 @@
         android:layout_marginTop="8dp"
         android:src="@drawable/question_mark"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintEnd_toEndOf="@+id/imageView4"
+        app:layout_constraintEnd_toEndOf="@+id/phone_lamp"
         app:layout_constraintHorizontal_bias="0.31"
-        app:layout_constraintStart_toStartOf="@+id/imageView4"
-        app:layout_constraintTop_toTopOf="@+id/imageView4"
+        app:layout_constraintStart_toStartOf="@+id/phone_lamp"
+        app:layout_constraintTop_toTopOf="@+id/phone_lamp"
         app:layout_constraintVertical_bias="0.13999999" />
 
     <Button

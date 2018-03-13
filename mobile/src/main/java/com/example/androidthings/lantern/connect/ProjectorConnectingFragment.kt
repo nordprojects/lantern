@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.animation.LinearInterpolator
 import com.example.androidthings.lantern.R
 import kotlinx.android.synthetic.main.fragment_projector_connecting.*
@@ -38,9 +39,13 @@ class ProjectorConnectingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        showConnecting()
         name = arguments?.getString(ConnectActivity.ARG_NAME) ?: "Lantern"
         tryAgainButton.setOnClickListener { listener?.onTryAgainClicked() }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        showConnecting()
     }
 
     override fun onAttach(context: Context?) {
@@ -60,8 +65,7 @@ class ProjectorConnectingFragment : Fragment() {
 
     fun showError() {
         if (view == null) return
-        animatorSet?.removeAllListeners()
-        animatorSet?.cancel()
+        stopAnimation()
         rainbow.visibility = View.INVISIBLE
         questionMark.visibility = View.VISIBLE
         tryAgainButton.visibility = View.VISIBLE
@@ -69,12 +73,14 @@ class ProjectorConnectingFragment : Fragment() {
     }
 
     private fun startConnectingAnimation() {
+        animatorSet?.removeAllListeners()
+        animatorSet?.cancel()
         val halfDuration: Long = 500
 
-        // TODO - this animation is dependent on screen density, redo in an independent way
-        // Use multiples of width of original view
+        phone_lamp.measure(WRAP_CONTENT, WRAP_CONTENT)
+        val gapWidth: Float = phone_lamp.measuredWidth.toFloat() * 0.5F
 
-        rainbow.scaleX = 1.0F
+        rainbow.scaleX = 0.0F
         rainbow.translationX = 0.0F
 
         // GROW
@@ -82,7 +88,7 @@ class ProjectorConnectingFragment : Fragment() {
             duration = halfDuration
             interpolator = LinearInterpolator()
         }
-        val translate = ObjectAnimator.ofFloat(rainbow, "translationX", 100.0f).apply {
+        val translate = ObjectAnimator.ofFloat(rainbow, "translationX", gapWidth * 0.5F).apply {
             duration = halfDuration
             interpolator = LinearInterpolator()
         }
@@ -95,7 +101,7 @@ class ProjectorConnectingFragment : Fragment() {
             duration = halfDuration
             interpolator = LinearInterpolator()
         }
-        val translate2 = ObjectAnimator.ofFloat(rainbow, "translationX", 240.0f).apply {
+        val translate2 = ObjectAnimator.ofFloat(rainbow, "translationX", gapWidth).apply {
             duration = halfDuration
             interpolator = LinearInterpolator()
         }
@@ -116,5 +122,10 @@ class ProjectorConnectingFragment : Fragment() {
             }
         })
         animatorSet = fullSet
+    }
+
+    private fun stopAnimation() {
+        animatorSet?.removeAllListeners()
+        animatorSet?.cancel()
     }
 }

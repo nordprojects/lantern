@@ -43,7 +43,12 @@
             android:label="Connect to device"
             android:parentActivityName=".startup.BeginActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".connect.ConnectActivity" />
+        <activity
+            android:name=".connect.ConnectActivity"
+            android:configChanges="orientation"
+            android:label="Connecting"
+            android:parentActivityName=".search.ProjectorSearchActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".home.HomeActivity"
             android:configChanges="orientation"
