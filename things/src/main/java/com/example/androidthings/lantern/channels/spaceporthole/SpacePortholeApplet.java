@@ -1,4 +1,4 @@
-package com.example.androidthings.lantern.channels;
+package com.example.androidthings.lantern.channels.spaceporthole;
 
 import java.util.ArrayList;
 import processing.core.*;

@@ -3,6 +3,7 @@ package com.example.androidthings.lantern
 import android.net.Uri
 import com.example.androidthings.lantern.channels.*
 import com.example.androidthings.lantern.channels.nowplaying.NowPlayingChannel
+import com.example.androidthings.lantern.channels.spaceporthole.SpacePortholeChannel
 import com.example.androidthings.lantern.shared.ChannelInfo
 
 
@@ -34,10 +35,10 @@ object ChannelsRegistry {
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_weather"),
                     customizable = true
                     )),
-            Pair(::SpaceChannel, ChannelInfo(
-                    "space",
+            Pair(::SpacePortholeChannel, ChannelInfo(
+                    "space-porthole",
                     "Space porthole",
-                    "Explore the galaxy with this virtual telescope. Look out for the ISS!",
+                    "Explore the galaxy with this virtual telescope.",
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_space"),
                     customizable = true
             )),

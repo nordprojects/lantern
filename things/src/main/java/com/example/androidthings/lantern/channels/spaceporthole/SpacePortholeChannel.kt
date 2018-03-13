@@ -1,4 +1,4 @@
-package com.example.androidthings.lantern.channels
+package com.example.androidthings.lantern.channels.spaceporthole
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import com.example.androidthings.lantern.R
 import processing.android.PFragment
 
 
-class SpaceChannel: Channel() {
+class SpacePortholeChannel : Channel() {
     private val sketch by lazy {
         SpacePortholeApplet().apply {
             latitude = config.settings.optDouble("latitude", 0.0).toFloat()
