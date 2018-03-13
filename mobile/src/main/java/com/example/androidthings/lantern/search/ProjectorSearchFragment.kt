@@ -45,7 +45,6 @@ class ProjectorSearchFragment : Fragment() {
         super.onAttach(context)
         val activity = activity
         if (activity is SearchFragmentListener) listener = activity
-
     }
 
     fun showSearch() {

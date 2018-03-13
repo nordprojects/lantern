@@ -1,20 +1,22 @@
 package com.example.androidthings.lantern.connect
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.Snackbar
+import android.support.v7.app.AppCompatActivity
 import com.example.androidthings.lantern.App
 import com.example.androidthings.lantern.R
 import com.example.androidthings.lantern.home.HomeActivity
-import kotlinx.android.synthetic.main.activity_projector_search.*
 
-class ConnectActivity : AppCompatActivity() {
+class ConnectActivity : AppCompatActivity(),
+    ProjectorConnectingFragment.ConnectingFragmentListener {
 
     companion object {
         const val ARG_ENDPOINT_ID = "ARG_ENDPOINT_ID"
         const val ARG_NAME = "ARG_NAME"
     }
+
+    private var connectingFragment: ProjectorConnectingFragment? = null
+    private var endpointId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,23 +25,34 @@ class ConnectActivity : AppCompatActivity() {
         val name = savedInstanceState?.getString(ARG_NAME)
         showProjectorConnectingFragment(name ?: "Lantern")
 
-        val endpointId = intent.getStringExtra(ARG_ENDPOINT_ID)
+        endpointId = intent.getStringExtra(ARG_ENDPOINT_ID)
+        requestConnection()
+    }
+
+    private fun requestConnection() {
+        val endpointId = endpointId
         if (endpointId != null) {
-            App.instance.client.connectTo(endpointId, { showHomeActivity() }, { onRequestConnectionFailure() })
+            App.instance.client.connectTo(endpointId,
+                    { showHomeActivity() },
+                    { onRequestConnectionFailure() })
+            connectingFragment?.showConnecting()
         }
     }
 
     private fun onRequestConnectionFailure() {
-        val snackBar = Snackbar.make(fragment_container, "Failed to connect to projector", Snackbar.LENGTH_LONG)
-        snackBar.show()
-        finish()
+        connectingFragment?.showError()
+    }
+
+    override fun onTryAgainClicked() {
+        requestConnection()
     }
 
     private fun showProjectorConnectingFragment(name: String) {
-        val connectingFragment = ProjectorConnectingFragment()
-        connectingFragment.arguments = Bundle().apply { putString(ARG_NAME, name) }
+        val fragment = ProjectorConnectingFragment()
+        connectingFragment = fragment
+        fragment.arguments = Bundle().apply { putString(ARG_NAME, name) }
         val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fragment_container, connectingFragment)
+        fragmentTransaction.replace(R.id.fragment_container, fragment)
         fragmentTransaction.commit()
     }
 
