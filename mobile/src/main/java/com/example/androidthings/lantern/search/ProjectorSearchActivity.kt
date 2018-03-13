@@ -1,16 +1,18 @@
 package com.example.androidthings.lantern.search
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.support.design.widget.Snackbar
-import android.support.design.widget.Snackbar.LENGTH_INDEFINITE
+import android.provider.Settings
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import com.example.androidthings.lantern.App
 import com.example.androidthings.lantern.R
 import com.example.androidthings.lantern.configuration.Discovery
 import com.example.androidthings.lantern.connect.ConnectActivity
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.nearby.connection.ConnectionsStatusCodes
 import kotlinx.android.synthetic.main.activity_projector_search.*
 import java.util.*
 
@@ -48,16 +50,39 @@ class ProjectorSearchActivity : AppCompatActivity(),
     private fun startDiscovery() {
         showProjectorSearchFragment()
         searchFragment?.showSearch()
-        App.instance.discovery.startDiscovery { onStartDiscoveryFailure() }
+        App.instance.discovery.startDiscovery { error ->
+            onStartDiscoveryFailure(error)
+        }
     }
 
-    private fun onStartDiscoveryFailure() {
+    private fun onStartDiscoveryFailure(error: Exception) {
         showProjectorSearchFragment()
-        searchFragment?.showError()
+        when(error) {
+            is Discovery.TimeoutException -> { searchFragment?.showTimeoutError() }
+            is ApiException -> {
+                when(error.statusCode) {
+                    ConnectionsStatusCodes.MISSING_PERMISSION_ACCESS_COARSE_LOCATION -> {
+                        searchFragment?.showPermissionsError()
+                    }
+                    ConnectionsStatusCodes.STATUS_BLUETOOTH_ERROR -> {
+                        searchFragment?.showBluetoothError()
+                    }
+                    else -> { searchFragment?.showUnknownError() }
+                }
+            }
+            else -> { searchFragment?.showUnknownError() }
+        }
     }
 
     override fun onTryAgainClicked() {
         startDiscovery()
+    }
+
+    override fun onSettingsClicked() {
+        startActivity(Intent().apply {
+            action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+            data = Uri.fromParts("package", packageName, null)
+        })
     }
 
     override fun onProjectorSelected(endpoint: Discovery.Endpoint) {

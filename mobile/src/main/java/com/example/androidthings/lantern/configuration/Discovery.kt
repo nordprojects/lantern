@@ -19,6 +19,8 @@ class Discovery(val context: Context): Observable() {
 
     data class Endpoint(val id: String, val info: DiscoveredEndpointInfo)
 
+    class TimeoutException: Exception()
+
     companion object {
         private val TAG: String = Discovery::class.java.simpleName
     }
@@ -27,27 +29,30 @@ class Discovery(val context: Context): Observable() {
     val endpoints: ArrayList<Endpoint> = arrayListOf()
     private val timeoutHandler = Handler()
 
-    fun startDiscovery(failure: () -> Unit) {
+    fun startDiscovery(failure: (error: Exception) -> Unit) {
         timeoutHandler.removeCallbacksAndMessages(null)
+
         connectionsClient.startDiscovery(
                 "com.example.androidthings.lantern.projector",
                 endpointDiscoveryCallback,
                 DiscoveryOptions(Strategy.P2P_CLUSTER))
                 .addOnSuccessListener { Log.i(TAG, "Start Discovery success") }
-                .addOnFailureListener { err ->
-                    Log.e(TAG, "Start Discovery failure", err)
-                    failure()
+                .addOnFailureListener { error ->
+                    Log.e(TAG, "Start Discovery failure", error)
+                    timeoutHandler.removeCallbacksAndMessages(null)
+                    failure(error)
                 }
 
         timeoutHandler.postDelayed({
             if (endpoints.size == 0) {
-                failure()
+                failure(TimeoutException())
                 stopDiscovery()
             }
         }, 30 * 1000)
     }
 
     fun stopDiscovery() {
+        timeoutHandler.removeCallbacksAndMessages(null)
         connectionsClient.stopDiscovery()
         endpoints.clear()
     }

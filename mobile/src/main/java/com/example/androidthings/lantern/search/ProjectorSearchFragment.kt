@@ -7,13 +7,10 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.LinearInterpolator
 import com.example.androidthings.lantern.R
@@ -24,12 +21,12 @@ class ProjectorSearchFragment : Fragment() {
     private var searchAnimatorSet: AnimatorSet? = null
     private var errorAnimatorSet: AnimatorSet? = null
 
-    var listener: SearchFragmentListener? = null
+    private var listener: SearchFragmentListener? = null
 
     interface SearchFragmentListener {
         fun onTryAgainClicked()
+        fun onSettingsClicked()
     }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -41,6 +38,7 @@ class ProjectorSearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         showSearch()
         tryAgainButton.setOnClickListener { listener?.onTryAgainClicked() }
+        settingsButton.setOnClickListener { listener?.onSettingsClicked() }
     }
 
     override fun onAttach(context: Context?) {
@@ -52,18 +50,42 @@ class ProjectorSearchFragment : Fragment() {
 
     fun showSearch() {
         if (view == null) return
-
         startSearchAnimation()
         textView.text = "Searching for nearby Lanterns…"
         tryAgainButton.visibility = View.INVISIBLE
+        settingsButton.visibility = View.INVISIBLE
     }
 
-    fun showError() {
+    fun showTimeoutError() {
         if (view == null) return
-
         startErrorAnimation()
-        textView.text = "Oh no!\nWe couldn’t find any nearby Lanterns. Check the one you’re trying to connect to has power and is on the WiFi."
+        textView.text = "Oh no!\nWe couldn’t find any nearby Lanterns. Check the one you’re trying to connect to has power and is close by."
         tryAgainButton.visibility = View.VISIBLE
+        settingsButton.visibility = View.INVISIBLE
+    }
+
+    fun showPermissionsError() {
+        if (view == null) return
+        startErrorAnimation()
+        textView.text = "Failed to start Nearby.\n\nMake sure you’ve enabled Location permissions in settings"
+        tryAgainButton.visibility = View.INVISIBLE
+        settingsButton.visibility = View.VISIBLE
+    }
+
+    fun showBluetoothError() {
+        if (view == null) return
+        startErrorAnimation()
+        textView.text = "Failed to start Nearby.\n\nCheck Bluetooth is turned on and try again."
+        tryAgainButton.visibility = View.VISIBLE
+        settingsButton.visibility = View.INVISIBLE
+    }
+
+    fun showUnknownError() {
+        if (view == null) return
+        startErrorAnimation()
+        textView.text = "Failed to start Nearby.\n\nSomething went wrong, please try again."
+        tryAgainButton.visibility = View.VISIBLE
+        settingsButton.visibility = View.INVISIBLE
     }
 
     private fun startSearchAnimation() {
