@@ -16,7 +16,7 @@ class BatSignalChannel : Channel() {
                               savedInstanceState: Bundle?): View? {
         return ImageView(this.activity).apply {
             scaleType = ImageView.ScaleType.CENTER_INSIDE
-            setImageResource(R.drawable.bat_signal)
+            setImageResource(R.drawable.batdroid_signal)
         }
     }
 }

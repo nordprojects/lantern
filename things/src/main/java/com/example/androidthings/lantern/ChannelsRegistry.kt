@@ -64,7 +64,7 @@ object ChannelsRegistry {
             Pair(::BatSignalChannel, ChannelInfo(
                     "bat-signal",
                     "Bat-Signal",
-                    "Summon the Batman when troubles about",
+                    "Summons the Batdroid, when trouble's about!",
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_bat_signal")
             )),
             Pair(::MessageChannel, ChannelInfo(
