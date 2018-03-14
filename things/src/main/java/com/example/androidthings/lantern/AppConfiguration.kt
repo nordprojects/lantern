@@ -1,5 +1,6 @@
 package com.example.androidthings.lantern
 
+import android.annotation.SuppressLint
 import android.provider.Settings.Secure
 import com.example.androidthings.lantern.shared.ChannelConfiguration
 import com.example.androidthings.lantern.shared.Direction
@@ -42,9 +43,25 @@ class AppConfiguration(private val context: Context): Observable() {
         val defaultConfig = """
             {
                 "planes": {
-                    "up": {"type": "blank"},
-                    "forward": {"type": "lamp"},
-                    "down": {"type": "now-playing"}
+                    "up": {
+                        "type": "space-porthole",
+                        "settings": {
+                            "latitude": 51.5,
+                            "longitude": 0.0
+                        }
+                    },
+                    "forward": {
+                        "type": "calendar-clock",
+                        "secrets": {
+                            "url": "https://calendar.google.com/calendar/ical/nordprojects.co_gjfo1dqt495ll9dt7vmoicjfu4%40group.calendar.google.com/public/basic.ics"
+                        }
+                    },
+                    "down": {
+                        "type": "ambient-weather",
+                        "settings": {
+                            "weatherOverride": "CALM"
+                        }
+                    }
                 }
             }
             """
@@ -73,6 +90,7 @@ class AppConfiguration(private val context: Context): Observable() {
         ))
     }
 
+    @SuppressLint("HardwareIds")
     private fun defaultName(): String {
         val hardwareId = Secure.getString(context.contentResolver, Secure.ANDROID_ID)
         return "Lantern-${hardwareId.takeLast(4)}"
