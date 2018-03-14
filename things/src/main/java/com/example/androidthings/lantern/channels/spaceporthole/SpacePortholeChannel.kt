@@ -32,10 +32,16 @@ class SpacePortholeChannel : Channel() {
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
+
+        // don't waste cycles rendering in the background
         if (hidden) {
             sketch.surface.pauseThread()
         } else {
             sketch.surface.resumeThread()
         }
+
+        // work around a bug where this view appears atop other surface views even when the
+        // fragment is hidden
+        sketch.surface.surfaceView.visibility = if (hidden) View.INVISIBLE else View.VISIBLE
     }
 }
