@@ -24,7 +24,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/google_sans_regular"
-        android:text="Choose a location to get weather data"
+        android:text="Choose a location to display ambient weather conditions."
         android:textColor="@android:color/black"
         android:textSize="16sp"
         app:layout_constraintLeft_toLeftOf="parent"
