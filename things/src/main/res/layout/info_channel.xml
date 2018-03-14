@@ -7,34 +7,26 @@
 
     <ImageView
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:src="@drawable/launch_bg"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="615:540"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="5dp"
-        android:src="@drawable/powered_by_android_things"
+        android:layout_marginEnd="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintDimensionRatio=""
+        app:layout_constraintEnd_toStartOf="@+id/centerGuideline"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/lantern_splash_logo" />
 
     <android.support.constraint.Guideline
         android:id="@+id/centerGuideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
+        app:layout_constraintGuide_begin="481dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginStart="50dp"
+        android:layout_marginStart="45dp"
         android:layout_marginTop="8dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -42,7 +34,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/google_sans_bold"
             android:text="Lantern"
@@ -53,7 +45,7 @@
 
         <TextView
             android:id="@+id/nameTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/google_sans_regular"
@@ -63,7 +55,7 @@
 
         <TextView
             android:id="@+id/ipAddressTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/google_sans_regular"
             android:textColor="@android:color/white"
@@ -72,7 +64,7 @@
 
         <TextView
             android:id="@+id/androidThingsVersionTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/google_sans_regular"
             android:textColor="@android:color/white"
@@ -81,11 +73,19 @@
 
         <TextView
             android:id="@+id/lanternVersionTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/google_sans_regular"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             tools:text="Lantern v1.0.1" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="25dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/powered_by_android_things_left" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
