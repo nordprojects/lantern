@@ -1,8 +1,14 @@
 package com.example.androidthings.lantern.channels.nowplaying
 
+import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +23,7 @@ import kotlin.concurrent.fixedRateTimer
 import kotlin.math.floor
 import kotlin.math.min
 import kotlin.math.round
+import kotlin.properties.Delegates
 
 /**
  * Shows the currently playing song on a Cast device on the local network.
@@ -56,7 +63,7 @@ class NowPlayingChannel : Channel() {
         }
         discoveryManager.startDiscovering()
 
-        updateTimer = fixedRateTimer("$this update", true, Date(), 1000) {
+        updateTimer = fixedRateTimer("$this update", true, Date(), 100) {
             Handler(Looper.getMainLooper()).post {
                 update()
             }
@@ -87,7 +94,7 @@ class NowPlayingChannel : Channel() {
                 && mediaStatus?.playerState == CastConnection.PlayerState.PLAYING) {
 
             val timeSinceLastUpdateMs = Date().time - mediaStatusUpdateDate.time
-            trackTimeEstimate += timeSinceLastUpdateMs / 1000
+            trackTimeEstimate += timeSinceLastUpdateMs / 1000.0
 
             // cap the time at the track duration as reported
             if (mediaStatus.duration != null) {
@@ -99,14 +106,22 @@ class NowPlayingChannel : Channel() {
         artistTextView.text = mediaStatus?.artist ?: mediaStatus?.subtitle ?: ""
         durationTextView.text = if (trackTimeEstimate != null) {
             // round to the nearest second (to match other players)
-            trackTimeEstimate = round(trackTimeEstimate)
+            val totalSeconds = round(trackTimeEstimate)
             // split into minutes and seconds display
-            val minutes = floor(trackTimeEstimate / 60).toInt()
-            val seconds = floor(trackTimeEstimate % 60).toInt()
+            val minutes = floor(totalSeconds / 60).toInt()
+            val seconds = floor(totalSeconds % 60).toInt()
             "%d:%02d".format(minutes, seconds)
         } else {
             ""
         }
+        val duration = mediaStatus?.duration
+
+        progressBarView.scaleX =
+                if (trackTimeEstimate != null && duration != null) {
+                    (trackTimeEstimate / duration).toFloat()
+                } else {
+                    0f
+                }
     }
 
     val castConnectionListener = object : CastConnection.Listener() {
@@ -167,5 +182,37 @@ class NowPlayingChannel : Channel() {
         castConnection?.listener = null
         castConnection?.close()
         castConnection = null
+    }
+
+    class ProgressBarView(context: Context, attrs: AttributeSet): View(context, attrs) {
+        var barColor: Int by Delegates.observable(Color.WHITE, { _, _, newValue ->
+            barPaint = Paint().apply {
+                color = newValue
+            }
+        })
+        private var barPaint: Paint = Paint().apply {
+            color = barColor
+        }
+
+        var percentComplete: Double by Delegates.observable(0.0, {
+            _, oldValue, newValue ->
+            if (oldValue != newValue) {
+                invalidate()
+            }
+        })
+
+        override fun onDraw(canvas: Canvas) {
+            super.onDraw(canvas)
+
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
+
+            canvas.drawRect(
+                    0f,
+                    0f,
+                    (canvas.width * percentComplete/100.0).toFloat(),
+                    canvas.height.toFloat(),
+                    barPaint
+            )
+        }
     }
 }

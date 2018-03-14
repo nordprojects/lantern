@@ -10,39 +10,41 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottomGuideline85"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topGuideline15">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/titleTextView"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="20dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="28dp"
             android:fontFamily="@font/lato_black_italic"
             android:maxLines="3"
-            android:text="THE JESTER, THE TRAMP &amp; THE ACROBAT MAKES A MOVE"
             android:textAllCaps="true"
             android:textAppearance="@android:style/TextAppearance"
-            android:textSize="57sp"
+            android:textColor="@android:color/white"
+            android:textSize="80sp"
             app:layout_constraintBottom_toTopOf="@+id/artistTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"
+            tools:text="THE JESTER, THE TRAMP &amp; THE ACROBAT MAKES A MOVE" />
 
         <TextView
             android:id="@+id/durationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/lato_bold_italic"
-            android:text="3:23"
-            android:textSize="29sp"
+            android:textColor="@android:color/white"
+            android:textSize="41sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="3:23" />
 
         <TextView
             android:id="@+id/artistTextView"
@@ -50,24 +52,26 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/lato_bold_italic"
             android:maxLines="1"
-            android:text="Kevin Morby"
-            android:textSize="40sp"
+            android:textColor="@android:color/white"
+            android:textSize="56sp"
             app:layout_constraintBottom_toTopOf="@+id/durationTextView"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Kevin Morby" />
+
+        <View
+            android:id="@+id/progressBarView"
+            android:layout_width="0dp"
+            android:layout_height="10dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/white"
+            android:transformPivotX="0dp"
+            android:transformPivotY="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/artistTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleTextView"
+            app:layout_constraintVertical_bias="0.0" />
     </android.support.constraint.ConstraintLayout>
-
-    <android.support.constraint.Guideline
-        android:id="@+id/topGuideline15"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent=".15" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/bottomGuideline85"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent=".85" />
 
 </android.support.constraint.ConstraintLayout>
