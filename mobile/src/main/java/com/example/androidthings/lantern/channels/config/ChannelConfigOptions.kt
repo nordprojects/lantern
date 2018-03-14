@@ -11,7 +11,7 @@ object ChannelConfigOptions {
             "webview" to WebConfigActivity::class.java,
             "ambient-weather" to WeatherConfigActivity::class.java,
             "now-playing" to NowPlayingConfigActivity::class.java,
-            "space" to SpaceConfigActivity::class.java
+            "space-porthole" to SpaceConfigActivity::class.java
     )
 
     val channelTypeToSubtitle = mapOf(

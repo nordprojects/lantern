@@ -2,6 +2,9 @@ package com.example.androidthings.lantern.channels.config
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.text.SpannableString
+import android.text.style.UnderlineSpan
+import com.example.androidthings.lantern.LocationConverter
 import com.example.androidthings.lantern.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -27,7 +30,16 @@ class SpaceConfigActivity : ChannelConfigActivity() {
         locationProvider?.lastLocation?.addOnSuccessListener {
             currentLatitude = it.latitude
             currentLongitude = it.longitude
+            update()
         }
+    }
+
+    private fun update() {
+        val lat = LocationConverter.latitudeAsDMS(currentLatitude ?: 0.0, 4)
+        val long = LocationConverter.longitudeAsDMS(currentLongitude ?: 0.0, 4)
+        val span = SpannableString("$lat\n$long")
+        span.setSpan(UnderlineSpan(), 0, span.length, 0)
+        locationTextView.text = span
     }
 
     private fun updateConfig() {
