@@ -183,36 +183,4 @@ class NowPlayingChannel : Channel() {
         castConnection?.close()
         castConnection = null
     }
-
-    class ProgressBarView(context: Context, attrs: AttributeSet): View(context, attrs) {
-        var barColor: Int by Delegates.observable(Color.WHITE, { _, _, newValue ->
-            barPaint = Paint().apply {
-                color = newValue
-            }
-        })
-        private var barPaint: Paint = Paint().apply {
-            color = barColor
-        }
-
-        var percentComplete: Double by Delegates.observable(0.0, {
-            _, oldValue, newValue ->
-            if (oldValue != newValue) {
-                invalidate()
-            }
-        })
-
-        override fun onDraw(canvas: Canvas) {
-            super.onDraw(canvas)
-
-            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-
-            canvas.drawRect(
-                    0f,
-                    0f,
-                    (canvas.width * percentComplete/100.0).toFloat(),
-                    canvas.height.toFloat(),
-                    barPaint
-            )
-        }
-    }
 }
