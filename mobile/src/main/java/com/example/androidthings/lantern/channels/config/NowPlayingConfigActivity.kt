@@ -7,7 +7,8 @@ import kotlinx.android.synthetic.main.activity_now_playing_config.*
 
 
 class NowPlayingConfigActivity: ChannelConfigActivity(),
-        NowPlayingCastFragment.OnCastDeviceSelectedListener {
+        NowPlayingCastFragment.OnCastDeviceSelectedListener,
+        NowPlayingStyleFragment.OnStyleSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +31,19 @@ class NowPlayingConfigActivity: ChannelConfigActivity(),
         config.settings.put("subtitle", "‘${device.name}’")
         config.settings.put("subtitleVia", "via Chromecast Audio")
 
+        showStyleFragment()
+    }
+
+    override fun onStyleSelected(style: String) {
+        config.settings.put("style", style)
+
         finishWithConfigUpdate()
+    }
+
+    private fun showStyleFragment() {
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.fragment_container, NowPlayingStyleFragment())
+            addToBackStack(null)
+        }.commit()
     }
 }
