@@ -4,14 +4,16 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.SpannableString
+import android.text.style.TextAppearanceSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.androidthings.lantern.R
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.activity_weather_config.*
 import kotlinx.android.synthetic.main.item_row_weather.view.*
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.FusedLocationProviderClient
 
 
 class WeatherConfigActivity : ChannelConfigActivity() {
@@ -22,16 +24,17 @@ class WeatherConfigActivity : ChannelConfigActivity() {
 
     data class WeatherOption(
             val title: String,
+            val subtitle: String,
             val icon: Int,
             val type: WeatherType)
 
     var items = listOf(
-            WeatherOption("Lantern’s current location", R.drawable.ic_current_location, WeatherType.LOCATION),
-            WeatherOption("Rain", R.drawable.ic_rain, WeatherType.RAIN),
-            WeatherOption("Sunny", R.drawable.ic_sunny, WeatherType.CALM_AND_SUNNY),
-            WeatherOption("Windy", R.drawable.ic_windy, WeatherType.WINDY),
-            WeatherOption("Calm", R.drawable.ic_calm, WeatherType.CALM),
-            WeatherOption("Breeze", R.drawable.ic_gentle_breeze, WeatherType.GENTLE_WIND)
+            WeatherOption("Lantern’s current location", "", R.drawable.ic_current_location, WeatherType.LOCATION),
+            WeatherOption("Rain", "Mawsynram, India", R.drawable.ic_rain, WeatherType.RAIN),
+            WeatherOption("Sunny", "Death Valley, USA", R.drawable.ic_sunny, WeatherType.CALM_AND_SUNNY),
+            WeatherOption("Windy", "Galway, Ireland", R.drawable.ic_windy, WeatherType.WINDY),
+            WeatherOption("Calm", "Gold Coast, Australia", R.drawable.ic_calm, WeatherType.CALM),
+            WeatherOption("Breeze", "Marseille, France", R.drawable.ic_gentle_breeze, WeatherType.GENTLE_WIND)
             )
 
     var selectedItem: WeatherOption = items[0]
@@ -77,8 +80,8 @@ class WeatherConfigActivity : ChannelConfigActivity() {
             }
         } else {
             config.settings.put("weatherOverride", selectedItem.type.toString())
-            config.settings.put("subtitle", "‘${selectedItem.title}’")
-            config.settings.put("subtitleVia", null)
+            config.settings.put("subtitle", "‘${selectedItem.subtitle}’")
+            config.settings.put("subtitleVia", "via Open Weather Map")
         }
 
         finishWithConfigUpdate()
@@ -106,7 +109,12 @@ class WeatherConfigActivity : ChannelConfigActivity() {
 
             fun bindItem(item: WeatherOption) {
                 this.item = item
-                view.textView.text = item.title
+
+                val spannable = SpannableString("${item.title} ${item.subtitle}")
+                val textAppearance = TextAppearanceSpan(this@WeatherConfigActivity, R.style.robotoRegular)
+                spannable.setSpan(textAppearance, item.title.length, spannable.length, 0)
+                view.textView.text = spannable
+
                 view.imageView.setImageResource(item.icon)
                 view.radioButton.isChecked = item == selectedItem
                 view.setOnClickListener { selectedItem = item }

@@ -41,4 +41,8 @@
 
     <style name="Theme.AppTheme.NoActionBar" parent="Theme.AppCompat.NoActionBar" />
 
+    <style name="robotoRegular">
+        <item name="android:fontFamily">@font/roboto</item>
+    </style>
+
 </resources>
