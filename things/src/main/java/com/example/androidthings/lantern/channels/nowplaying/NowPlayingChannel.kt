@@ -1,10 +1,11 @@
 package com.example.androidthings.lantern.channels.nowplaying
 
+import android.animation.TimeAnimator
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,14 +17,16 @@ import android.view.ViewGroup
 import com.example.androidthings.lantern.Channel
 import com.example.androidthings.lantern.R
 import com.example.androidthings.lantern.shared.CastDiscoveryManager
-import kotlinx.android.synthetic.main.now_playing_channel.*
+import kotlinx.android.synthetic.main.now_playing_channel_stacked.*
 import java.io.IOException
 import java.util.*
 import kotlin.concurrent.fixedRateTimer
+import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.min
 import kotlin.math.round
 import kotlin.properties.Delegates
+
 
 /**
  * Shows the currently playing song on a Cast device on the local network.
@@ -36,6 +39,9 @@ import kotlin.properties.Delegates
 class NowPlayingChannel : Channel() {
     val TAG = this::class.java.simpleName
     private val configDeviceId by lazy { config.settings.opt("castId") as? String }
+    private val configStyle by lazy {
+        Style.withJsonName(config.settings.optString("style")) ?: Style.STACKED
+    }
 
     var mediaStatus: CastConnection.MediaStatus? = null
     var mediaStatusUpdateDate: Date? = null
@@ -45,11 +51,18 @@ class NowPlayingChannel : Channel() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.now_playing_channel, container, false)
+        return when (configStyle) {
+            Style.STACKED ->
+                inflater.inflate(R.layout.now_playing_channel_stacked, container, false)
+            Style.SCROLLING ->
+                inflater.inflate(R.layout.now_playing_channel_scrolling, container, false)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val tickerView = view.findViewById<NowPlayingTickerView>(R.id.tickerView)
+        tickerView?.startAnimating()
         update()
     }
 
@@ -102,9 +115,9 @@ class NowPlayingChannel : Channel() {
             }
         }
 
-        titleTextView.text = mediaStatus?.title ?: ""
-        artistTextView.text = mediaStatus?.artist ?: mediaStatus?.subtitle ?: ""
-        durationTextView.text = if (trackTimeEstimate != null) {
+        val title = mediaStatus?.title ?: ""
+        val subtitle = mediaStatus?.artist ?: mediaStatus?.subtitle ?: ""
+        val elapsedTime = if (trackTimeEstimate != null) {
             // round to the nearest second (to match other players)
             val totalSeconds = round(trackTimeEstimate)
             // split into minutes and seconds display
@@ -114,24 +127,49 @@ class NowPlayingChannel : Channel() {
         } else {
             ""
         }
-        val duration = mediaStatus?.duration
 
-        progressBarView.scaleX =
-                if (trackTimeEstimate != null && duration != null) {
-                    (trackTimeEstimate / duration).toFloat()
-                } else {
-                    0f
-                }
+        when (configStyle) {
+            Style.STACKED -> {
+                titleTextView.text = title
+                artistTextView.text = subtitle
+                durationTextView.text = elapsedTime
+
+                val duration = mediaStatus?.duration
+                progressBarView.scaleX =
+                        if (trackTimeEstimate != null && duration != null) {
+                            (trackTimeEstimate / duration).toFloat()
+                        } else {
+                            0f
+                        }
+            }
+            Style.SCROLLING -> {
+//                val text = SpannableStringBuilder()
+//                        .append(title, StyleSpan(BOLD), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                        .append("    ")
+//                        .append(subtitle)
+//                        .append("    ")
+//                        .append(elapsedTime)
+//                        .append("    ")
+
+                val tickerView = view!!.findViewById<NowPlayingTickerView>(R.id.tickerView)
+
+                tickerView.title = title
+                tickerView.subtitle = subtitle
+                tickerView.duration = elapsedTime
+            }
+        }
     }
 
     val castConnectionListener = object : CastConnection.Listener() {
         override fun onStatusUpdate(appName: String?, status: String?) {
         }
+
         override fun onMediaStatusUpdate(mediaStatus: CastConnection.MediaStatus) {
             this@NowPlayingChannel.mediaStatus = mediaStatus
             mediaStatusUpdateDate = Date()
             update()
         }
+
         override fun onDisconnect() {
             disconnectFromCastDevice()
             connectToAvailableCastDevice()
@@ -168,8 +206,7 @@ class NowPlayingChannel : Channel() {
         Thread(Runnable {
             try {
                 connection.connect()
-            }
-            catch (e: IOException) {
+            } catch (e: IOException) {
                 Log.e(TAG, "Error connecting to cast device", e)
                 Handler(Looper.getMainLooper()).post {
                     disconnectFromCastDevice()
@@ -178,9 +215,143 @@ class NowPlayingChannel : Channel() {
             }
         }).start()
     }
+
     fun disconnectFromCastDevice() {
         castConnection?.listener = null
         castConnection?.close()
         castConnection = null
+    }
+
+    enum class Style {
+        STACKED, SCROLLING;
+
+        val jsonName
+            get() = when (this) {
+                STACKED -> "stacked"
+                SCROLLING -> "scrolling"
+            }
+
+        companion object {
+            fun withJsonName(jsonName: String): Style? {
+                return Style.values().find { it.jsonName == jsonName }
+            }
+        }
+    }
+
+    class NowPlayingTickerView(context: Context, attrs: AttributeSet): View(context, attrs) {
+        val TAG = this::class.java.simpleName
+
+        var title: String by Delegates.observable("", { _, oldValue, newValue ->
+            titleBitmap = null
+        })
+        var subtitle: String by Delegates.observable("", { _, oldValue, newValue ->
+            subtitleBitmap = null
+        })
+        var duration: String by Delegates.observable("", { _, oldValue, newValue ->
+            durationBitmap = null
+        })
+
+        private val titlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            typeface = resources.getFont(R.font.lato_black_italic)
+            textSize = 80F
+            color = Color.WHITE
+        }
+        private val subtitlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            typeface = resources.getFont(R.font.lato_italic)
+            textSize = 80F
+            color = Color.WHITE
+        }
+        private val durationPaint = subtitlePaint
+
+        private var titleBitmap: Bitmap? = null
+        private var subtitleBitmap: Bitmap? = null
+        private var durationBitmap: Bitmap? = null
+
+        private var scrollX = 0f
+        private val SCROLL_SPEED = 80f // pixels per second
+        private val ELEMENT_GAP_WIDTH = 75f
+        private val REPEAT_GAP_WIDTH = 250f
+        private var drawTimer: TimeAnimator? = null
+
+        override fun onVisibilityAggregated(isVisible: Boolean) {
+            super.onVisibilityAggregated(isVisible)
+
+            if (isVisible) {
+                startAnimating()
+            } else {
+                stopAnimating()
+            }
+        }
+
+        fun stopAnimating() {
+            drawTimer?.cancel()
+            drawTimer = null
+        }
+
+        fun startAnimating() {
+            stopAnimating()
+            drawTimer = TimeAnimator().apply {
+                setTimeListener { _, _, delta ->
+                    tick(delta)
+                }
+                start()
+            }
+        }
+
+        private fun tick(delta: Long) {
+            scrollX += SCROLL_SPEED * (delta.toFloat() / 1000f)
+            invalidate()
+        }
+
+        override fun onDraw(canvas: Canvas) {
+            super.onDraw(canvas)
+
+            if (titleBitmap == null) {
+                titleBitmap = renderTextToBitmap(title.toUpperCase(), titlePaint)
+            }
+            if (subtitleBitmap == null) {
+                subtitleBitmap = renderTextToBitmap(subtitle.toUpperCase(), subtitlePaint)
+            }
+            if (durationBitmap == null) {
+                durationBitmap = renderTextToBitmap(duration.toUpperCase(), durationPaint)
+            }
+
+            val titleBitmap = titleBitmap!!
+            val subtitleBitmap = subtitleBitmap!!
+            val durationBitmap = durationBitmap!!
+
+            val totalLineWidth = (
+                    titleBitmap.width + ELEMENT_GAP_WIDTH
+                            + subtitleBitmap.width + ELEMENT_GAP_WIDTH
+                            + durationBitmap.width + REPEAT_GAP_WIDTH)
+
+            var drawX = -scrollX % totalLineWidth
+            drawX -= canvas.width
+
+            while (drawX < canvas.width) {
+                canvas.drawBitmap(titleBitmap, drawX, 0f, null)
+                drawX += titleBitmap.width
+                drawX += ELEMENT_GAP_WIDTH
+                canvas.drawBitmap(subtitleBitmap, drawX, 0f, null)
+                drawX += subtitleBitmap.width
+                drawX += ELEMENT_GAP_WIDTH
+                canvas.drawBitmap(durationBitmap, drawX, 0f, null)
+                drawX += durationBitmap.width
+                drawX += REPEAT_GAP_WIDTH
+            }
+        }
+
+        companion object {
+            fun renderTextToBitmap(text: String, paint: Paint): Bitmap {
+                val baseline = -paint.ascent() // ascent() is negative
+                val width = ceil(paint.measureText(text)).toInt() + 1
+                val height = ceil(baseline + paint.descent()).toInt()
+
+                val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+                val canvas = Canvas(bitmap)
+                canvas.drawText(text, 0f, baseline, paint)
+                return bitmap
+            }
+        }
     }
 }
