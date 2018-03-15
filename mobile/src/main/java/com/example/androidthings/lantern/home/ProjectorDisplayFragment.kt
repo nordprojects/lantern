@@ -74,6 +74,21 @@ class ProjectorDisplayFragment : Fragment() {
             directionSelectedListener?.onDirectionSelected(Direction.DOWN)
         }
 
+        up_button.onPressedChangedListener = { pressed ->
+            val offset = (4.5F / 34F) * up_button.height.toFloat()
+            lampGlowUp.translationY = if (pressed) -offset else 0F
+        }
+
+        forward_button.onPressedChangedListener = { pressed ->
+            val offset = (4.5F / 34F) * forward_button.width.toFloat()
+            lampGlowForward.translationX = if (pressed) offset else 0F
+        }
+
+        down_button.onPressedChangedListener = { pressed ->
+            val offset = (4.5F / 34F) * down_button.height.toFloat()
+            lampGlowDown.translationY = if (pressed) offset else 0F
+        }
+
         update()
     }
 

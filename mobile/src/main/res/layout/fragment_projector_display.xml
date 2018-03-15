@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     tools:context="com.example.androidthings.lantern.home.ProjectorDisplayFragment">
 
-    <ImageButton
+    <com.example.androidthings.lantern.home.PressImageView
         android:id="@+id/up_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="13dp"
         android:background="@android:color/transparent"
-        android:src="@drawable/up_plane"
+        android:src="@drawable/up_plane_states"
         app:layout_constraintBottom_toTopOf="@+id/forward_button"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
@@ -31,14 +31,14 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/up_button" />
 
-    <ImageButton
+    <com.example.androidthings.lantern.home.PressImageView
         android:id="@+id/forward_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="65dp"
         android:background="@android:color/transparent"
         android:contentDescription="Set forward"
-        android:src="@drawable/forward_plane"
+        android:src="@drawable/forward_plane_states"
         app:layout_constraintBottom_toBottomOf="@+id/projectorHeadImageView"
         app:layout_constraintStart_toEndOf="@+id/projectorHeadImageView"
         app:layout_constraintTop_toTopOf="@+id/projectorHeadImageView" />
@@ -77,13 +77,13 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <ImageButton
+    <com.example.androidthings.lantern.home.PressImageView
         android:id="@+id/down_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="13dp"
         android:background="@android:color/transparent"
-        android:src="@drawable/down_plane"
+        android:src="@drawable/down_plane_states"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/forward_button" />
