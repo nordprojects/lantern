@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_projector_connecting.*
  */
 class ProjectorConnectingFragment : Fragment() {
 
-    var name: String = "Lantern"
+    val name: String by lazy {arguments?.getString(ConnectActivity.ARG_NAME) ?: "Lantern" }
     var animatorSet: AnimatorSet? = null
 
     private var listener: ConnectingFragmentListener? = null
@@ -39,7 +39,6 @@ class ProjectorConnectingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        name = arguments?.getString(ConnectActivity.ARG_NAME) ?: "Lantern"
         tryAgainButton.setOnClickListener { listener?.onTryAgainClicked() }
     }
 

@@ -22,7 +22,7 @@ class ConnectActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_connect)
 
-        val name = savedInstanceState?.getString(ARG_NAME)
+        val name = intent.getStringExtra(ARG_NAME)
         showProjectorConnectingFragment(name ?: "Lantern")
 
         endpointId = intent.getStringExtra(ARG_ENDPOINT_ID)
