@@ -32,15 +32,15 @@ object LocationConverter {
     }
 
     private fun replaceDelimiters(str: String, decimalPlace: Int): String {
-        var str = str
-        str = str.replaceFirst(":".toRegex(), "°")
-        str = str.replaceFirst(":".toRegex(), "'")
-        val pointIndex = str.indexOf(".")
+        var string = str
+        string = string.replaceFirst(":".toRegex(), "°")
+        string = string.replaceFirst(":".toRegex(), "'")
+        val pointIndex = string.indexOf(".")
         val endIndex = pointIndex + 1 + decimalPlace
         if (endIndex < str.length) {
-            str = str.substring(0, endIndex)
+            string = string.substring(0, endIndex)
         }
-        str += "\""
-        return str
+        string += "\""
+        return string
     }
 }

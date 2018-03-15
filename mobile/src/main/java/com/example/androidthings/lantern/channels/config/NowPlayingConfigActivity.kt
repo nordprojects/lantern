@@ -26,7 +26,7 @@ class NowPlayingConfigActivity: ChannelConfigActivity(),
     }
 
     override fun onCastDeviceSelectedSelected(device: CastDiscoveryManager.CastDevice?) {
-        val device = device ?: return
+        if (device == null) return
         config.settings.put("castId", device.id)
         config.settings.put("subtitle", "‘${device.name}’")
         config.settings.put("subtitleVia", "via Chromecast Audio")
