@@ -159,7 +159,9 @@ class ProjectorDisplayFragment : Fragment() {
             currentChannelSubtitleTextView.isSelected = false
             marqueeHandler.removeCallbacksAndMessages(null)
             marqueeHandler.postDelayed( {
-                currentChannelSubtitleTextView.isSelected = true
+                if (currentChannelSubtitleTextView != null) {
+                    currentChannelSubtitleTextView.isSelected = true
+                }
             }, 1000)
 
         }
