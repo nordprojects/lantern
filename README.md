@@ -1,7 +1,9 @@
 # Lantern
 
-The weather channel uses [OpenWeatherMap](http://openweathermap.org/) APIs to work. To compile your own,
-signup for an account and generate an API key.
+## Setup
+
+The weather channel uses [OpenWeatherMap](http://openweathermap.org/) APIs to work. To compile your 
+own, signup for an account and generate an API key.
 
 Then create a file at `things/src/main/res/values/secrets.xml`:
 
@@ -9,12 +11,23 @@ Then create a file at `things/src/main/res/values/secrets.xml`:
     <resources>
         <string name="openweathermap_api_key">YOUR_KEY_HERE</string>
     </resources>
+    
+This file is ignored by Git, to prevent accidental key-sharing.
 
-## Channel Configuration Screen
+## Development
 
-If you create a channel on the Lantern and it needs to be configured, for example to give it a URL to display, you can create a configuration screen in the companion mobile app.
+While developing on Lantern, you might want to skip the StartupActivity. To do this, add
+`--ez quickStart true` to the Launch Flags of your Run Configuration.
 
-To add a channel config to the mobile app you must create an activity and add it to the list of available config activites using the following steps
+### Creating a channel
+
+#### Configuration Screen
+
+If you create a channel on the Lantern and it needs to be configured, for example to give it a URL
+to display, you can create a configuration screen in the companion mobile app.
+
+To add a channel config to the mobile app you must create an activity and add it to the list of
+available config activites using the following steps
 
 - Subcalss `ChannelConfigActivity`
 - Add that to the AndoirdManifest.xml file, making sure to set it's parent to `".channels.ChannelsListActivity"`

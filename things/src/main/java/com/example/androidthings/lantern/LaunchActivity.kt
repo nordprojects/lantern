@@ -34,10 +34,17 @@ class LaunchActivity: AppCompatActivity() {
                     .add(R.id.infoChannelViewGroup, InfoChannel())
                     .commit()
 
+            val holdDuration = if (intent.extras?.get("quickStart") as? Boolean == true) {
+                Log.i(TAG, "Started with quickStart flag. Skipping startup pause.")
+                1000L // 1 second
+            } else {
+                10000L // 10 seconds
+            }
+
             Handler().postDelayed({
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
-            }, 10000)
+            }, holdDuration)
         } else {
             // show the resolution error message, countdown and reboot after 10 seconds
             resolutionErrorViewGroup.visibility = View.VISIBLE
