@@ -7,6 +7,7 @@
     android:layout_height="match_parent">
 
     <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -28,5 +29,17 @@
             android:layout_height="match_parent"
             android:scaleType="fitXY"
             android:src="@drawable/circle_mask" />
+
     </FrameLayout>
+
+    <ImageView
+        android:id="@+id/northMarkerImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/north_marker" />
+
 </android.support.constraint.ConstraintLayout>
