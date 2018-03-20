@@ -20,15 +20,13 @@ public class SpacePortholeApplet extends PApplet {
     float latitude = 51.2f;
     float longitude = -0.1f;
 
-    public void setup() {
+    boolean firstDraw = true;
 
+    public void setup() {
         orientation(LANDSCAPE);
 
         // increase the fov to 90deg
         perspective(radians(90), width/height, 1.0f, 1000.0f);
-
-        loadStarData();
-        classifyStarsBySize();
 
         // set up the camera, pointing along the Y axis (towards lat/long 0), using Z as 'up'
         camera(
@@ -39,6 +37,16 @@ public class SpacePortholeApplet extends PApplet {
 
     public void draw() {
         background(0);
+
+        if (firstDraw) {
+            firstDraw = false;
+            return;
+        }
+
+        if (stars == null) {
+            loadStarData();
+            classifyStarsBySize();
+        }
 
         // Setup the scene.
         float rightAscension = longitude + greenwichSiderealTimeInHours()/24f*360f;
@@ -108,7 +116,7 @@ public class SpacePortholeApplet extends PApplet {
         JSONObject starsDb = loadJSONObject("stars.json");
 
         JSONArray jsonStars = starsDb.getJSONArray("stars");
-        stars = new ArrayList<Star>();
+        stars = new ArrayList<Star>(jsonStars.size());
 
         for (int i = 0; i < jsonStars.size(); i++) {
             JSONArray jsonStar = jsonStars.getJSONArray(i);
@@ -116,7 +124,7 @@ public class SpacePortholeApplet extends PApplet {
         }
 
         JSONArray jsonConstellationLines = starsDb.getJSONArray("constellationLines");
-        constellationLines = new ArrayList<int[]>();
+        constellationLines = new ArrayList<int[]>(jsonConstellationLines.size());
 
         for (int i = 0; i < jsonConstellationLines.size(); i++) {
             JSONArray jsonConstellationLine = jsonConstellationLines.getJSONArray(i);
@@ -125,9 +133,9 @@ public class SpacePortholeApplet extends PApplet {
     }
 
     public void classifyStarsBySize() {
-        bigStars = new ArrayList<Star>();
-        mediumStars = new ArrayList<Star>();
-        smallStars = new ArrayList<Star>();
+        bigStars = new ArrayList<Star>(stars.size());
+        mediumStars = new ArrayList<Star>(stars.size());
+        smallStars = new ArrayList<Star>(stars.size());
 
         for (Star star : stars) {
             if (star.magnitude > 0.66f) {
