@@ -92,8 +92,16 @@ class CastDiscoveryManager(private val context: Context) {
         }
         override fun onServiceLost(serviceInfo: NsdServiceInfo) {
             Log.i(TAG, "service lost $serviceInfo")
-            val changed = _devices.removeIf {
-                it.host == serviceInfo.host
+
+            // remove the relevant device from the devices list
+            val iterator = _devices.listIterator()
+            var changed = false
+            while (iterator.hasNext()) {
+                val device = iterator.next()
+                if (device.host == serviceInfo.host) {
+                    iterator.remove()
+                    changed = true
+                }
             }
 
             if (changed) {
