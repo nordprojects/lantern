@@ -43,7 +43,7 @@ class CastConnection(val host: String, val port: Int) {
 
     companion object {
         private val TAG: String = CastConnection::class.java.simpleName
-        val DEFAULT_RECEIVER_ID = "receiver-0"
+        const val DEFAULT_RECEIVER_ID = "receiver-0"
     }
 
     private lateinit var transport: CastConnectionTransport
@@ -135,10 +135,7 @@ class CastConnection(val host: String, val port: Int) {
 
     private fun handleReceivedMediaStatus(payload: JSONObject) {
         val status = payload.optJSONArray("status")?.optJSONObject(0)
-
-        if (status == null) {
-            return
-        }
+                ?: return
 
         val playerState = PlayerState.valueOf(status.optString("playerState"))
         val currentTime = status.opt("currentTime") as? Double
