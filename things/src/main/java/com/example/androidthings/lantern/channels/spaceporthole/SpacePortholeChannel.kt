@@ -10,7 +10,14 @@ import com.example.androidthings.lantern.R
 import kotlinx.android.synthetic.main.space_porthole_channel.*
 import processing.android.PFragment
 
-
+/**
+ * Uses your local latitude/longitude, the system time and a database of stars and constellations
+ * to project the stars above you right now.
+ *
+ * Developed as a Processing sketch and embedding into a Lantern channel using the
+ * Processing-Android project.
+ *
+ */
 class SpacePortholeChannel : Channel() {
     private val sketch by lazy {
         SpacePortholeApplet().apply {

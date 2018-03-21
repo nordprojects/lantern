@@ -8,9 +8,11 @@ import kotlinx.android.parcel.Parcelize
 import org.json.JSONObject
 
 /**
- * Created by Michael Colville on 31/01/2018.
+ * Represents the configuration of a channel, including the channel type and any other settings
+ * required.
+ *
+ * Normally created by the mobile app, and then sent to the things app for use.
  */
-
 @SuppressLint("ParcelCreator")
 @Parcelize
 class ChannelConfiguration(val type: String,

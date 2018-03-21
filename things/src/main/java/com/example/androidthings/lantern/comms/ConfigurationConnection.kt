@@ -10,6 +10,9 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Observer
 
+/**
+ * Handles the connection with the mobile app.
+ */
 class ConfigurationConnection(val transport: ConfigurationConnectionTransport) {
     private val TAG = ConfigurationConnection::class.java.simpleName
     private val accelerometerObserver = Observer { _, _ -> accelerometerUpdated() }
@@ -26,7 +29,14 @@ class ConfigurationConnection(val transport: ConfigurationConnectionTransport) {
         App.instance.accelerometer.addObserver(accelerometerObserver)
         App.instance.config.addObserver(appConfigObserver)
     }
-    fun onMessageReceived(message: ConfigurationMessage) {
+
+    fun onDisconnected() {
+        Log.i(TAG, "Disconnected from ${transport.endpointId}")
+        App.instance.accelerometer.deleteObserver(accelerometerObserver)
+        App.instance.config.deleteObserver(appConfigObserver)
+    }
+
+    private fun onMessageReceived(message: ConfigurationMessage) {
         Log.d(TAG, "Received message from ${transport.endpointId}. $message")
 
         when (message.type) {
@@ -51,11 +61,6 @@ class ConfigurationConnection(val transport: ConfigurationConnectionTransport) {
             }
             else -> { throw IllegalArgumentException("Can't handle message type ${message.type}") }
         }
-    }
-    fun onDisconnected() {
-        Log.i(TAG, "Disconnected from ${transport.endpointId}")
-        App.instance.accelerometer.deleteObserver(accelerometerObserver)
-        App.instance.config.deleteObserver(appConfigObserver)
     }
 
     private fun sendStateUpdate() {

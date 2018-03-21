@@ -18,10 +18,11 @@ import kotlin.concurrent.fixedRateTimer
 class Accelerometer: Observable(), AutoCloseable {
     val TAG = this::class.java.simpleName
 
-    val device = ADXL345(BoardDefaults.busForAccelerometer)
-    var updateTimer: Timer? = null
     var direction: Direction? = null
         private set
+
+    private val device = ADXL345(BoardDefaults.busForAccelerometer)
+    private var updateTimer: Timer? = null
 
     fun startUpdating() {
         if (updateTimer != null) {
@@ -45,7 +46,7 @@ class Accelerometer: Observable(), AutoCloseable {
         updateTimer = null
     }
 
-    fun update() {
+    private fun update() {
         // range is 10 bits, covering 2g of acceleration
         val scaleFactor = 2.0/1024.0
 

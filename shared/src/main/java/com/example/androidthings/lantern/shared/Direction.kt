@@ -1,7 +1,7 @@
 package com.example.androidthings.lantern.shared
 
 /**
- * Created by joerick on 25/01/18.
+ * Represents the directions that the Lantern can project a different channel.
  */
 enum class Direction {
     UP, FORWARD, DOWN;

@@ -14,7 +14,7 @@ import com.example.androidthings.lantern.R
 class BatSignalChannel : Channel() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return ImageView(this.activity).apply {
+        return ImageView(context).apply {
             scaleType = ImageView.ScaleType.CENTER_INSIDE
             setImageResource(R.drawable.batdroid_signal)
         }

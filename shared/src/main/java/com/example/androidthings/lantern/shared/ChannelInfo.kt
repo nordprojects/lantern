@@ -4,9 +4,10 @@ import android.net.Uri
 import org.json.JSONObject
 
 /**
- * Created by Michael Colville on 31/01/2018.
+ * Metadata about a channel.
+ *
+ * Provided by the things app for display within the mobile app in the channel list.
  */
-
 data class ChannelInfo(val id: String,
                        val name: String,
                        val description: String,
@@ -16,7 +17,7 @@ data class ChannelInfo(val id: String,
             json.getString("id"),
             json.getString("name"),
             json.getString("description"),
-            json.optString("image")?.let { Uri.parse(it) },
+            (json.opt("image") as? String)?.let { Uri.parse(it) },
             json.getBoolean("customizable")
     )
     fun toJson(): JSONObject {
