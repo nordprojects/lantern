@@ -497,7 +497,7 @@ class CalendarChannel : Channel() {
     }
 
     companion object {
-        private const val TEXT_VIEW_HEIGHT = 70
+        private const val TEXT_VIEW_HEIGHT = 90
         private const val TEXT_VIEW_WIDTH = 200
         private val TAG = this::class.java.simpleName
     }
