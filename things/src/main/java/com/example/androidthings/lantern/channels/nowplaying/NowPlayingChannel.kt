@@ -242,13 +242,19 @@ class NowPlayingChannel : Channel() {
         val TAG = this::class.java.simpleName
 
         var title: String by Delegates.observable("", { _, oldValue, newValue ->
-            titleBitmap = null
+            if (newValue != oldValue) {
+                titleBitmap = null
+            }
         })
         var subtitle: String by Delegates.observable("", { _, oldValue, newValue ->
-            subtitleBitmap = null
+            if (newValue != oldValue) {
+                subtitleBitmap = null
+            }
         })
         var duration: String by Delegates.observable("", { _, oldValue, newValue ->
-            durationBitmap = null
+            if (newValue != oldValue) {
+                durationBitmap = null
+            }
         })
 
         private val titlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
