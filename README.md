@@ -6,10 +6,12 @@ Before compiling the project for the first time you need to create a `secrets.xm
 
 Create a file at `things/src/main/res/values/secrets.xml`, with the following contents:
 
-    <?xml version="1.0" encoding="utf-8"?>
-    <resources>
-        <string name="openweathermap_api_key">YOUR_KEY_HERE</string>
-    </resources>
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="openweathermap_api_key">YOUR_KEY_HERE</string>
+</resources>
+```
 
 This file is ignored by Git, to prevent accidental key-sharing.
 
@@ -28,39 +30,43 @@ To create your own channel, create a Kotlin file at
 `things/src/main/java/com/example/androidthings/lantern/channels/MyChannel.kt`. Then paste
 the following code to begin:
 
-    package com.example.androidthings.lantern.channels
-    
-    import android.os.Bundle
-    import android.view.Gravity
-    import android.view.LayoutInflater
-    import android.view.View
-    import android.view.ViewGroup
-    import android.widget.TextView
-    import com.example.androidthings.lantern.Channel
-    
-    class MyChannel: Channel() {
-        override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                                  savedInstanceState: Bundle?): View? {
-            val view = TextView(context)
-            view.text = "Hello world from my new Lantern channel!"
-            view.textSize = 30f
-            view.gravity = Gravity.CENTER
-            return view
-    
-            // alternatively, you can load from a layout file!
-            // return inflater.inflate(R.layout.my_channel, viewGroup, false)
-        }        
-    }
+```kotlin
+package com.example.androidthings.lantern.channels
+
+import android.os.Bundle
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import com.example.androidthings.lantern.Channel
+
+class MyChannel : Channel() {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        val view = TextView(context)
+        view.text = "Hello world from my new Lantern channel!"
+        view.textSize = 30f
+        view.gravity = Gravity.CENTER
+        return view
+
+        // alternatively, you can load from a layout file!
+        // return inflater.inflate(R.layout.my_channel, viewGroup, false)
+    }        
+}
+```
 
 Finally, you need to register the channel so it can be found from the app. Open the file
 `things/src/main/java/com/example/androidthings/lantern/ChannelsRegistry.kt` and add your new
 channel to the `channelsWithInfo` list. e.g.
 
-            Pair(::MyChannel, ChannelInfo(
-                    "my-channel",
-                    "My brand-new Lantern channel",
-                    "It may not look like much, but this channel is going places!"
-            )),
+```kotlin
+    Pair(::MyChannel, ChannelInfo(
+            "my-channel",
+            "My brand-new Lantern channel",
+            "It may not look like much, but this channel is going places!"
+    )),
+```
 
 That's it! Now build the project and run on your Raspberry Pi, and select the channel with the
 mobile app (you don't need to update the mobile app, the things app sends a list of available 
@@ -122,7 +128,7 @@ available config activities using the following steps
  -  Add you new subclass to the AndroidManifest.xml file, making sure to set it's parent activity to
     `".channels.ChannelsListActivity"`
 
-    ```
+    ```xml
         <activity
             android:name=".channels.config.WebConfigActivity"
             android:configChanges="orientation"
@@ -133,7 +139,7 @@ available config activities using the following steps
 
  -  Add a toolbar to the activity layout file...
  
-    ```
+    ```xml
         <android.support.v7.widget.Toolbar
             style="@style/ToolBarStyle"
             android:id="@+id/toolbar"
@@ -146,7 +152,7 @@ available config activities using the following steps
     
     ...and set it as the action bar in `onCreate`
      
-    ```
+    ```kotlin
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationIcon(R.drawable.back_chevron)
@@ -154,7 +160,7 @@ available config activities using the following steps
     
  -  Add an entry to `ChannelConfigOptions` linking it to the channel ID.
 
-    ```
+    ```kotlin
         "webview" to WebConfigActivity::class.java
     ```
 
