@@ -61,9 +61,11 @@ class WeatherConfigActivity : ChannelConfigActivity() {
         setChannelButton.setOnClickListener { updateConfig() }
 
         locationProvider = LocationServices.getFusedLocationProviderClient(this)
-        locationProvider?.lastLocation?.addOnSuccessListener {
-            currentLatitude = it.latitude
-            currentLongitude = it.longitude
+        locationProvider?.lastLocation?.addOnSuccessListener { location ->
+            if (location != null) {
+                currentLatitude = location.latitude
+                currentLongitude = location.longitude
+            }
         }
     }
 
