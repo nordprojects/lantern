@@ -34,7 +34,7 @@ class App : AndroidApplication() {
         super.onCreate()
         instance = this
 
-        setDisplayDPI()
+        setupDisplay()
 
         loadConfig()
         advertisingName = config.name
@@ -87,7 +87,7 @@ class App : AndroidApplication() {
         Log.d(TAG, "Saved settings to $CONFIG_FILE_PATH")
     }
 
-    private fun setDisplayDPI() {
+    private fun setupDisplay() {
         val windowManager = getSystemService(WindowManager::class.java)
         val screenMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(screenMetrics)
@@ -103,5 +103,7 @@ class App : AndroidApplication() {
         Log.i(TAG, "Screen height is ${screenHeight}px, setting density to $density")
         screenManager.setDisplayDensity(density)
         screenManager.setBrightness(255)
+
+        screenManager.lockRotation(ScreenManager.ROTATION_0)
     }
 }
