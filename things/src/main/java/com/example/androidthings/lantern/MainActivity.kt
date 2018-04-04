@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
             if (needsRefresh) {
-                val newChannel = newChannelForConfig(incomingChannelConfig)
+                val newChannel = ChannelsRegistry.newChannelForConfig(incomingChannelConfig)
                 channels[direction] = newChannel
                 Log.i(TAG, "Channel for $direction is now $newChannel")
             }
@@ -125,30 +125,5 @@ class MainActivity : AppCompatActivity() {
         }
 
         transaction.commitAllowingStateLoss()
-    }
-
-    private fun newChannelForConfig(config: ChannelConfiguration): Channel {
-        val args = Bundle()
-        args.putParcelable(Channel.ARG_CONFIG, config)
-        var channel: Channel? = null
-        var rotationDisabled = false
-
-        for ((channelConstructor, info) in ChannelsRegistry.channelsWithInfo) {
-            if (info.id == config.type) {
-                channel = channelConstructor()
-                rotationDisabled = info.rotationDisabled
-                break
-            }
-        }
-
-        args.putBoolean(Channel.ARG_ROTATION_DISABLED, rotationDisabled)
-
-        if (channel == null) {
-            channel = ErrorChannel()
-            args.putString(ErrorChannel.ARG_MESSAGE, "Unknown channel type '${config.type}'")
-        }
-
-        channel.arguments = args
-        return channel
     }
 }

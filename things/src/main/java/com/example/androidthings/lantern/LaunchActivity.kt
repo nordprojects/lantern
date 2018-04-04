@@ -27,12 +27,8 @@ class LaunchActivity: AppCompatActivity() {
 
         if (isInTheCorrectResolution()) {
             // load the info channel and hold for 10 seconds
-            val args = Bundle().apply {
-                putParcelable(Channel.ARG_CONFIG, ChannelConfiguration("info"))
-            }
-            val infoChannel = InfoChannel().apply {
-                arguments = args
-            }
+            val config = ChannelConfiguration("info")
+            val infoChannel = ChannelsRegistry.newChannelForConfig(config)
             supportFragmentManager.beginTransaction()
                     .add(R.id.infoChannelViewGroup, infoChannel)
                     .commit()
