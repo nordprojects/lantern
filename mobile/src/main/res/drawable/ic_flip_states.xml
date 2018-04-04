@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="true">
+        <bitmap android:src="@drawable/ic_flip"
+                android:alpha="1.0"/>
+    </item>
+
+    <item android:state_enabled="false">
+        <bitmap android:src="@drawable/ic_flip"
+                android:alpha="0.25"/>
+    </item>
+</selector>

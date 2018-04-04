@@ -1,15 +1,11 @@
 package com.example.androidthings.lantern
 
-import android.app.Activity
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import com.example.androidthings.lantern.channels.BlankChannel
-import com.example.androidthings.lantern.channels.CalendarChannel
 import com.example.androidthings.lantern.channels.ErrorChannel
 import com.example.androidthings.lantern.shared.ChannelConfiguration
 import com.example.androidthings.lantern.shared.Direction
-import org.json.JSONObject
 import java.util.*
 
 /**
@@ -74,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
             if (needsRefresh) {
-                val newChannel = newChannelForConfig(incomingChannelConfig)
+                val newChannel = ChannelsRegistry.newChannelForConfig(incomingChannelConfig)
                 channels[direction] = newChannel
                 Log.i(TAG, "Channel for $direction is now $newChannel")
             }
@@ -129,26 +125,5 @@ class MainActivity : AppCompatActivity() {
         }
 
         transaction.commitAllowingStateLoss()
-    }
-
-    private fun newChannelForConfig(config: ChannelConfiguration): Channel {
-        val args = Bundle()
-        args.putParcelable(Channel.ARG_CONFIG, config)
-        var channel: Channel? = null
-
-        for ((channelConstructor, info) in ChannelsRegistry.channelsWithInfo) {
-            if (info.id == config.type) {
-                channel = channelConstructor()
-                break
-            }
-        }
-
-        if (channel == null) {
-            channel = ErrorChannel()
-            args.putString(ErrorChannel.ARG_MESSAGE, "Unknown channel type '${config.type}'")
-        }
-
-        channel.arguments = args
-        return channel
     }
 }

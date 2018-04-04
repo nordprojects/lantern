@@ -1,20 +1,17 @@
 package com.example.androidthings.lantern
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
-import android.os.Looper
 import android.support.v7.app.AppCompatActivity
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import com.example.androidthings.lantern.channels.InfoChannel
+import com.example.androidthings.lantern.shared.ChannelConfiguration
 import com.google.android.things.device.DeviceManager
 import kotlinx.android.synthetic.main.launch_activity_layout.*
-import java.util.*
-import kotlin.concurrent.fixedRateTimer
 
 /**
  * Created by joerick on 01/03/18.
@@ -30,8 +27,10 @@ class LaunchActivity: AppCompatActivity() {
 
         if (isInTheCorrectResolution()) {
             // load the info channel and hold for 10 seconds
+            val config = ChannelConfiguration("info")
+            val infoChannel = ChannelsRegistry.newChannelForConfig(config)
             supportFragmentManager.beginTransaction()
-                    .add(R.id.infoChannelViewGroup, InfoChannel())
+                    .add(R.id.infoChannelViewGroup, infoChannel)
                     .commit()
 
             val holdDuration = if (intent.extras?.get("quickStart") as? Boolean == true) {

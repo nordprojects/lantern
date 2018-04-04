@@ -1,9 +1,11 @@
 package com.example.androidthings.lantern
 
 import android.net.Uri
+import android.os.Bundle
 import com.example.androidthings.lantern.channels.*
 import com.example.androidthings.lantern.channels.nowplaying.NowPlayingChannel
 import com.example.androidthings.lantern.channels.spaceporthole.SpacePortholeChannel
+import com.example.androidthings.lantern.shared.ChannelConfiguration
 import com.example.androidthings.lantern.shared.ChannelInfo
 
 
@@ -33,14 +35,16 @@ object ChannelsRegistry {
                     "Weather caustics",
                     "Ambient water reflections react to open weather data for a chosen location",
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_weather"),
-                    customizable = true
+                    customizable = true,
+                    rotationDisabled = true
                     )),
             Pair(::SpacePortholeChannel, ChannelInfo(
                     "space-porthole",
                     "Space porthole",
                     "Explore the galaxy with this virtual telescope. Look out for Orion!",
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_space"),
-                    customizable = true
+                    customizable = true,
+                    rotationDisabled = true
             )),
             Pair(::LampChannel, ChannelInfo(
                     "lamp",
@@ -83,4 +87,31 @@ object ChannelsRegistry {
     )
 
     val channelsInfo = channelsWithInfo.map { it.second }
+
+    fun newChannelForConfig(config: ChannelConfiguration): Channel {
+        val args = Bundle()
+        args.putParcelable(Channel.ARG_CONFIG, config)
+        var channel: Channel? = null
+        var rotationDisabled = false
+
+        for ((channelConstructor, info) in ChannelsRegistry.channelsWithInfo) {
+            if (info.id == config.type) {
+                channel = channelConstructor()
+                rotationDisabled = info.rotationDisabled
+                break
+            }
+        }
+
+        if (rotationDisabled) {
+            args.putBoolean(Channel.ARG_ROTATION_DISABLED, rotationDisabled)
+        }
+
+        if (channel == null) {
+            channel = ErrorChannel()
+            args.putString(ErrorChannel.ARG_MESSAGE, "Unknown channel type '${config.type}'")
+        }
+
+        channel.arguments = args
+        return channel
+    }
 }

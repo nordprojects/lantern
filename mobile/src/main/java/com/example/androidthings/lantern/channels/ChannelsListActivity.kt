@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.Snackbar.LENGTH_LONG
+import android.view.Menu
+import android.view.MenuItem
 import com.example.androidthings.lantern.App
 import com.example.androidthings.lantern.R
 import com.example.androidthings.lantern.channels.config.ChannelConfigActivity
@@ -12,6 +14,7 @@ import com.example.androidthings.lantern.channels.config.ChannelConfigOptions
 import com.example.androidthings.lantern.shared.ChannelConfiguration
 import com.example.androidthings.lantern.shared.ChannelInfo
 import com.example.androidthings.lantern.shared.Direction
+import com.example.androidthings.lantern.shared.Rotation
 import kotlinx.android.synthetic.main.activity_channels_list.*
 import java.util.*
 
@@ -21,6 +24,7 @@ class ChannelsListActivity : AppCompatActivity(),
     private var direction: Direction = Direction.FORWARD
     private var projectorObserver = Observer({_, _ -> projectorDidUpdate()})
     private val connectionObserver = Observer { _, _ -> checkConnectionStatus() }
+    private var flipMenuItem: MenuItem? = null
 
     companion object {
         const val CONFIG_ACTIVITY_REQUEST = 1
@@ -36,22 +40,31 @@ class ChannelsListActivity : AppCompatActivity(),
         toolbar.setNavigationIcon(R.drawable.back_chevron)
 
         val directionString = intent.getStringExtra(ARG_DIRECTION)
-        direction = Direction.valueOf(directionString)
+        if (directionString != null) {
+            direction = Direction.valueOf(directionString)
 
-
-        val channelFragment = ChannelListFragment()
-        val args = Bundle()
-        args.putString(ARG_DIRECTION, directionString)
-        channelFragment.arguments = args
-        supportFragmentManager.beginTransaction().apply {
-            add(R.id.fragmentContainer, channelFragment)
-            commit()
+            val channelFragment = ChannelListFragment()
+            val args = Bundle()
+            args.putString(ARG_DIRECTION, directionString)
+            channelFragment.arguments = args
+            supportFragmentManager.beginTransaction().apply {
+                add(R.id.fragmentContainer, channelFragment)
+                commit()
+            }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.channel_list_menu, menu)
+        flipMenuItem = menu.findItem(R.id.action_flip)
+        updateFlipIcon()
+        return true
     }
 
     override fun onResume() {
         super.onResume()
         App.instance.client.addObserver(connectionObserver)
+        App.instance.client.activeConnection?.addObserver(projectorObserver)
         checkConnectionStatus()
     }
 
@@ -68,7 +81,9 @@ class ChannelsListActivity : AppCompatActivity(),
     }
 
     override fun onChannelSelected(channel: ChannelInfo) {
-        val config = ChannelConfiguration(channel.id)
+        val projector = App.instance.projector ?: return
+        val currentConfig = projector.planes[direction] ?: return
+        val config = ChannelConfiguration(channel.id, currentConfig.rotation)
         val subtitle = ChannelConfigOptions.channelTypeToSubtitle[channel.id]
         if (subtitle != null) {
             config.settings.put("subtitle", subtitle)
@@ -87,6 +102,7 @@ class ChannelsListActivity : AppCompatActivity(),
             }
         } else {
             sendConfig(config)
+            finish()
         }
     }
 
@@ -99,20 +115,54 @@ class ChannelsListActivity : AppCompatActivity(),
                     val config = data?.getParcelableExtra<ChannelConfiguration>(ChannelConfigActivity.ARG_CONFIG)
                     if (config != null) {
                         sendConfig(config)
+                        finish()
                     }
                 }
             }
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_flip -> {
+            flipRotation()
+            true
+        }
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun sendConfig(config: ChannelConfiguration) {
         val connection = App.instance.client.activeConnection!!
         connection.sendSetPlane(direction, config)
-
-        App.instance.client.activeConnection?.addObserver(projectorObserver)
     }
 
     private fun projectorDidUpdate() {
-        finish()
+        updateFlipIcon()
+    }
+
+    private fun updateFlipIcon() {
+        val projector = App.instance.projector ?: return
+        val config = projector.planes[direction] ?: return
+        val availableChannels = App.instance.client.activeConnection?.availableChannels ?: return
+        val channelInfo = availableChannels.find { it.id == config.type } ?: return
+        val flipMenuItem = flipMenuItem ?: return
+
+        flipMenuItem.isEnabled = !channelInfo.rotationDisabled
+        when(config.rotation) {
+            Rotation.LANDSCAPE -> flipMenuItem.setIcon(R.drawable.ic_flip_states)
+            Rotation.LANDSCAPE_UPSIDE_DOWN -> flipMenuItem.setIcon(R.drawable.ic_flip_upside_down_states)
+        }
+    }
+
+    private fun flipRotation() {
+        val projector = App.instance.projector ?: return
+        val config = projector.planes[direction] ?: return
+        val newRotation = when(config.rotation) {
+            Rotation.LANDSCAPE -> Rotation.LANDSCAPE_UPSIDE_DOWN
+            Rotation.LANDSCAPE_UPSIDE_DOWN -> Rotation.LANDSCAPE
+        }
+        val newConfig = config.copy(rotation = newRotation)
+        sendConfig(newConfig)
     }
 }
