@@ -102,6 +102,7 @@ class ChannelsListActivity : AppCompatActivity(),
             }
         } else {
             sendConfig(config)
+            finish()
         }
     }
 
@@ -114,6 +115,7 @@ class ChannelsListActivity : AppCompatActivity(),
                     val config = data?.getParcelableExtra<ChannelConfiguration>(ChannelConfigActivity.ARG_CONFIG)
                     if (config != null) {
                         sendConfig(config)
+                        finish()
                     }
                 }
             }
