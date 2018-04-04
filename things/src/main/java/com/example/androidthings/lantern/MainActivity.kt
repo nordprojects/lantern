@@ -131,13 +131,17 @@ class MainActivity : AppCompatActivity() {
         val args = Bundle()
         args.putParcelable(Channel.ARG_CONFIG, config)
         var channel: Channel? = null
+        var rotationDisabled = false
 
         for ((channelConstructor, info) in ChannelsRegistry.channelsWithInfo) {
             if (info.id == config.type) {
                 channel = channelConstructor()
+                rotationDisabled = info.rotationDisabled
                 break
             }
         }
+
+        args.putBoolean(Channel.ARG_ROTATION_DISABLED, rotationDisabled)
 
         if (channel == null) {
             channel = ErrorChannel()

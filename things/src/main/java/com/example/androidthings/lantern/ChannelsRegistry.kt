@@ -33,14 +33,16 @@ object ChannelsRegistry {
                     "Weather caustics",
                     "Ambient water reflections react to open weather data for a chosen location",
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_weather"),
-                    customizable = true
+                    customizable = true,
+                    rotationDisabled = true
                     )),
             Pair(::SpacePortholeChannel, ChannelInfo(
                     "space-porthole",
                     "Space porthole",
                     "Explore the galaxy with this virtual telescope. Look out for Orion!",
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_space"),
-                    customizable = true
+                    customizable = true,
+                    rotationDisabled = true
             )),
             Pair(::LampChannel, ChannelInfo(
                     "lamp",

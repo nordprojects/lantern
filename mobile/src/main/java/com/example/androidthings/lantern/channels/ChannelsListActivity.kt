@@ -133,7 +133,6 @@ class ChannelsListActivity : AppCompatActivity(),
     private fun sendConfig(config: ChannelConfiguration) {
         val connection = App.instance.client.activeConnection!!
         connection.sendSetPlane(direction, config)
-
     }
 
     private fun projectorDidUpdate() {
@@ -143,11 +142,14 @@ class ChannelsListActivity : AppCompatActivity(),
     private fun updateFlipIcon() {
         val projector = App.instance.projector ?: return
         val config = projector.planes[direction] ?: return
+        val availableChannels = App.instance.client.activeConnection?.availableChannels ?: return
+        val channelInfo = availableChannels.find { it.id == config.type } ?: return
         val flipMenuItem = flipMenuItem ?: return
 
+        flipMenuItem.isEnabled = !channelInfo.rotationDisabled
         when(config.rotation) {
-            Rotation.LANDSCAPE -> flipMenuItem.setIcon(R.drawable.ic_flip)
-            Rotation.LANDSCAPE_UPSIDE_DOWN -> flipMenuItem.setIcon(R.drawable.ic_flip_upside_down)
+            Rotation.LANDSCAPE -> flipMenuItem.setIcon(R.drawable.ic_flip_states)
+            Rotation.LANDSCAPE_UPSIDE_DOWN -> flipMenuItem.setIcon(R.drawable.ic_flip_upside_down_states)
         }
     }
 

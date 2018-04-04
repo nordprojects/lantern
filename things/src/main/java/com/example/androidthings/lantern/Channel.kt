@@ -13,8 +13,13 @@ open class Channel : Fragment() {
         arguments!!.getParcelable<ChannelConfiguration>(ARG_CONFIG)
     }
 
+    val rotationDisabled: Boolean by lazy {
+        arguments!!.getBoolean(ARG_ROTATION_DISABLED)
+    }
+
     companion object {
         const val ARG_CONFIG = "config"
+        const val ARG_ROTATION_DISABLED = "rotationDisabled"
     }
 
     override fun onStart() {
@@ -28,6 +33,7 @@ open class Channel : Fragment() {
     }
 
     private fun updateRotation() {
+       if (rotationDisabled) return
        val view = view ?: return
        view.rotation = when(config.rotation) {
             Rotation.LANDSCAPE -> 0F
