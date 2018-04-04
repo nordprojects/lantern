@@ -1,6 +1,8 @@
 package com.example.androidthings.lantern
 
+import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.view.View
 import com.example.androidthings.lantern.shared.ChannelConfiguration
 import com.example.androidthings.lantern.shared.Rotation
 
@@ -13,7 +15,7 @@ open class Channel : Fragment() {
         arguments!!.getParcelable<ChannelConfiguration>(ARG_CONFIG)
     }
 
-    val rotationDisabled: Boolean by lazy {
+    private val rotationDisabled: Boolean by lazy {
         arguments!!.getBoolean(ARG_ROTATION_DISABLED)
     }
 
@@ -22,22 +24,14 @@ open class Channel : Fragment() {
         const val ARG_ROTATION_DISABLED = "rotationDisabled"
     }
 
-    override fun onStart() {
-        super.onStart()
-        updateRotation()
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden) updateRotation()
-    }
-
-    private fun updateRotation() {
-       if (rotationDisabled) return
-       val view = view ?: return
-       view.rotation = when(config.rotation) {
-            Rotation.LANDSCAPE -> 0F
-            Rotation.LANDSCAPE_UPSIDE_DOWN -> 180F
+        if (!rotationDisabled) {
+            view.rotation = when(config.rotation) {
+                Rotation.LANDSCAPE -> 0F
+                Rotation.LANDSCAPE_UPSIDE_DOWN -> 180F
+            }
         }
     }
 }
