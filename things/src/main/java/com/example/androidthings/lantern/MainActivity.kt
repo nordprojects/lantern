@@ -1,15 +1,11 @@
 package com.example.androidthings.lantern
 
-import android.app.Activity
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import com.example.androidthings.lantern.channels.BlankChannel
-import com.example.androidthings.lantern.channels.CalendarChannel
 import com.example.androidthings.lantern.channels.ErrorChannel
 import com.example.androidthings.lantern.shared.ChannelConfiguration
 import com.example.androidthings.lantern.shared.Direction
-import org.json.JSONObject
 import java.util.*
 
 /**

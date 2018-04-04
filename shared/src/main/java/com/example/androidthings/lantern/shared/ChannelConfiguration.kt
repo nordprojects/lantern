@@ -16,10 +16,12 @@ import org.json.JSONObject
 @SuppressLint("ParcelCreator")
 @Parcelize
 class ChannelConfiguration(val type: String,
+                           val rotation: Rotation = Rotation.LANDSCAPE,
                            val settings: JSONObject = JSONObject(),
                            val secrets: JSONObject? = JSONObject()) : Parcelable {
     constructor(json: JSONObject) : this(
             json.getString("type"),
+            Rotation.withJsonName(json.optString("rotation", "landscape")),
             json.optJSONObject("settings") ?: JSONObject(),
             json.optJSONObject("secrets")
     )
@@ -27,11 +29,19 @@ class ChannelConfiguration(val type: String,
     fun toJson(includingSecrets: Boolean = false): JSONObject {
         val json = JSONObject()
         json.put("type", type)
+        json.put("rotation", rotation.jsonName)
         json.put("settings", settings)
         if (includingSecrets) {
             json.put("secrets", secrets)
         }
         return json
+    }
+
+    fun copy(type: String = this.type,
+             rotation: Rotation = this.rotation,
+             settings: JSONObject = this.settings,
+             secrets: JSONObject? = this.secrets): ChannelConfiguration {
+        return ChannelConfiguration(type, rotation, settings, secrets)
     }
 
     companion object : Parceler<ChannelConfiguration> {
