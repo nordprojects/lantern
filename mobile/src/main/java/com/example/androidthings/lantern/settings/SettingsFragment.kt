@@ -1,6 +1,5 @@
 package com.example.androidthings.lantern.settings
 
-
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -18,12 +17,7 @@ import android.text.InputType
 import android.widget.EditText
 import java.util.Observer
 
-
 class SettingsFragment : Fragment() {
-
-    companion object {
-        val TAG: String = SettingsFragment::class.java.simpleName
-    }
     private val projectorConfigObserver = Observer { _, _ -> updateDeviceDetails() }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -60,19 +54,19 @@ class SettingsFragment : Fragment() {
     }
 
     private fun onDeviceDetailsClicked() {
-        // TODO - replace with xml layout
-        val builder = AlertDialog.Builder(context!!)
-        builder.setTitle("Pick a name for your Lantern")
-        val input = EditText(context!!)
-        input.setPadding(50,50,50,50)
-        input.inputType = InputType.TYPE_CLASS_TEXT
-        builder.setView(input)
-        builder.setPositiveButton("Change Name",  { _, _ ->
-            App.instance.client.activeConnection?.sendSetName(input.text.toString())
-        })
-        builder.setNegativeButton("Cancel",  { dialog, _ ->
-            dialog.cancel()
-        })
+        val context = context ?: return
+        val input = EditText(context).apply {
+            setPadding(50,50,50,50)
+            inputType = InputType.TYPE_CLASS_TEXT
+        }
+        val builder = AlertDialog.Builder(context).apply {
+            setTitle("Pick a name for your Lantern")
+            setView(input)
+            setPositiveButton("Change Name", { _, _ ->
+                App.instance.client.activeConnection?.sendSetName(input.text.toString())
+            })
+            setNegativeButton("Cancel", { dialog, _ ->  dialog.cancel() })
+        }
         builder.show()
     }
 
@@ -88,8 +82,8 @@ class SettingsFragment : Fragment() {
     }
 
     private fun onLearnMoreClicked() {
+        // TODO - replace with project website url
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://developer.android.com/things/index.html"))
         startActivity(intent)
     }
-
 }

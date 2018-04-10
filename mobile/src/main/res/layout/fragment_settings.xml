@@ -16,8 +16,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
-    <!-- TODO - use reusable views for these rows -->
-
     <android.support.constraint.ConstraintLayout
         android:id="@+id/deviceDetails"
         android:layout_width="0dp"
