@@ -173,10 +173,22 @@ class AmbientWeatherChannel : Channel() {
             update()
         }
 
+        private fun getWeatherAPIKey(): String? {
+            // Gets the openweathermap api key from Secrets.xml
+            // (note this file must be created manually, see README for instructions)
+            val packageName = context!!.packageName
+            val resId = resources.getIdentifier("openweathermap_api_key", "string", packageName)
+            return try {
+                getString(resId)
+            } catch (error: Exception) {
+                throw Exception("Weather API Key not found, please add to secrets.xml")
+            }
+        }
+
         private fun fetchWeatherData(latitude: Double, longitude: Double): JSONObject {
             var connection: HttpsURLConnection? = null
             var inputStream: InputStream? = null
-            val apiKey = context!!.resources.getString(R.string.openweathermap_api_key)
+            val apiKey = getWeatherAPIKey()
             val url = URL("https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$apiKey")
 
             try {
