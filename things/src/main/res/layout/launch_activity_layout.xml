@@ -57,6 +57,7 @@
                 tools:layout_editor_absoluteY="130dp" />
 
             <TextView
+                android:id="@+id/errorMessageTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"

@@ -40,7 +40,12 @@ class App : AndroidApplication() {
         advertisingName = config.name
 
         configServer.startAdvertising(advertisingName)
-        accelerometer.startUpdating()
+
+        try {
+            accelerometer.startUpdating()
+        } catch (error: Exception) {
+            Log.w(TAG,"Failed to start accelerometer", error)
+        }
 
         config.addObserver(configObserver)
     }

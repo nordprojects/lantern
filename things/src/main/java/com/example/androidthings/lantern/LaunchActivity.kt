@@ -25,6 +25,15 @@ class LaunchActivity: AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
+        try {
+            App.instance.accelerometer
+        } catch (error: Exception) {
+            timeRemainingTextView.text = ""
+            errorMessageTextView.text = "Unable to detect accelerometer. Please power off the device and check the connection."
+            resolutionErrorViewGroup.visibility = View.VISIBLE
+            return
+        }
+
         if (isInTheCorrectResolution()) {
             // load the info channel and hold for 10 seconds
             val config = ChannelConfiguration("info")
