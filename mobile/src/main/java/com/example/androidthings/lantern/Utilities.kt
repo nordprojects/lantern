@@ -4,6 +4,9 @@ import android.location.Location
 import com.example.androidthings.lantern.shared.Direction
 import kotlin.math.absoluteValue
 
+/**
+ * Specifies a highlight color used throughout the app for each direction.
+ */
 val Direction.color: Int get() {
     return when(this) {
         Direction.UP -> R.color.upPlane
@@ -12,7 +15,11 @@ val Direction.color: Int get() {
     }
 }
 
-// Adapted from https://stackoverflow.com/a/39055801/2546065
+/**
+ * Converts Location.FORMAT_SECONDS to Decimal Minutes Seconds.
+ * e.g. 40:42:51.26472 to 40°42′51.2647″ N
+ * Adapted from https://stackoverflow.com/a/39055801/2546065
+ */
 object LocationConverter {
 
     fun latitudeAsDMS(latitude: Double, decimalPlace: Int): String {

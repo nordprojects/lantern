@@ -15,6 +15,12 @@ import com.example.androidthings.lantern.shared.Direction
 import kotlinx.android.synthetic.main.activity_home.*
 import java.util.*
 
+/**
+ * Main screen of the app. Shows the current state of the projector with buttons to change the
+ * channel being displayed on each plane.
+ *
+ * Created by Michael Colville.
+ */
 class HomeActivity : AppCompatActivity(), ProjectorDisplayFragment.OnDirectionSelectedListener {
 
     private val clientObserver = Observer { _, _ -> checkConnectionStatus() }

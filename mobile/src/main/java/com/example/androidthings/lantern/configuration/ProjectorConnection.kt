@@ -6,6 +6,9 @@ import org.json.JSONObject
 import java.util.*
 
 /**
+ * Sends and receives messages to the projector and keeps the current state of the projector
+ * as well as a list of available channels.
+ *
  * Created by Michael Colville on 30/01/2018.
  */
 

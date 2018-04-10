@@ -9,6 +9,8 @@ import com.google.android.gms.nearby.connection.*
 import java.util.*
 
 /**
+ * Sets up the connection to a projector given an Endpoint ID from Discovery.
+ *
  * Created by Michael Colville on 29/01/2018.
  */
 

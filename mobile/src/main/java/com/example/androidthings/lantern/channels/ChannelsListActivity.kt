@@ -18,6 +18,14 @@ import com.example.androidthings.lantern.shared.Rotation
 import kotlinx.android.synthetic.main.activity_channels_list.*
 import java.util.*
 
+/**
+ * Used to change the channel for a given plane. Lists all the available channels, with the current
+ * channel at the top. When a channel is pressed the activity checks if a configuration activity is
+ * available for that channel and shows that, else simply updates the projector configuration to
+ * show that channel.
+ *
+ * Created by Michael Colville.
+ */
 class ChannelsListActivity : AppCompatActivity(),
         ChannelListFragment.OnChannelSelectedListener {
 

@@ -7,6 +7,11 @@ import com.example.androidthings.lantern.App
 import com.example.androidthings.lantern.R
 import com.example.androidthings.lantern.home.HomeActivity
 
+/**
+ * Loading screen shown when making a connection to a projector.
+ *
+ * Created by Michael Colville.
+ */
 class ConnectActivity : AppCompatActivity(),
     ProjectorConnectingFragment.ConnectingFragmentListener {
 

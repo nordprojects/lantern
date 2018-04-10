@@ -16,6 +16,12 @@ import com.google.android.gms.nearby.connection.ConnectionsStatusCodes
 import kotlinx.android.synthetic.main.activity_projector_search.*
 import java.util.*
 
+/**
+ * Manages the Discovery object and shows a searching animation when looking for endpoints and a
+ * list of available endpoints once any have been found.
+ *
+ * Created by Michael Colville.
+ */
 class ProjectorSearchActivity : AppCompatActivity(),
         ProjectorListFragment.OnProjectorSelectedListener,
          ProjectorSearchFragment.SearchFragmentListener {

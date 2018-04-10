@@ -11,12 +11,11 @@ import com.google.android.gms.nearby.connection.Strategy
 import java.util.*
 
 /**
+ * Handles searching for nearby projectors and keeps a list of available endpoints.
+ *
  * Created by Michael Colville on 02/03/2018.
  */
-
-
 class Discovery(val context: Context): Observable() {
-
     data class Endpoint(val id: String, val info: DiscoveredEndpointInfo)
 
     class TimeoutException: Exception()

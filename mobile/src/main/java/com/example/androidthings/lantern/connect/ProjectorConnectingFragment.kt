@@ -1,6 +1,5 @@
 package com.example.androidthings.lantern.connect
 
-
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
@@ -16,10 +15,6 @@ import android.view.animation.LinearInterpolator
 import com.example.androidthings.lantern.R
 import kotlinx.android.synthetic.main.fragment_projector_connecting.*
 
-
-/**
- * A simple [Fragment] subclass.
- */
 class ProjectorConnectingFragment : Fragment() {
 
     val name: String by lazy {arguments?.getString(ConnectActivity.ARG_NAME) ?: "Lantern" }

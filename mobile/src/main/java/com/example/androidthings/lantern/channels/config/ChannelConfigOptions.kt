@@ -1,7 +1,12 @@
 package com.example.androidthings.lantern.channels.config
 
-
 /**
+ * Registry of Activities used for configuring channels. Add a subclass of ChannelConfigActivity
+ * to allow users to update ChannelConfiguration.
+ *
+ * Add a default subtitle for a channel if required to be displayed on the HomeActivity when
+ * that channel is being projected. This subtitle can also be set in the ChannelConfigActivity.
+ *
  * Created by Michael Colville on 12/02/2018.
  */
 object ChannelConfigOptions {

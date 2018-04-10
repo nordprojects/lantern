@@ -1,6 +1,5 @@
 package com.example.androidthings.lantern.home
 
-
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -14,8 +13,12 @@ import com.example.androidthings.lantern.App
 import com.example.androidthings.lantern.R
 import kotlinx.android.synthetic.main.fragment_lost_connection.*
 
+/**
+ * Error screen shown when a nearby connection is lost, giving the option to reconnect.
+ *
+ * Created by Michael Colville.
+ */
 class LostConnectionFragment : Fragment() {
-
     companion object {
         private val TAG: String = LostConnectionFragment::class.java.simpleName
     }

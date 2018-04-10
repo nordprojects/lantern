@@ -5,6 +5,8 @@ import android.util.AttributeSet
 import android.widget.ImageButton
 
 /**
+ * ImageButton subclass that notifies a listener when it's pressed state changes.
+ *
  * Created by Michael Colville on 15/03/2018.
  */
 class PressImageView @JvmOverloads constructor(

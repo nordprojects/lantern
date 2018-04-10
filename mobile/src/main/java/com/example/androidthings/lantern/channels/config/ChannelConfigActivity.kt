@@ -7,6 +7,9 @@ import com.example.androidthings.lantern.shared.ChannelConfiguration
 import java.util.Observer
 
 /**
+ * Base class for channel configuration activities. Subclass this and set properties on config,
+ * before calling finishWithConfigUpdate().
+ *
  * Created by Michael Colville on 12/02/2018.
  */
 

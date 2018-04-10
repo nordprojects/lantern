@@ -7,6 +7,9 @@ import org.json.JSONObject
 import java.util.*
 
 /**
+ * Contains the current state of the projector including which channel is set to each plane, and
+ * which direction the projector is currently facing.
+ *
  * Created by Michael Colville on 30/01/2018.
  */
 
