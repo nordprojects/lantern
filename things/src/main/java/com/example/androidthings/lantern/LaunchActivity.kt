@@ -12,6 +12,9 @@ import com.example.androidthings.lantern.channels.InfoChannel
 import com.example.androidthings.lantern.shared.ChannelConfiguration
 import com.google.android.things.device.DeviceManager
 import kotlinx.android.synthetic.main.launch_activity_layout.*
+import android.view.WindowManager
+
+
 
 /**
  * Created by joerick on 01/03/18.
@@ -24,6 +27,8 @@ class LaunchActivity: AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
+        setupDisplay()
 
         try {
             App.instance.accelerometer
@@ -76,6 +81,12 @@ class LaunchActivity: AppCompatActivity() {
         Log.d(TAG, "Checking screen resolution, height is ${displayMetrics.heightPixels}px")
 
         return (displayMetrics.heightPixels >= 540)
+    }
+
+    private fun setupDisplay() {
+        val layoutProperties = window.attributes
+        layoutProperties.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_FULL
+        window.attributes = layoutProperties
     }
 
     companion object {

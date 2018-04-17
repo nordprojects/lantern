@@ -7,12 +7,12 @@ import android.view.Display
 import android.view.WindowManager
 import com.example.androidthings.lantern.comms.ConfigurationServer
 import com.example.androidthings.lantern.hardware.Accelerometer
-import com.google.android.things.device.ScreenManager
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.FileNotFoundException
 import java.util.*
 import android.app.Application as AndroidApplication
+
 
 class App : AndroidApplication() {
     companion object {
@@ -93,22 +93,21 @@ class App : AndroidApplication() {
     }
 
     private fun setupDisplay() {
-        val windowManager = getSystemService(WindowManager::class.java)
-        val screenMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(screenMetrics)
-        val screenHeight = screenMetrics.heightPixels
-
-        val screenManager = ScreenManager.getInstance(Display.DEFAULT_DISPLAY)
-
-        val density = when (screenHeight) {
-            1080 -> 320 // xhdpi
-            720 -> 213 // tvdpi
-            else -> screenHeight * 160 / 540 // a linear scaling according to height
-        }
-        Log.i(TAG, "Screen height is ${screenHeight}px, setting density to $density")
-        screenManager.setDisplayDensity(density)
-        screenManager.setBrightness(255)
-
-        screenManager.lockRotation(ScreenManager.ROTATION_0)
+        //TODO - Set display density without ScreenManager, see issue - https://issuetracker.google.com/issues/78143410
+//        val windowManager = getSystemService(WindowManager::class.java)
+//        val screenMetrics = DisplayMetrics()
+//        windowManager.defaultDisplay.getMetrics(screenMetrics)
+//        val screenHeight = screenMetrics.heightPixels
+//
+//        val screenManager = ScreenManager.getInstance(Display.DEFAULT_DISPLAY)
+//
+//        val density = when (screenHeight) {
+//            1080 -> 320 // xhdpi
+//            720 -> 213 // tvdpi
+//            else -> screenHeight * 160 / 540 // a linear scaling according to height
+//        }
+//        Log.i(TAG, "Screen height is ${screenHeight}px, setting density to $density")
+//        screenManager.setDisplayDensity(density)
+//
     }
 }
