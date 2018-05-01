@@ -34,8 +34,6 @@ class App : AndroidApplication() {
         super.onCreate()
         instance = this
 
-        setupDisplay()
-
         loadConfig()
         advertisingName = config.name
 
@@ -90,24 +88,5 @@ class App : AndroidApplication() {
         file.close()
 
         Log.d(TAG, "Saved settings to $CONFIG_FILE_PATH")
-    }
-
-    private fun setupDisplay() {
-        //TODO - Set display density without ScreenManager, see issue - https://issuetracker.google.com/issues/78143410
-//        val windowManager = getSystemService(WindowManager::class.java)
-//        val screenMetrics = DisplayMetrics()
-//        windowManager.defaultDisplay.getMetrics(screenMetrics)
-//        val screenHeight = screenMetrics.heightPixels
-//
-//        val screenManager = ScreenManager.getInstance(Display.DEFAULT_DISPLAY)
-//
-//        val density = when (screenHeight) {
-//            1080 -> 320 // xhdpi
-//            720 -> 213 // tvdpi
-//            else -> screenHeight * 160 / 540 // a linear scaling according to height
-//        }
-//        Log.i(TAG, "Screen height is ${screenHeight}px, setting density to $density")
-//        screenManager.setDisplayDensity(density)
-//
     }
 }
