@@ -71,13 +71,6 @@ object ChannelsRegistry {
                     "Summon Android when troubles about…",
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_bat_signal")
             )),
-            Pair(::MessageChannel, ChannelInfo(
-                    "message",
-                    "Message",
-                    "Display a short message",
-                    Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_blank"),
-                    customizable = true
-            )),
             Pair(::InfoChannel, ChannelInfo(
                     "info",
                     "Lantern Info",
