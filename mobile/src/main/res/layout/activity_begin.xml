@@ -24,7 +24,6 @@
         android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="70dp"
-        android:fontFamily="@font/google_sans_regular"
         android:text="Transform any surface into an\nambient smart interface."
         android:textAlignment="center"
         android:textColor="@android:color/black"

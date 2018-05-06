@@ -153,7 +153,6 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/google_sans_regular"
         android:text="Tap a surface to change the channel"
         android:textColor="@color/text_dark"
         android:textSize="16sp"

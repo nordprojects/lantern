@@ -13,7 +13,6 @@
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="32dp"
-        android:fontFamily="@font/google_sans_regular"
         android:text="Choose an orientation for the song info."
         android:textColor="@android:color/black"
         android:textSize="16sp"
