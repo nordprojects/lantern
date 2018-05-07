@@ -22,12 +22,12 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <LinearLayout
-            android:layout_width="440dp"
+            android:layout_width="390dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="25dp"
-            android:layout_marginEnd="50dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginBottom="22dp"
+            android:layout_marginEnd="44dp"
+            android:layout_marginStart="44dp"
+            android:layout_marginTop="22dp"
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -40,8 +40,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:src="@drawable/lantern_logo"
-                tools:layout_editor_absoluteX="357dp"
-                tools:layout_editor_absoluteY="147dp" />
+                tools:layout_editor_absoluteX="317dp"
+                tools:layout_editor_absoluteY="130dp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -53,14 +53,13 @@
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
                 android:textSize="52sp"
-                app:layout_constraintStart_toStartOf="@+id/guideline"
-                tools:layout_editor_absoluteY="130dp" />
+                tools:layout_editor_absoluteY="115dp" />
 
             <TextView
                 android:id="@+id/errorMessageTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="18dp"
                 android:fontFamily="@font/google_sans_regular"
                 android:gravity="center"
                 android:text="Lantern booted in the wrong screen resolution. Make sure projector is connected. &#10;&#10;Rebooting in:"
