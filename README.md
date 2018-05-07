@@ -32,7 +32,7 @@ By building on Android Things, we benefit from a modern, familiar technology sta
 
 ![Technical Architecture](https://user-images.githubusercontent.com/1244317/39315774-6fea22ea-496f-11e8-9473-a3ae96dfd0cc.png)
 
-There are two main components to the Lantern software - the ‘Things’ app (`/things`), which runs on Android Things on a Raspberry Pi, and the Companion app (`/mobile`)` which runs on an Android phone.
+There are two main components to the Lantern software - the ‘Things’ app (`/things`), which runs on Android Things on a Raspberry Pi, and the Companion app (`/mobile`) which runs on an Android phone.
 
 The hardware is built as an ‘Ikea hack’, with a 3D-printed enclosure, a Raspberry Pi, a laser projector (HDMI), an accelerometer (I2C) and a few off-the-shelf wires and connectors.
 
@@ -40,7 +40,7 @@ The hardware is built as an ‘Ikea hack’, with a 3D-printed enclosure, a Rasp
 
 ![iso components](https://user-images.githubusercontent.com/1244317/39315851-9d03373a-496f-11e8-8380-38af303ca893.jpg)
 
-Note: this guide focuses on the software side of Lantern. For more in-depth instructions, see the [guide on Hackster.io]((https://www.hackster.io/nord-projects/lantern-9f0c28)).
+Note: this guide focuses on the software side of Lantern. For more in-depth instructions, see the [guide on Hackster.io](https://www.hackster.io/nord-projects/lantern-9f0c28).
 
 #### Step 1: Assemble the hardware
 
