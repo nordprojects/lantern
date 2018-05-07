@@ -24,8 +24,8 @@
 
     <RelativeLayout
         android:id="@+id/eventsView"
-        android:layout_width="963dp"
-        android:layout_height="541dp"
+        android:layout_width="854dp"
+        android:layout_height="480dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

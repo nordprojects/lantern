@@ -8,7 +8,7 @@
     <ImageView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="60dp"
+        android:layout_marginEnd="53dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio=""
         app:layout_constraintEnd_toStartOf="@+id/centerGuideline"
@@ -20,13 +20,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="481dp" />
+        app:layout_constraintGuide_begin="427dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginStart="45dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="8dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -40,8 +40,7 @@
             android:text="Lantern"
             android:textColor="@android:color/white"
             android:textSize="60sp"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            tools:layout_editor_absoluteY="130dp" />
+            tools:layout_editor_absoluteY="115dp" />
 
         <TextView
             android:id="@+id/nameTextView"

@@ -10,7 +10,7 @@
         android:id="@+id/tickerView"
         class="com.example.androidthings.lantern.channels.nowplaying.NowPlayingChannel$NowPlayingTickerView"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="89dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
