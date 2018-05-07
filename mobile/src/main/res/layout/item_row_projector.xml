@@ -38,7 +38,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="15dp"
-                android:fontFamily="@font/google_sans_regular"
                 android:text="TextView"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"

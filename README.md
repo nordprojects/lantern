@@ -4,7 +4,13 @@
 
 Lantern combines an Ikea lamp, laser projector and Android Things to create a connected projector that explores the relationships between surfaces and content.
 
-This repo contains all the app code that powers Lantern. The project is split into three modules. At `/things`, the Android Things app, at `/mobile` the companion mobile app, and `/shared` contains code used by both.
+This repo contains all the app code that powers Lantern. 
+
+The project is split into three modules:
+
+- `/things` - the Android Things app
+- `/mobile` - the companion mobile app
+- `/shared` - code used by both apps
 
 For instructions on how to build the hardware, see [our project page on Hackster.io](https://www.hackster.io/nord-projects/lantern-9f0c28).
 
@@ -16,7 +22,7 @@ Lantern imagines a future where projections are used to present ambient informat
 
 ![Lantern head tilt](https://user-images.githubusercontent.com/1244317/39312133-ac6c0d40-4966-11e8-80ae-60e09fd77f3e.gif)
 
-Lantern is set-up and controlled using the companion app for Android. They communicate using Nearby Connections, a protocol developed by Google to facilitate local peer-to-peer communication with nearby devices.
+Lantern is set-up and controlled using the companion app for Android. They communicate using *Nearby Connections*, a protocol developed by Google to facilitate local peer-to-peer communication with nearby devices.
 
 Lantern is built around the concept of ‘channels’ – app fragments that can be configured through the companion app, and display projected UI. Each surface has a different channel, so Lantern will display something different on the table, the wall and the ceiling.
 
@@ -34,7 +40,7 @@ The hardware is built as an ‘Ikea hack’, with a 3D-printed enclosure, a Rasp
 
 ![iso components](https://user-images.githubusercontent.com/1244317/39315851-9d03373a-496f-11e8-8380-38af303ca893.jpg)
 
-Note: the guide below focuses on the software side of Lantern - for more in-depth instructions of the whole process see our [guide over on Hackster.io]((https://www.hackster.io/nord-projects/lantern-9f0c28)).
+Note: this guide focuses on the software side of Lantern. For more in-depth instructions, see the [guide on Hackster.io]((https://www.hackster.io/nord-projects/lantern-9f0c28)).
 
 #### Step 1: Assemble the hardware
 
@@ -44,7 +50,7 @@ Note: the guide below focuses on the software side of Lantern - for more in-dept
 
 To build the hardware, you’ll hack the Ikea Tertial lamp, 3d-print the enclosure, and assemble it with the Raspberry Pi, projector and the other components.
 
-[Full instructions are here!](https://www.hackster.io/nord-projects/lantern-9f0c28)
+For more information, read the [assembly instructions](https://www.hackster.io/nord-projects/lantern-9f0c28).
 
 #### Step 2: Install Android Things
 
@@ -60,23 +66,23 @@ or
 
     sudo ~/Downloads/android-things-setup-utility/android-things-setup-utility-linux
 
-On Windows, right-click the executable and choose ‘Run as administrator’
+On Windows, right-click the executable file and choose ‘Run as administrator’
 
 When prompted, choose ‘Install Android Things’, ‘Raspberry Pi’ and then ‘Development image’. 
 
-You will be prompted to insert your SD card - Android Things will be written to it.
+Insert your SD card; Android Things will then be written to it.
 
 #### Step 3: Boot Android Things and connect
 
 ![Connect Ethernet](https://user-images.githubusercontent.com/1244317/39311717-93f63782-4965-11e8-801b-012b15c97cb2.png)
 
-Insert the SD card into the Raspberry Pi and connect the power. Android Things will boot, now we need to give it the WiFi details so we can connect wirelessly.
+Insert the SD card into the Raspberry Pi and connect the power. Once Android Things starts, we'll setup the WiFi connection.
 
-Connect an ethernet cable from the Pi to your computer or to something on your network (e.g. your router).
+Connect an ethernet cable from the Pi to your computer (or to something on your network like a router).
 
-Run `android-things-setup-utility` again, this time choosing to configure WiFi. Follow the prompts to write your WiFi details to the device.
+Run `android-things-setup-utility` again, this time choosing to configure WiFi. Follow the on-screen prompts to complete the setup.
 
-Once connected, open a terminal and use adb to connect to it over the network.
+Once connected, open a terminal and use adb to connect to the device.
 
     adb connect android.local
 
@@ -85,15 +91,15 @@ Once connected, open a terminal and use adb to connect to it over the network.
 
 ![Lantern Projection](https://user-images.githubusercontent.com/1244317/39311635-5fe2fbc4-4965-11e8-82a7-08eaad3ffc2b.png)
 
-Open this repo in [Android Studio](https://developer.android.com/studio/) and wait for Gradle to sync. Once it’s finished, you should have a `things` Run Configuration in the little menu in the toolbar. Choose `things` and hit Run.
+Open this repo in [Android Studio](https://developer.android.com/studio/) and wait for Gradle to sync. Once finished, you should have a `things` Run Configuration in the menu in the toolbar. Choose `things` and hit Run.
 
-Turn on the projector and watch the display. Once the code is built, Lantern will start 🎉 !
+Turn on the projector. Once the code is built, Lantern will start 🎉 !
 
 #### Step 5: Assemble the lamp
 
 ![Assemble](https://user-images.githubusercontent.com/1244317/39313304-937dbb32-4969-11e8-8f87-5c4cbbfc6bf0.png)
 
-Insert the hardware into the lamp head and tighten with the thumbscrews.
+Insert the hardware into the lamp and attach it with the thumbscrews.
 
 #### Step 6: Install the companion app and configure your Lantern
 
@@ -101,7 +107,7 @@ Insert the hardware into the lamp head and tighten with the thumbscrews.
 
 Connect your Android phone (with [dev mode](https://developer.android.com/studio/debug/dev-options#enable) enabled). In Android Studio, choose the `mobile` Run Configuration and hit Run.
 
-Using the companion app, connect the Lantern and have a play with the channels we’ve made!
+Using the companion app, connect the Lantern and play with the channels we’ve created!
 
 ## Making your own channels
 
@@ -147,17 +153,15 @@ channel to the `channelsWithInfo` list. e.g.
     )),
 ```
 
-That's it! Now build the project and run on your Raspberry Pi, and select the channel with the
-mobile app (you don't need to update the mobile app, the things app sends a list of available 
-channels when it connects).
+That's it! Now build the project and run on your Raspberry Pi. Now select the channel with the
+mobile app to see it run. (You don't need to update the mobile app, because the things app sends a list of available 
+channels when it connects.)
 
 #### Configuration Screen on mobile
 
-If you create a channel on the Lantern that needs configuration, for example to give it a URL
-to display, you can create a configuration screen in the companion mobile app.
+If you create a channel that needs configuration (e.g. a URL to display), you can create a configuration Activity in the companion mobile app.
 
-To add a channel configuration scree to the mobile app you first create an activity then and add it to the list of
-available configuration activities using the following steps
+To add a channel configuration screen, first create an activity and then add it to the list of available activities using the following steps:
 
  -  Subclass `ChannelConfigActivity`
  -  Add your new subclass to the AndroidManifest.xml file, making sure to set it's parent activity to
