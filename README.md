@@ -232,3 +232,13 @@ This file is ignored by Git, to prevent accidental key-sharing.
 The weather channel uses [OpenWeatherMap](http://openweathermap.org/) APIs to work. To compile your 
 own, signup for an account and generate an API key, and add it to the `secrets.xml`
 `openweathermap_api_key` entry.
+
+## Changelog
+
+#### 11th July 2018
+
+- Added 'camera' example channel (thanks @TobiasSchaffner! [#7](https://github.com/nordprojects/lantern/pull/7#issuecomment-404177386))
+
+#### 7th May 2018
+
+- First public release!
