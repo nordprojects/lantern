@@ -23,6 +23,12 @@ object ChannelsRegistry {
                     Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_clock"),
                     customizable = true
             )),
+            Pair(::ScreenShot, ChannelInfo(
+                    "ScreenShot",
+                    "Take a picture",
+                    "Take a picture of something that is under lantern and project it to any surface.",
+                    Uri.parse("android.resource://com.example.androidthings.lantern/drawable/banner_screenshot")
+                    )),
             Pair(::NowPlayingChannel, ChannelInfo(
                     "now-playing",
                     "Now playing",
