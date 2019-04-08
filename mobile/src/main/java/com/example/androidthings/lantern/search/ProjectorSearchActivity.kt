@@ -73,10 +73,10 @@ class ProjectorSearchActivity : AppCompatActivity(),
                     ConnectionsStatusCodes.STATUS_BLUETOOTH_ERROR -> {
                         searchFragment?.showBluetoothError()
                     }
-                    else -> { searchFragment?.showUnknownError() }
+                    else -> { searchFragment?.showUnknownError(error) }
                 }
             }
-            else -> { searchFragment?.showUnknownError() }
+            else -> { searchFragment?.showUnknownError(error) }
         }
     }
 

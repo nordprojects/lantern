@@ -79,10 +79,11 @@ class ProjectorSearchFragment : Fragment() {
         settingsButton.visibility = View.INVISIBLE
     }
 
-    fun showUnknownError() {
+    fun showUnknownError(error: Exception) {
         if (view == null) return
         startErrorAnimation()
-        textView.text = "Failed to start Nearby.\n\nSomething went wrong, please try again."
+        error.localizedMessage
+        textView.text = "Failed to start Nearby.\n\nSomething went wrong, please try again.\n\n${error.localizedMessage}"
         tryAgainButton.visibility = View.VISIBLE
         settingsButton.visibility = View.INVISIBLE
     }
