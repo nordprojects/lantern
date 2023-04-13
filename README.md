@@ -4,7 +4,9 @@
 
 Lantern combines an Ikea lamp, laser projector and Android Things to create a connected projector that explores the relationships between surfaces and content.
 
-This repo contains all the app code that powers Lantern. 
+**Note - as of January 2022 Android Things has been discontinued.** We are leaving this project up as the hardware steps will still work to create a connected projector, powered by a Raspberry Pi. To display content on the projector you would now need to install Linux on the Pi and create your own content to display. For example launching a full screen web browser and projecting web apps.
+
+This repo contains all the Android Things app code that used to power Lantern. 
 
 The project is split into three modules:
 
